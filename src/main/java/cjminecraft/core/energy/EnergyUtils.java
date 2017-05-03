@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.energy.support.BuildCraftSupport;
@@ -612,11 +614,17 @@ public class EnergyUtils {
 		long energyPerSide = energy / tiles.size();
 		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
 		long energyTaken = 0;
+		long extraEnergy = 0;
 		while (tilesIterator.hasNext()) {
 			Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
 			EnumFacing side = entry.getKey();
 			TileEntity te = entry.getValue();
-			energyTaken += takeEnergy(te, energyPerSide, simulate, side);
+			long et = takeEnergy(te, energyPerSide + extraEnergy, simulate, side);
+			energyTaken += et;
+			if (et < energyPerSide)
+				extraEnergy = energyPerSide - et;
+			else
+				extraEnergy = 0;
 		}
 		return energyTaken;
 	}
@@ -651,11 +659,17 @@ public class EnergyUtils {
 		long energyPerSide = energy / tiles.size();
 		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
 		long energyGiven = 0;
+		long extraEnergy = 0;
 		while (tilesIterator.hasNext()) {
 			Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
 			EnumFacing side = entry.getKey();
 			TileEntity te = entry.getValue();
-			energyGiven += giveEnergy(te, energyPerSide, simulate, side);
+			long eg = giveEnergy(te, energyPerSide + extraEnergy, simulate, side);
+			energyGiven += eg;
+			if (eg < energyPerSide)
+				extraEnergy = energyPerSide - eg;
+			else
+				extraEnergy = 0;
 		}
 		return energyGiven;
 	}
