@@ -1,4 +1,5 @@
 {
+	"name": "CJCore"
 	"version": "0.0.1.0",
 	"changelog": [
 		"Added energy support"
