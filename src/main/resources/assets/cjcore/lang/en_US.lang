@@ -36,3 +36,7 @@ gui.config.energy.multimeter_show_capacity.name=Show Multimeter Capacity
 gui.config.energy.multimeter_show_capacity.comment=Whether or not to show the capacity when using the multimeter
 
 item.multimeter.name=Multimeter
+
+update.ready=[%s] An update is available to version %s
+
+update-0.0.1.0-a=Added energy support
