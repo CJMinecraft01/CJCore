@@ -2,7 +2,7 @@
 	"name": "CJCore",
 	"version": "0.0.1.0",
 	"changelog": [
-		"update.0.0.1.0"
+		"+ Added Energy Support", "+ Added Version Checker"
 	],
 	"download": ""
 }

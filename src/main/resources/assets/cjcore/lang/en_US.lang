@@ -37,6 +37,6 @@ gui.config.energy.multimeter_show_capacity.comment=Whether or not to show the ca
 
 item.multimeter.name=Multimeter
 
-update.ready=[%s] An update is available to version %s
-
-update.0.0.1.0=+Added energy support\n+Added update checker
+update.ready=There is an update for %s available!
+update.version=Current Version: %s, newest Version: %s
+update.download=[Click To Download]

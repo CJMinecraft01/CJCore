@@ -61,14 +61,13 @@ public class VersionChecker {
 			return;
 		}
 		if (updateRequired) {
-			TextComponentString text = new TextComponentString(TextFormatting.RED + I18n.format("update.ready", name, version));
-			text.setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL)));
-			player.sendMessage(text);
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.ready", TextFormatting.GOLD + name)));
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.version", TextFormatting.RED + currentVersion, TextFormatting.DARK_GREEN + version)));
+			player.sendMessage(new TextComponentString(TextFormatting.RED + I18n.format("update.download")).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL))));
 			for (String log : changeLog) {
-				text = new TextComponentString(TextFormatting.AQUA + "+ " + I18n.format(log));
-				text.setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL)));
-				player.sendMessage(text);
+				player.sendMessage(new TextComponentString(TextFormatting.AQUA + log));
 			}
+			
 		}
 	}
 
