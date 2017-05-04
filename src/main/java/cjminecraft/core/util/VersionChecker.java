@@ -61,9 +61,9 @@ public class VersionChecker {
 			return;
 		}
 		if (updateRequired) {
-			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.ready", TextFormatting.GOLD + name)));
-			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.version", TextFormatting.RED + currentVersion, TextFormatting.DARK_GREEN + version)));
-			player.sendMessage(new TextComponentString(TextFormatting.RED + I18n.format("update.download")).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL))));
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.ready", TextFormatting.GOLD + name + TextFormatting.WHITE)));
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.version", TextFormatting.DARK_RED + currentVersion + TextFormatting.WHITE, TextFormatting.DARK_GREEN + version)));
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE + "[" + TextFormatting.DARK_AQUA + I18n.format("update.download") + TextFormatting.WHITE + "]").setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL))));
 			for (String log : changeLog) {
 				player.sendMessage(new TextComponentString(TextFormatting.AQUA + log));
 			}

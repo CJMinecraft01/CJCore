@@ -39,4 +39,4 @@ item.multimeter.name=Multimeter
 
 update.ready=There is an update for %s available!
 update.version=Current Version: %s, newest Version: %s
-update.download=[Click To Download]
+update.download=Click To Download
