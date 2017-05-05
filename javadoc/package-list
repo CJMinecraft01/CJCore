@@ -1,0 +1,14 @@
+cjminecraft.core
+cjminecraft.core.client.gui
+cjminecraft.core.config
+cjminecraft.core.crafting
+cjminecraft.core.energy
+cjminecraft.core.energy.support
+cjminecraft.core.init
+cjminecraft.core.items
+cjminecraft.core.network
+cjminecraft.core.network.energy
+cjminecraft.core.proxy
+cjminecraft.core.util
+cofh.api
+cofh.api.energy
