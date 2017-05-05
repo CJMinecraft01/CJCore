@@ -8,5 +8,4 @@ Yes you can but please notify me so I can see where my mod is being used (you do
 ## Can I use the code for my own mod?
 Of course! My mod is open source and means that anyone can use my code but please don't claim any code as your own :D
 
-
 http://www.youtube.com/cjminecraft
