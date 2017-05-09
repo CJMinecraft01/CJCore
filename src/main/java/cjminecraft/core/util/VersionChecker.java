@@ -44,7 +44,7 @@ public class VersionChecker {
 			version = jo.get("version").getAsString();
 			Class clazz = Class.forName(versionFieldClass);
 			Field versionField = clazz.getDeclaredField(versionFieldName);
-			if (version != versionField.get(clazz))
+			if (!version.equals(versionField.get(clazz)))
 				updateRequired = true;
 			currentVersion = (String) versionField.get(clazz);
 			if (updateRequired) {

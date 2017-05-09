@@ -5,7 +5,7 @@
   "description": "The core library for CJMinecraft's mods.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://github.com/CJMinecraft01/CJCore",
   "updateUrl": "",
   "authorList": ["CJMinecraft"],
   "credits": "Subscribers who influenced the creation of this library. Thank you to Emotion Fox for the amazing Energy Bar texture!",

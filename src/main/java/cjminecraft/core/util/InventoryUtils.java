@@ -62,6 +62,8 @@ public class InventoryUtils {
 	 * @return Whether the two {@link ItemStack}s are the same
 	 */
 	public static boolean isStackEqual(ItemStack a, ItemStack b, boolean ignoreNBT, boolean ignoreMetaData) {
+		if(a == null || b == null)
+			return false;
 		if (ignoreNBT && ignoreMetaData)
 			return a.getItem() == b.getItem();
 		if (ignoreNBT && !ignoreMetaData)
