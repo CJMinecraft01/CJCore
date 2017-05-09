@@ -13,6 +13,7 @@ import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.util.InventoryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,6 +42,7 @@ public class ItemMultimeter extends Item {
 		this.setUnlocalizedName(unlocalizedName);
 		this.setRegistryName(new ResourceLocation(CJCore.MODID, unlocalizedName));
 		this.setMaxStackSize(1);
+		this.setCreativeTab(CreativeTabs.REDSTONE);
 	}
 
 	/**

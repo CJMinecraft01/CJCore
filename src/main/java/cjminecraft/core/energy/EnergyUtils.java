@@ -9,11 +9,8 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
 import cjminecraft.core.energy.support.IEnergySupport;
@@ -53,14 +50,11 @@ public class EnergyUtils {
 	 */
 	public static void preInit() {
 		energyHolderSupport = Arrays.<IEnergySupport>asList(new CoFHSupport.CoFHHolderSupport(),
-				new ForgeEnergySupport(), new TeslaSupport.TeslaHolderSupport(),
-				new BuildCraftSupport.BuildCraftHolderSupport());
+				new ForgeEnergySupport(), new TeslaSupport.TeslaHolderSupport());
 		energyConsumerSupport = Arrays.<IEnergySupport>asList(new CoFHSupport.CoFHReceiverSupport(),
-				new ForgeEnergySupport(), new TeslaSupport.TeslaConsumerSupport(),
-				new BuildCraftSupport.BuildCraftReceiverSupport());
+				new ForgeEnergySupport(), new TeslaSupport.TeslaConsumerSupport());
 		energyProducerSupport = Arrays.<IEnergySupport>asList(new CoFHSupport.CoFHProviderSupport(),
-				new ForgeEnergySupport(), new TeslaSupport.TeslaProducerSupport(),
-				new BuildCraftSupport.BuildCraftProviderSupport());
+				new ForgeEnergySupport(), new TeslaSupport.TeslaProducerSupport());
 	}
 
 	/**
@@ -123,6 +117,8 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(TileEntity te, EnumFacing from) {
+		if(te == null)
+			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(te, from))
 				return support;
@@ -144,6 +140,8 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(TileEntity te, EnumFacing from) {
+		if(te == null)
+			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(te, from))
 				return support;
@@ -166,6 +164,8 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(TileEntity te, EnumFacing from) {
+		if(te == null)
+			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(te, from))
 				return support;
@@ -187,6 +187,8 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(ItemStack stack, EnumFacing from) {
+		if(stack == null || stack.getItem() == null)
+			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(stack, from))
 				return support;
@@ -208,6 +210,8 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(ItemStack stack, EnumFacing from) {
+		if(stack == null || stack.getItem() == null)
+			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(stack, from))
 				return support;
@@ -229,6 +233,8 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(ItemStack stack, EnumFacing from) {
+		if(stack == null || stack.getItem() == null)
+			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(stack, from))
 				return support;
