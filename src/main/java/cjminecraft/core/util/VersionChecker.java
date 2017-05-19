@@ -24,14 +24,56 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 
+/**
+ * Handles any updates required using a custom JSON file hosted on a webserver
+ * 
+ * @author CJMinecraft
+ *
+ */
 public class VersionChecker {
 
+	/**
+	 * The URL for the CJCore update json file
+	 */
 	public static String cjcoreURL = "https://raw.githubusercontent.com/CJMinecraft01/CJCore/master/update.json";
 
-	public static void checkForUpdate(String url, String versionFieldClass, String versionFieldName,
-			EntityPlayer player) {
+	/**
+	 * States whether an update is available using the update json file
+	 * 
+	 * @param url
+	 *            The url where the update file is found
+	 * @param currentVersion
+	 *            The current version of the mod
+	 * @return Whether an update is available
+	 */
+	public static boolean isUpdate(String url, String currentVersion) {
+		try {
+			URL URL = new URL(url);
+			JsonReader jr = new JsonReader(new InputStreamReader(URL.openStream()));
+			JsonElement je = new JsonParser().parse(jr);
+			JsonObject jo = je.getAsJsonObject();
+			String version = jo.get("version").getAsString();
+			if (!version.equals(currentVersion))
+				return true;
+		} catch (Exception e) {
+			CJCore.logger.catching(e);
+		}
+		return false;
+	}
+
+	/**
+	 * Will display a message when there is an update available using
+	 * information from the update file
+	 * 
+	 * @param url
+	 *            The url path to the file
+	 * @param currentVersion
+	 *            The current mod version
+	 * @param player
+	 *            The player to send the messages to
+	 */
+	public static void checkForUpdate(String url, String currentVersion, EntityPlayer player) {
 		String version = "";
-		String currentVersion = "";
 		String name = "";
 		List<String> changeLog = new ArrayList<String>();
 		String downloadURL = "";
@@ -42,11 +84,8 @@ public class VersionChecker {
 			JsonElement je = new JsonParser().parse(jr);
 			JsonObject jo = je.getAsJsonObject();
 			version = jo.get("version").getAsString();
-			Class clazz = Class.forName(versionFieldClass);
-			Field versionField = clazz.getDeclaredField(versionFieldName);
-			if (!version.equals(versionField.get(clazz)))
+			if (!version.equals(currentVersion))
 				updateRequired = true;
-			currentVersion = (String) versionField.get(clazz);
 			if (updateRequired) {
 				name = jo.get("name").getAsString();
 				JsonArray cl = jo.get("changelog").getAsJsonArray();
@@ -61,13 +100,18 @@ public class VersionChecker {
 			return;
 		}
 		if (updateRequired) {
-			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.ready", TextFormatting.GOLD + name + TextFormatting.WHITE)));
-			player.sendMessage(new TextComponentString(TextFormatting.WHITE + I18n.format("update.version", TextFormatting.DARK_RED + currentVersion + TextFormatting.WHITE, TextFormatting.DARK_GREEN + version)));
-			player.sendMessage(new TextComponentString(TextFormatting.WHITE + "[" + TextFormatting.DARK_AQUA + I18n.format("update.download") + TextFormatting.WHITE + "]").setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL))));
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE
+					+ I18n.format("update.ready", TextFormatting.GOLD + name + TextFormatting.WHITE)));
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE
+					+ I18n.format("update.version", TextFormatting.DARK_RED + currentVersion + TextFormatting.WHITE,
+							TextFormatting.DARK_GREEN + version)));
+			player.sendMessage(new TextComponentString(TextFormatting.WHITE + "[" + TextFormatting.DARK_AQUA
+					+ I18n.format("update.download") + TextFormatting.WHITE + "]").setStyle(
+							new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL))));
 			for (String log : changeLog) {
 				player.sendMessage(new TextComponentString(TextFormatting.AQUA + log));
 			}
-			
+
 		}
 	}
 

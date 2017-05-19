@@ -1,5 +1,7 @@
 package cjminecraft.core.proxy;
 
+import cjminecraft.core.energy.EnergyUnits;
+
 /**
  * For all things server
  * @author CJMinecraft
@@ -8,8 +10,9 @@ package cjminecraft.core.proxy;
 public class ServerProxy extends CommonProxy {
 	
 	@Override
-	public void preInit() {
+	public void preInit() {	
 		super.preInit();
+		EnergyUnits.preInitServer();
 	}
 	
 	@Override

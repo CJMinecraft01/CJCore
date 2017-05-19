@@ -1,6 +1,7 @@
 package cjminecraft.core.energy;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,7 +11,9 @@ import java.util.Map.Entry;
 import javax.annotation.Nullable;
 
 import cjminecraft.core.CJCore;
+import cjminecraft.core.client.gui.EnergyBarOverlay;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
 import cjminecraft.core.energy.support.IEnergySupport;
@@ -26,6 +29,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.Loader;
 import scala.annotation.meta.field;
 
 /**
@@ -41,20 +45,36 @@ public class EnergyUtils {
 	/**
 	 * Lists of registered support
 	 */
-	private static List<IEnergySupport> energyHolderSupport;
-	private static List<IEnergySupport> energyConsumerSupport;
-	private static List<IEnergySupport> energyProducerSupport;
+	private static List<IEnergySupport> energyHolderSupport = new ArrayList<IEnergySupport>();
+	private static List<IEnergySupport> energyConsumerSupport = new ArrayList<IEnergySupport>();
+	private static List<IEnergySupport> energyProducerSupport = new ArrayList<IEnergySupport>();
 
 	/**
 	 * Should not be called outside of {@link CJCore}
 	 */
 	public static void preInit() {
-		energyHolderSupport = Arrays.<IEnergySupport>asList(new CoFHSupport.CoFHHolderSupport(),
-				new ForgeEnergySupport(), new TeslaSupport.TeslaHolderSupport());
-		energyConsumerSupport = Arrays.<IEnergySupport>asList(new CoFHSupport.CoFHReceiverSupport(),
-				new ForgeEnergySupport(), new TeslaSupport.TeslaConsumerSupport());
-		energyProducerSupport = Arrays.<IEnergySupport>asList(new CoFHSupport.CoFHProviderSupport(),
-				new ForgeEnergySupport(), new TeslaSupport.TeslaProducerSupport());
+		CJCore.logger.info("Adding Forge Energy Support!");
+		addEnergyHolderSupport(new ForgeEnergySupport());
+		addEnergyConsumerSupport(new ForgeEnergySupport());
+		addEnergyProducerSupport(new ForgeEnergySupport());
+		
+		CJCore.logger.info("Adding CoFH Support!");
+		addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
+		addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
+		addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
+		
+		if(Loader.isModLoaded("tesla")) {
+			CJCore.logger.info("Adding Tesla Support!");
+			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());
+			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
+			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
+		}
+		if(Loader.isModLoaded("buildcraftcore")) {
+			CJCore.logger.info("Adding Buildcraft Support!");
+			addEnergyHolderSupport(new BuildCraftSupport.BuildCraftHolderSupport());
+			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
+			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
+		}
 	}
 
 	/**
@@ -65,10 +85,10 @@ public class EnergyUtils {
 	 */
 	public static void addEnergyHolderSupport(IEnergySupport support) {
 		if (energyHolderSupport.contains(support))
-			CJCore.logger.info(I18n.format("energy.utils.repeat_support", support.getClass().getSimpleName()));
+			CJCore.logger.info(String.format("A energy support of type %s has already been registered - SKIPPING", support.getClass().getSimpleName()));
 		else {
 			energyHolderSupport.add(support);
-			CJCore.logger.info(I18n.format("energy.utils.support_success", support.getClass().getSimpleName()));
+			CJCore.logger.info(String.format("Successfully registered energy support %s", support.getClass().getSimpleName()));
 		}
 	}
 
@@ -80,10 +100,10 @@ public class EnergyUtils {
 	 */
 	public static void addEnergyConsumerSupport(IEnergySupport support) {
 		if (energyConsumerSupport.contains(support))
-			CJCore.logger.info(I18n.format("energy.utils.repeat_support", support.getClass().getSimpleName()));
+			CJCore.logger.info(String.format("A energy support of type %s has already been registered - SKIPPING", support.getClass().getSimpleName()));
 		else {
 			energyConsumerSupport.add(support);
-			CJCore.logger.info(I18n.format("energy.utils.support_success", support.getClass().getSimpleName()));
+			CJCore.logger.info(String.format("Successfully registered energy support %s", support.getClass().getSimpleName()));
 		}
 	}
 
@@ -95,10 +115,10 @@ public class EnergyUtils {
 	 */
 	public static void addEnergyProducerSupport(IEnergySupport support) {
 		if (energyProducerSupport.contains(support))
-			CJCore.logger.info(I18n.format("energy.utils.repeat_support", support.getClass().getSimpleName()));
+			CJCore.logger.info(String.format("A energy support of type %s has already been registered - SKIPPING", support.getClass().getSimpleName()));
 		else {
 			energyProducerSupport.add(support);
-			CJCore.logger.info(I18n.format("energy.utils.support_success", support.getClass().getSimpleName()));
+			CJCore.logger.info(String.format("Successfully registered energy support %s", support.getClass().getSimpleName()));
 		}
 	}
 
@@ -117,7 +137,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(TileEntity te, EnumFacing from) {
-		if(te == null)
+		if (te == null)
 			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(te, from))
@@ -140,7 +160,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(TileEntity te, EnumFacing from) {
-		if(te == null)
+		if (te == null)
 			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(te, from))
@@ -164,7 +184,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(TileEntity te, EnumFacing from) {
-		if(te == null)
+		if (te == null)
 			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(te, from))
@@ -187,7 +207,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(ItemStack stack, EnumFacing from) {
-		if(stack == null || stack.getItem() == null)
+		if (stack == null || stack.getItem() == null)
 			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(stack, from))
@@ -210,7 +230,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(ItemStack stack, EnumFacing from) {
-		if(stack == null || stack.getItem() == null)
+		if (stack == null || stack.getItem() == null)
 			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(stack, from))
@@ -233,7 +253,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(ItemStack stack, EnumFacing from) {
-		if(stack == null || stack.getItem() == null)
+		if (stack == null || stack.getItem() == null)
 			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(stack, from))
@@ -427,11 +447,10 @@ public class EnergyUtils {
 	public static long giveEnergy(TileEntity te, long energy, boolean simulate, EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(te, from);
 		if (support != null)
-			if (support.canReceive(support.getContainer(te, from), from))
-				return convertEnergy(support.defaultEnergyUnit(), EnergyUnits.MINECRAFT_JOULES,
-						support.giveEnergy(support.getContainer(te, from),
-								convertEnergy(EnergyUnits.MINECRAFT_JOULES, support.defaultEnergyUnit(), energy),
-								simulate, from));
+			return convertEnergy(support.defaultEnergyUnit(), EnergyUnits.MINECRAFT_JOULES,
+					support.giveEnergy(support.getContainer(te, from),
+							convertEnergy(EnergyUnits.MINECRAFT_JOULES, support.defaultEnergyUnit(), energy), simulate,
+							from));
 		return 0;
 	}
 
@@ -520,6 +539,52 @@ public class EnergyUtils {
 								convertEnergy(EnergyUnits.MINECRAFT_JOULES, support.defaultEnergyUnit(), energy),
 								simulate, from));
 		return 0;
+	}
+
+	/**
+	 * Set the energy inside of the given {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds energy
+	 * @param energy
+	 *            The energy to set in the {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            unit
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @return The energy which was set
+	 */
+	public static long setEnergy(TileEntity te, long energy, EnumFacing from) {
+		if (hasSupport(te, from)) {
+			long energyStored = getEnergyStored(te, from);
+			if (energyStored < energy)
+				return giveEnergy(te, energy - energyStored, false, from);
+			else if (energyStored > energy)
+				return takeEnergy(te, energyStored - energy, false, from);
+		}
+		return 0;
+	}
+
+	/**
+	 * Set the energy inside of the given {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds energy
+	 * @param energy
+	 *            The energy to set in the {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            unit
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 */
+	public static void setEnergy(ItemStack stack, long energy, EnumFacing from) {
+		if (hasSupport(stack, from)) {
+			long energyStored = getEnergyStored(stack, from);
+			if (energyStored < energy)
+				giveEnergy(stack, energy - energyStored, false, from);
+			else if (energyStored > energy)
+				takeEnergy(stack, energyStored - energy, false, from);
+		}
 	}
 
 	/**

@@ -54,8 +54,11 @@ public class ItemMultimeter extends Item {
 	 */
 	public static class MultimeterOverlay {
 
-		private static List<ResourceLocation> blacklistBlocks = new ArrayList<ResourceLocation>();
-		
+		/**
+		 * The blacklist of blocks which should not display the {@link EnergyBarOverlay}
+		 */
+		public static List<ResourceLocation> blacklistBlocks = new ArrayList<ResourceLocation>();
+
 		public MultimeterOverlay() {
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_shock_suppressor"));
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_display_stand"));
@@ -67,17 +70,21 @@ public class ItemMultimeter extends Item {
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_heat_collector"));
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_leaf_generator"));
 		}
-		
+
 		/**
 		 * The overlay to be drawn
 		 */
-		public static EnergyBarOverlay overlay = new EnergyBarOverlay(0, CJCoreConfig.MULTIMETER_OFFSET_X, CJCoreConfig.MULTIMETER_OFFSET_Y, 0, 0);
+		public static EnergyBarOverlay overlay = new EnergyBarOverlay(0, CJCoreConfig.MULTIMETER_OFFSET_X,
+				CJCoreConfig.MULTIMETER_OFFSET_Y, 0, 0);
 
 		/**
 		 * Sync with the server Used every 10 ticks
 		 */
 		private static int sync = 0;
 
+		/**
+		 * The current energy data
+		 */
 		public static EnergyData data = new EnergyData();
 
 		/**
@@ -89,7 +96,8 @@ public class ItemMultimeter extends Item {
 		/**
 		 * Actually draws the overlay
 		 * 
-		 * @param event The event
+		 * @param event
+		 *            The event
 		 */
 		@SubscribeEvent(receiveCanceled = true)
 		public void onEvent(RenderGameOverlayEvent.Pre event) {
@@ -101,30 +109,29 @@ public class ItemMultimeter extends Item {
 
 			if (!InventoryUtils.hasInHotbar(new ItemStack(CJCoreItems.multimeter), player, true, true))
 				return;
-
 			if (EnergyUtils.hasSupport(player.getHeldItemMainhand(), player.getAdjustedHorizontalFacing())) {
 				if (sync == 0) {
-					if(data == null)
+					if (data == null)
 						data = new EnergyData();
-						
-					data.setEnergy(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES, CJCoreConfig.DEFAULT_ENERGY_UNIT,
-							EnergyUtils.getEnergyStored(player.getHeldItemMainhand(),
+					data.setEnergy(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
+							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getEnergyStored(player.getHeldItemMainhand(),
 									player.getAdjustedHorizontalFacing())));
-					data.setCapacity(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES, CJCoreConfig.DEFAULT_ENERGY_UNIT,
-							EnergyUtils.getCapacity(player.getHeldItemMainhand(),
+					data.setCapacity(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
+							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getCapacity(player.getHeldItemMainhand(),
 									player.getAdjustedHorizontalFacing())));
 				}
 				targetBlock = false;
 			} else if (EnergyUtils.hasSupport(player.getHeldItemOffhand(), player.getAdjustedHorizontalFacing())) {
 				if (sync == 0) {
-					if(data == null)
+					if (data == null)
 						data = new EnergyData();
-					
-					data.setEnergy(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES, CJCoreConfig.DEFAULT_ENERGY_UNIT,
-							EnergyUtils.getEnergyStored(player.getHeldItemOffhand(),
+
+					data.setEnergy(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
+							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getEnergyStored(player.getHeldItemOffhand(),
 									player.getAdjustedHorizontalFacing())));
-					data.setCapacity(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES, CJCoreConfig.DEFAULT_ENERGY_UNIT,
-							EnergyUtils.getCapacity(player.getHeldItemOffhand(), player.getAdjustedHorizontalFacing())));
+					data.setCapacity(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
+							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getCapacity(player.getHeldItemOffhand(),
+									player.getAdjustedHorizontalFacing())));
 				}
 				targetBlock = false;
 			} else {
@@ -134,13 +141,14 @@ public class ItemMultimeter extends Item {
 				RayTraceResult target = Minecraft.getMinecraft().objectMouseOver;
 				if (target.typeOfHit != RayTraceResult.Type.BLOCK)
 					return;
-				if (blacklistBlocks.contains(Minecraft.getMinecraft().world.getBlockState(target.getBlockPos()).getBlock().getRegistryName()))
+				if (blacklistBlocks.contains(Minecraft.getMinecraft().world.getBlockState(target.getBlockPos())
+						.getBlock().getRegistryName()))
 					return;
 				TileEntity te = Minecraft.getMinecraft().world.getTileEntity(target.getBlockPos());
 				if (te == null)
 					return;
 				if (!EnergyUtils.hasSupport(te, target.sideHit)) {
-					if(data == null)
+					if (data == null)
 						data = new EnergyData();
 					data.setEnergy(0).setEnergy(0);
 					return;
@@ -148,7 +156,7 @@ public class ItemMultimeter extends Item {
 				if (sync == 0)
 					EnergyUtils.syncEnergyData(target.getBlockPos(), target.sideHit, CJCore.MODID);
 				data = EnergyUtils.getCachedEnergyData(CJCore.MODID);
-				if(data != null)
+				if (data != null)
 					data.convertData(CJCoreConfig.DEFAULT_ENERGY_UNIT);
 			}
 			sync++;
@@ -157,7 +165,8 @@ public class ItemMultimeter extends Item {
 			if (event.getType() == ElementType.ALL) {
 				overlay.updateEnergyBar(data);
 				overlay.xPosition = CJCoreConfig.MULTIMETER_OFFSET_X;
-				overlay.yPosition = event.getResolution().getScaledHeight() - overlay.height - CJCoreConfig.MULTIMETER_OFFSET_Y;
+				overlay.yPosition = event.getResolution().getScaledHeight() - overlay.height
+						- CJCoreConfig.MULTIMETER_OFFSET_Y;
 				overlay.drawButton(Minecraft.getMinecraft(), 0, 0);
 			}
 		}

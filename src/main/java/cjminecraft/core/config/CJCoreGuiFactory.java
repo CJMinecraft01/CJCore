@@ -48,7 +48,7 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 	}
 
 	/**
-	 * Depricated
+	 * Deprecated
 	 */
 	@Override
 	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {

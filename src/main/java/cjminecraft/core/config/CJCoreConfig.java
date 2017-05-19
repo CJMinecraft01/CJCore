@@ -102,28 +102,25 @@ public class CJCoreConfig {
 			config.load();
 
 		List<String> energyUnits = new ArrayList<String>();
-		EnergyUnits.getEnergyUnits().forEach(unit -> {
-			if(unit.getUnlocalizedName() != "energy_base")
-				energyUnits.add(unit.getName());
-		});
+		EnergyUnits.getEnergyUnits().forEach(unit -> {energyUnits.add(unit.getName());});
 		Property propertyDefaultEnergyUnit = config.get(CATEGORY_NAME_ENERGY, "DefaultEnergyUnit",
 				EnergyUnits.FORGE_ENERGY.getUnlocalizedName());
 		propertyDefaultEnergyUnit.setValidValues(energyUnits.toArray(new String[0]));
-		propertyDefaultEnergyUnit.setComment(I18n.format("gui.config.energy.default_energy_unit.comment"));
+		propertyDefaultEnergyUnit.setComment("The energy unit that you will normally see");
 		propertyDefaultEnergyUnit.setLanguageKey("gui.config.energy.default_energy_unit.name");
 		
 		Property propertyMultimeterOffsetX = config.get(CATEGORY_NAME_ENERGY, "MultimeterOffsetX", 6);
 		propertyMultimeterOffsetX.setMinValue(0);
-		propertyMultimeterOffsetX.setComment(I18n.format("gui.config.energy.multimeter_offset_x.comment"));
+		propertyMultimeterOffsetX.setComment("The offset from the left hand side when using the Multimeter");
 		propertyMultimeterOffsetX.setLanguageKey("gui.config.energy.multimeter_offset_x.name");
 		
 		Property propertyMultimeterOffsetY = config.get(CATEGORY_NAME_ENERGY, "MultimeterOffsetY", 7);
 		propertyMultimeterOffsetY.setMinValue(0);
-		propertyMultimeterOffsetY.setComment(I18n.format("gui.config.energy.multimeter_offset_y.comment"));
+		propertyMultimeterOffsetY.setComment("The offset from the bottom when using the Multimeter");
 		propertyMultimeterOffsetY.setLanguageKey("gui.config.energy.multimeter_offset_y.name");
 		
 		Property propertyMultimeterShowCapacity = config.get(CATEGORY_NAME_ENERGY, "MultimeterShowCapacity", false);
-		propertyMultimeterShowCapacity.setComment(I18n.format("gui.config.energy.multimeter_show_capacity.comment"));
+		propertyMultimeterShowCapacity.setComment("Whether or not to show the capacity when using the multimeter");
 		propertyMultimeterShowCapacity.setLanguageKey("gui.config.energy.multimeter_show_capacity.name");
 
 		List<String> propertyOrderEnergy = new ArrayList<String>();

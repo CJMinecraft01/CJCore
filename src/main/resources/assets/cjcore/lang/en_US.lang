@@ -40,3 +40,9 @@ item.multimeter.name=Multimeter
 update.ready=There is an update for %s available!
 update.version=Current Version: %s, newest Version: %s
 update.download=Click To Download
+
+command.tileentity.usage=/tileenitty <x> <y> <z> energy get [side] or /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side]
+command.tileentity.nosupport=There is no support for the tile entity at position %s %s %s
+command.tileentity.notake=This tile entity does not allow energy to be taken
+command.tileentity.nogive=This tile entity does not allow energy to be given
+command.tileentity.noset=This tile entity does not allow energy to be set

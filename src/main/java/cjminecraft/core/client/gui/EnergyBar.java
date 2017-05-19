@@ -27,6 +27,9 @@ public class EnergyBar extends GuiButton {
 	 */
 	public ResourceLocation texture;
 
+	private int textureX;
+	private int textureY;
+
 	/**
 	 * Store the energy and capacity in the {@link EnergyBar} - used for
 	 * rendering
@@ -53,34 +56,8 @@ public class EnergyBar extends GuiButton {
 		super(buttonId, x, y, "");
 		this.width = 18;
 		this.height = 85;
-		this.energy = energy;
-		this.capacity = capacity;
-		this.texture = new ResourceLocation(CJCore.MODID, "textures/gui/energy_bar.png");
-	}
-
-	/**
-	 * Initialize the {@link EnergyBar}
-	 * 
-	 * @param buttonId
-	 *            The id of the button
-	 * @param x
-	 *            The x position of the {@link EnergyBar}
-	 * @param y
-	 *            The y position of the {@link EnergyBar}
-	 * @param width
-	 *            The width of the {@link EnergyBar}
-	 * @param height
-	 *            The height of the {@link EnergyBar}
-	 * @param energy
-	 *            The amount of energy in the {@link EnergyBar} (can be 0)
-	 * @param capacity
-	 *            The maximum amount of energy in the {@link EnergyBar} (can be
-	 *            0)
-	 */
-	public EnergyBar(int buttonId, int x, int y, int width, int height, long energy, long capacity) {
-		super(buttonId, x, y, "");
-		this.width = width;
-		this.height = height;
+		this.textureX = 0;
+		this.textureY = 0;
 		this.energy = energy;
 		this.capacity = capacity;
 		this.texture = new ResourceLocation(CJCore.MODID, "textures/gui/energy_bar.png");
@@ -106,15 +83,21 @@ public class EnergyBar extends GuiButton {
 	 *            The width of the {@link EnergyBar} in the texture
 	 * @param height
 	 *            The height of the {@link EnergyBar} in the texture
+	 * @param textureX
+	 *            The x position of the {@link EnergyBar} in the texture
+	 * @param textureY
+	 *            The y position of the {@link EnergyBar} in the texture
 	 */
 	public EnergyBar(int buttonId, int x, int y, long energy, long capacity, ResourceLocation texture, int width,
-			int height) {
+			int height, int textureX, int textureY) {
 		super(buttonId, x, y, "");
 		this.energy = energy;
 		this.capacity = capacity;
 		this.texture = texture;
 		this.width = width;
 		this.height = height;
+		this.textureX = textureX;
+		this.textureY = textureY;
 	}
 
 	/**
@@ -126,16 +109,16 @@ public class EnergyBar extends GuiButton {
 				&& mouseY < this.yPosition + this.height;
 		mc.getTextureManager().bindTexture(texture);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		this.drawTexturedModalRect(xPosition, yPosition, 0, 0, width, height);
+		this.drawTexturedModalRect(xPosition, yPosition, textureX, textureY, width, height);
 
 		mc.getTextureManager().bindTexture(texture);
 		int[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
 		GlStateManager.color(colour[0], colour[1], colour[2]);
-		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, 1, 1, width - 2, height - 2);
+		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1, textureY + 1, width - 2, height - 2);
 
 		mc.getTextureManager().bindTexture(texture);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, 1, 1, width - 1, height - getEnergyBarHeight() - 1);
+		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1, textureY + 1, width - 1, height - getEnergyBarHeight() - 1);
 	}
 
 	/**

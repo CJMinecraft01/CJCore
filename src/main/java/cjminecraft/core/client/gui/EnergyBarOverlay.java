@@ -36,7 +36,7 @@ public class EnergyBarOverlay extends EnergyBar {
 	public EnergyBarOverlay(int buttonId, int x, int y, long energy, long capacity) {
 		super(buttonId, x, y, energy, capacity);
 	}
-	
+
 	/**
 	 * Initialize the {@link EnergyBar}
 	 * 
@@ -46,44 +46,25 @@ public class EnergyBarOverlay extends EnergyBar {
 	 *            The x position of the {@link EnergyBar}
 	 * @param y
 	 *            The y position of the {@link EnergyBar}
-	 * @param width
-	 *            The width of the {@link EnergyBar}
-	 * @param height
-	 *            The height of the {@link EnergyBar}
 	 * @param energy
 	 *            The amount of energy in the {@link EnergyBar} (can be 0)
 	 * @param capacity
 	 *            The maximum amount of energy in the {@link EnergyBar} (can be
 	 *            0)
-	 */
-	public EnergyBarOverlay(int buttonId, int x, int y, int width, int height, long energy, long capacity) {
-		super(buttonId, x, y, width, height, energy, capacity);
-	}
-
-	/**
-	 * Initialize the (@link EnergyBar)
-	 * 
-	 * @param buttonId
-	 *            The id of the button
-	 * @param x
-	 *            The x position of the (@link EnergyBar)
-	 * @param y
-	 *            The y position of the (@link EnergyBar)
-	 * @param energy
-	 *            The amount of energy in the (@link EnergyBar) (can be 0)
-	 * @param capacity
-	 *            The maximum amount of energy in the (@link EnergyBar) (can be
-	 *            0)
 	 * @param texture
-	 *            The texture for the (@link EnergyBar)
+	 *            The texture for the {@link EnergyBar}
 	 * @param width
-	 *            The width of the (@link EnergyBar) in the texture
+	 *            The width of the {@link EnergyBar} in the texture
 	 * @param height
-	 *            The height of the (@link EnergyBar) in the texture
+	 *            The height of the {@link EnergyBar} in the texture
+	 * @param textureX
+	 *            The x position of the {@link EnergyBar} in the texture
+	 * @param textureY
+	 *            The y position of the {@link EnergyBar} in the texture
 	 */
 	public EnergyBarOverlay(int buttonId, int x, int y, long energy, long capacity, ResourceLocation texture, int width,
-			int height) {
-		super(buttonId, x, y, energy, capacity, texture, width, height);
+			int height, int textureX, int textureY) {
+		super(buttonId, x, y, energy, capacity, texture, width, height, textureX, textureY);
 	}
 
 	/**

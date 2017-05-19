@@ -4,6 +4,7 @@ import buildcraft.api.mj.IMjPassiveProvider;
 import buildcraft.api.mj.IMjReadable;
 import buildcraft.api.mj.IMjReceiver;
 import buildcraft.api.mj.MjAPI;
+import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import net.minecraft.item.ItemStack;
