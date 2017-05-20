@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.1.0",
+	"version": "0.0.1.1",
 	"changelog": [
-		"+ Added Energy Support", "+ Added Version Checker"
+		"=Fixed Server Bugs","+Added tile entity command to edit energy inside of a tile entity","=Fixed Lack of Tesla and Buildcraft crash"
 	],
-	"download": ""
+	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
