@@ -1,7 +1,7 @@
 {
 	"name": "CJCore",
 	"version": "0.0.1.2",
-	"changelog":
+	"changelog": [
 		"=Improved /tileentity command", "=Fixed not saving config error"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
