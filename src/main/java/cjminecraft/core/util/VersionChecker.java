@@ -111,7 +111,6 @@ public class VersionChecker {
 			for (String log : changeLog) {
 				player.sendMessage(new TextComponentString(TextFormatting.AQUA + log));
 			}
-
 		}
 	}
 

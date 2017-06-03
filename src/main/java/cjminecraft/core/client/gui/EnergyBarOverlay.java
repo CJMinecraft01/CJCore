@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
  *
  */
 public class EnergyBarOverlay extends EnergyBar {
-
+	
 	/**
 	 * Initialize the (@link EnergyBar)
 	 * 
@@ -80,7 +80,7 @@ public class EnergyBarOverlay extends EnergyBar {
 				GlStateManager.DestFactor.ZERO);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		mc.getTextureManager().bindTexture(texture);
-		this.drawTexturedModalRect(xPosition - 4, yPosition - 4, 0, height, width + 8, height + 8);
+		this.drawTexturedModalRect(xPosition - 4, yPosition - 4, width, 0, width + 8, height + 8);
 		GlStateManager.disableBlend();
 		// Shows the energy inside of the {@link TileEntity}
 		mc.fontRendererObj.drawStringWithShadow(NumberFormat.getNumberInstance().format(energy) + " "

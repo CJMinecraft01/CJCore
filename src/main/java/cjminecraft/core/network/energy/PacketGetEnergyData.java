@@ -1,6 +1,7 @@
 package cjminecraft.core.network.energy;
 
 import cjminecraft.core.CJCore;
+import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.util.NetworkUtils;
@@ -19,6 +20,7 @@ public class PacketGetEnergyData implements IMessage {
 
 	private boolean messageValid;
 	
+	private EnergyUnit unit;
 	private BlockPos pos;
 	private EnumFacing side;
 	
@@ -32,7 +34,8 @@ public class PacketGetEnergyData implements IMessage {
 		this.messageValid = false;
 	}
 	
-	public PacketGetEnergyData(BlockPos pos, EnumFacing side, boolean updateFields, String... args) {
+	public PacketGetEnergyData(EnergyUnit unit, BlockPos pos, EnumFacing side, boolean updateFields, String... args) {
+		this.unit = unit;
 		this.pos = pos;
 		this.side = side;
 		if(updateFields) {
@@ -50,6 +53,7 @@ public class PacketGetEnergyData implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		try {
+			this.unit = NetworkUtils.readEnergyUnit(buf);
 			this.pos = NetworkUtils.readBlockPos(buf);
 			this.side = NetworkUtils.readEnumFacing(buf);
 			this.className = ByteBufUtils.readUTF8String(buf);
@@ -70,6 +74,7 @@ public class PacketGetEnergyData implements IMessage {
 	public void toBytes(ByteBuf buf) {
 		if(!this.messageValid)
 			return;
+		NetworkUtils.writeEnergyUnit(buf, this.unit);
 		NetworkUtils.writeBlockPos(buf, this.pos);
 		NetworkUtils.writeEnumFacing(buf, this.side);
 		ByteBufUtils.writeUTF8String(buf, this.className);
@@ -97,8 +102,8 @@ public class PacketGetEnergyData implements IMessage {
 				return;
 			if (!EnergyUtils.hasSupport(te, message.side))
 				return;
-			long energy = EnergyUtils.getEnergyStored(te, message.side);
-			long capacity = EnergyUtils.getCapacity(te, message.side);
+			long energy = EnergyUtils.getEnergyStored(te, message.side, message.unit);
+			long capacity = EnergyUtils.getCapacity(te, message.side, message.unit);
 			if(message.updateFields)
 				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergyData(energy, capacity, true, message.className, message.energyFieldName, message.capacityFieldName), ctx.getServerHandler().playerEntity);
 			else

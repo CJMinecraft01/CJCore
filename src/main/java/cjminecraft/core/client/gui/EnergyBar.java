@@ -22,6 +22,10 @@ import net.minecraft.util.ResourceLocation;
  */
 public class EnergyBar extends GuiButton {
 
+	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(CJCore.MODID, "textures/gui/energy_bar.png");
+	public static final int DEFAULT_WIDTH = 18;
+	public static final int DEFAULT_HEIGHT = 85;
+	
 	/**
 	 * The default texture of the {@link EnergyBar}
 	 */
@@ -54,13 +58,13 @@ public class EnergyBar extends GuiButton {
 	 */
 	public EnergyBar(int buttonId, int x, int y, long energy, long capacity) {
 		super(buttonId, x, y, "");
-		this.width = 18;
-		this.height = 85;
+		this.width = DEFAULT_WIDTH;
+		this.height = DEFAULT_HEIGHT;
 		this.textureX = 0;
 		this.textureY = 0;
 		this.energy = energy;
 		this.capacity = capacity;
-		this.texture = new ResourceLocation(CJCore.MODID, "textures/gui/energy_bar.png");
+		this.texture = DEFAULT_TEXTURE;
 	}
 
 	/**

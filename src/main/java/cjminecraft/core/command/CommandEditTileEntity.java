@@ -1,5 +1,6 @@
 package cjminecraft.core.command;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,11 +77,13 @@ public class CommandEditTileEntity extends CommandBase {
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args,
 			BlockPos targetPos) {
 		return args.length >= 0 && args.length < 4 ? getTabCompletionCoordinate(args, 0, targetPos)
-				: args.length == 4 ? getListOfStringsMatchingLastWord(args, new String[] { "energy" })
-						: args.length == 5
+				: args.length > 3 && args.length < 5 ? getListOfStringsMatchingLastWord(args, new String[] { "energy" })
+						: args.length > 4 && args.length < 6
 								? getListOfStringsMatchingLastWord(args, new String[] { "set", "get", "give", "take" })
-								: args.length == 7 && !args[6].isEmpty() ? getListOfStringsMatchingLastWord(args, faces)
-										: args.length == 7 ? getListOfStringsMatchingLastWord(args, energyUnits)
+								: args.length > 7 && args.length < 9 && !args[6].isEmpty()
+										? getListOfStringsMatchingLastWord(args, faces)
+										: args.length > 6 && args.length < 8
+												? getListOfStringsMatchingLastWord(args, energyUnits)
 												: Collections.<String>emptyList();
 	}
 
@@ -132,15 +135,16 @@ public class CommandEditTileEntity extends CommandBase {
 							break;
 						}
 				}
-				if (EnergyUtils.setEnergy(te, EnergyUtils.convertEnergy(unit, EnergyUnits.MINECRAFT_JOULES, energy),
-						side) == 0)
+				if (EnergyUtils.setEnergy(te, energy, unit, side) == 0)
 					throw new CommandException("command.tileentity.noset");
 			}
 			if (args[4].equalsIgnoreCase("get")) {
-				long energy = EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES, CJCoreConfig.DEFAULT_ENERGY_UNIT,
-						EnergyUtils.getEnergyStored(te, side));
-				sender.sendMessage(
-						new TextComponentString(energy + " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()));
+				long energy = EnergyUtils.getEnergyStored(te, side, CJCoreConfig.DEFAULT_ENERGY_UNIT);
+				long capacity = EnergyUtils.getCapacity(te, side, CJCoreConfig.DEFAULT_ENERGY_UNIT);
+				sender.sendMessage(new TextComponentString(NumberFormat.getNumberInstance().format(energy) + " "
+						+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() + " / "
+						+ NumberFormat.getNumberInstance().format(capacity) + " "
+						+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()));
 			}
 			if (args[4].equalsIgnoreCase("give")) {
 				if (args.length < 7)
@@ -155,8 +159,7 @@ public class CommandEditTileEntity extends CommandBase {
 							break;
 						}
 				}
-				if (EnergyUtils.giveEnergy(te, EnergyUtils.convertEnergy(unit, EnergyUnits.MINECRAFT_JOULES, energy),
-						false, side) == 0)
+				if (EnergyUtils.giveEnergy(te, energy, unit, false, side) == 0)
 					throw new CommandException("command.tileentity.nogive");
 			}
 			if (args[4].equalsIgnoreCase("take")) {
@@ -172,8 +175,7 @@ public class CommandEditTileEntity extends CommandBase {
 							break;
 						}
 				}
-				if (EnergyUtils.takeEnergy(te, EnergyUtils.convertEnergy(unit, EnergyUnits.MINECRAFT_JOULES, energy),
-						false, side) == 0)
+				if (EnergyUtils.takeEnergy(te, energy, unit, false, side) == 0)
 					throw new CommandException("command.tileentity.notake");
 			}
 		}

@@ -10,7 +10,6 @@ import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
  */
 public class EnergyData {
 
-	private EnergyUnit unit;
 	private long energy;
 	private long capacity;
 
@@ -18,22 +17,8 @@ public class EnergyData {
 	 * Initialize all values to the default
 	 */
 	public EnergyData() {
-		this.unit = EnergyUnits.MINECRAFT_JOULES;
 		this.energy = 0;
 		this.capacity = 0;
-	}
-
-	/**
-	 * Convert the energy and capacity to the new {@link EnergyUnit}
-	 * 
-	 * @param to
-	 *            The {@link EnergyUnit} to convert into
-	 * @return This
-	 */
-	public EnergyData convertData(EnergyUnit to) {
-		this.energy = EnergyUtils.convertEnergy(this.unit, to, this.energy);
-		this.capacity = EnergyUtils.convertEnergy(this.unit, to, this.capacity);
-		return this;
 	}
 
 	/**

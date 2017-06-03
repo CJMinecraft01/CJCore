@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyData;
+import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.util.NetworkUtils;
 import cjminecraft.core.energy.EnergyUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -28,7 +30,7 @@ public class PacketReturnCapacity implements IMessage {
 		this.messageValid = false;
 	}
 
-	public PacketReturnCapacity(long capacity, boolean updateFields, String... args) {
+	public PacketReturnCapacity(EnergyUnit unit, long capacity, boolean updateFields, String... args) {
 		this.capacity = capacity;
 		if (updateFields) {
 			this.updateFields = true;

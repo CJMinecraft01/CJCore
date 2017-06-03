@@ -35,10 +35,10 @@ public class CJCoreConfig {
 	 * The default {@link EnergyUnit}
 	 */
 	public static EnergyUnit DEFAULT_ENERGY_UNIT;
-	
+
 	public static int MULTIMETER_OFFSET_X;
 	public static int MULTIMETER_OFFSET_Y;
-	
+
 	public static boolean MULTIMETER_SHOW_CAPACITY;
 
 	private static Configuration config = null;
@@ -102,23 +102,25 @@ public class CJCoreConfig {
 			config.load();
 
 		List<String> energyUnits = new ArrayList<String>();
-		EnergyUnits.getEnergyUnits().forEach(unit -> {energyUnits.add(unit.getName());});
+		EnergyUnits.getEnergyUnits().forEach(unit -> {
+			energyUnits.add(unit.getUnlocalizedName());
+		});
 		Property propertyDefaultEnergyUnit = config.get(CATEGORY_NAME_ENERGY, "DefaultEnergyUnit",
 				EnergyUnits.FORGE_ENERGY.getUnlocalizedName());
-		propertyDefaultEnergyUnit.setValidValues(energyUnits.toArray(new String[0]));
+		propertyDefaultEnergyUnit.setValidValues(energyUnits.toArray(new String[] {}));
 		propertyDefaultEnergyUnit.setComment("The energy unit that you will normally see");
 		propertyDefaultEnergyUnit.setLanguageKey("gui.config.energy.default_energy_unit.name");
-		
+
 		Property propertyMultimeterOffsetX = config.get(CATEGORY_NAME_ENERGY, "MultimeterOffsetX", 6);
 		propertyMultimeterOffsetX.setMinValue(0);
 		propertyMultimeterOffsetX.setComment("The offset from the left hand side when using the Multimeter");
 		propertyMultimeterOffsetX.setLanguageKey("gui.config.energy.multimeter_offset_x.name");
-		
+
 		Property propertyMultimeterOffsetY = config.get(CATEGORY_NAME_ENERGY, "MultimeterOffsetY", 7);
 		propertyMultimeterOffsetY.setMinValue(0);
 		propertyMultimeterOffsetY.setComment("The offset from the bottom when using the Multimeter");
 		propertyMultimeterOffsetY.setLanguageKey("gui.config.energy.multimeter_offset_y.name");
-		
+
 		Property propertyMultimeterShowCapacity = config.get(CATEGORY_NAME_ENERGY, "MultimeterShowCapacity", false);
 		propertyMultimeterShowCapacity.setComment("Whether or not to show the capacity when using the multimeter");
 		propertyMultimeterShowCapacity.setLanguageKey("gui.config.energy.multimeter_show_capacity.name");
@@ -129,19 +131,14 @@ public class CJCoreConfig {
 		propertyOrderEnergy.add(propertyMultimeterOffsetY.getName());
 		propertyOrderEnergy.add(propertyMultimeterShowCapacity.getName());
 		config.setCategoryPropertyOrder(CATEGORY_NAME_ENERGY, propertyOrderEnergy);
-		
+
 		if (readFieldsFromConfig) {
-			for (EnergyUnit unit : EnergyUnits.getEnergyUnits())
-				if (unit.getUnlocalizedName().equalsIgnoreCase(propertyDefaultEnergyUnit.getString()) || unit.getName().equalsIgnoreCase(propertyDefaultEnergyUnit.getString()))
-					DEFAULT_ENERGY_UNIT = unit;
-			if (DEFAULT_ENERGY_UNIT == null) {
-				DEFAULT_ENERGY_UNIT = EnergyUnits.FORGE_ENERGY;
-			}
+			DEFAULT_ENERGY_UNIT = EnergyUnits.byUnlocalizedName(propertyDefaultEnergyUnit.getString());
 			MULTIMETER_OFFSET_X = propertyMultimeterOffsetX.getInt();
 			MULTIMETER_OFFSET_Y = propertyMultimeterOffsetY.getInt();
 			MULTIMETER_SHOW_CAPACITY = propertyMultimeterShowCapacity.getBoolean();
 		}
-		
+
 		propertyDefaultEnergyUnit.set(DEFAULT_ENERGY_UNIT.getUnlocalizedName());
 		propertyMultimeterOffsetX.set(MULTIMETER_OFFSET_X);
 		propertyMultimeterOffsetY.set(MULTIMETER_OFFSET_Y);

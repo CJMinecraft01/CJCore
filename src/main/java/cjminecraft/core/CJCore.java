@@ -42,7 +42,7 @@ public class CJCore {
 	
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
-	public static final String VERSION = "0.0.1.1";
+	public static final String VERSION = "0.0.1.4";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.11,1.11.2]";
 	public static final String ACCEPTED_MC_VERSION = "1.11.2";
 	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";
@@ -66,15 +66,16 @@ public class CJCore {
 	public void preInit(FMLPreInitializationEvent event) {
 		CJCoreItems.init();
 		CJCoreItems.register();
-		proxy.preInit();
+		EnergyUnits.preInit();
 		EnergyUtils.preInit();
 		CJCoreConfig.preInit();
+		proxy.preInit();
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		proxy.init();
 		CraftingHandler.registerCraftingRecipes();
+		proxy.init();
 	}
 	
 	@EventHandler

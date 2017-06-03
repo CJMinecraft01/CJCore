@@ -154,10 +154,8 @@ public class ItemMultimeter extends Item {
 					return;
 				}
 				if (sync == 0)
-					EnergyUtils.syncEnergyData(target.getBlockPos(), target.sideHit, CJCore.MODID);
+					EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, target.getBlockPos(), target.sideHit, CJCore.MODID);
 				data = EnergyUtils.getCachedEnergyData(CJCore.MODID);
-				if (data != null)
-					data.convertData(CJCoreConfig.DEFAULT_ENERGY_UNIT);
 			}
 			sync++;
 			sync %= 10;

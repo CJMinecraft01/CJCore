@@ -1,5 +1,7 @@
 package cjminecraft.core.util;
 
+import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -59,6 +61,29 @@ public class NetworkUtils {
 	 */
 	public static EnumFacing readEnumFacing(ByteBuf buf) {
 		return EnumFacing.byName(ByteBufUtils.readUTF8String(buf));
+	}
+
+	/**
+	 * Writes the {@link EnergyUnit} to the {@link ByteBuf}
+	 * 
+	 * @param buf
+	 *            The {@link ByteBuf} to write to
+	 * @param unit
+	 *            The {@link EnergyUnit} to write
+	 */
+	public static void writeEnergyUnit(ByteBuf buf, EnergyUnit unit) {
+		ByteBufUtils.writeUTF8String(buf, unit.getUnlocalizedName());
+	}
+
+	/**
+	 * Reads a {@link EnergyUnit} from a {@link ByteBuf}
+	 * 
+	 * @param buf
+	 *            The {@link ByteBuf} to read from
+	 * @return The {@link EnergyUnit} from the {@link ByteBuf}
+	 */
+	public static EnergyUnit readEnergyUnit(ByteBuf buf) {
+		return EnergyUnits.byUnlocalizedName(ByteBufUtils.readUTF8String(buf));
 	}
 
 }
