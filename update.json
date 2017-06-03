@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.1.3",
+	"version": "0.0.1.4",
 	"changelog": [
-		"=Fixed update checker bug"
+		"Fixed Energy Units localization", "Improved accuracy of energy conversion"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
