@@ -30,7 +30,7 @@ public class PacketReturnCapacity implements IMessage {
 		this.messageValid = false;
 	}
 
-	public PacketReturnCapacity(EnergyUnit unit, long capacity, boolean updateFields, String... args) {
+	public PacketReturnCapacity(long capacity, boolean updateFields, String... args) {
 		this.capacity = capacity;
 		if (updateFields) {
 			this.updateFields = true;

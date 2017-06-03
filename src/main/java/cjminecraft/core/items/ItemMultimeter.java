@@ -55,7 +55,8 @@ public class ItemMultimeter extends Item {
 	public static class MultimeterOverlay {
 
 		/**
-		 * The blacklist of blocks which should not display the {@link EnergyBarOverlay}
+		 * The blacklist of blocks which should not display the
+		 * {@link EnergyBarOverlay}
 		 */
 		public static List<ResourceLocation> blacklistBlocks = new ArrayList<ResourceLocation>();
 
@@ -113,25 +114,20 @@ public class ItemMultimeter extends Item {
 				if (sync == 0) {
 					if (data == null)
 						data = new EnergyData();
-					data.setEnergy(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
-							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getEnergyStored(player.getHeldItemMainhand(),
-									player.getAdjustedHorizontalFacing())));
-					data.setCapacity(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
-							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getCapacity(player.getHeldItemMainhand(),
-									player.getAdjustedHorizontalFacing())));
+					data.setEnergy(EnergyUtils.getEnergyStored(player.getHeldItemMainhand(),
+							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
+					data.setCapacity(EnergyUtils.getCapacity(player.getHeldItemMainhand(),
+							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
 				}
 				targetBlock = false;
 			} else if (EnergyUtils.hasSupport(player.getHeldItemOffhand(), player.getAdjustedHorizontalFacing())) {
 				if (sync == 0) {
 					if (data == null)
 						data = new EnergyData();
-
-					data.setEnergy(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
-							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getEnergyStored(player.getHeldItemOffhand(),
-									player.getAdjustedHorizontalFacing())));
-					data.setCapacity(EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES,
-							CJCoreConfig.DEFAULT_ENERGY_UNIT, EnergyUtils.getCapacity(player.getHeldItemOffhand(),
-									player.getAdjustedHorizontalFacing())));
+					data.setEnergy(EnergyUtils.getEnergyStored(player.getHeldItemOffhand(),
+							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
+					data.setCapacity(EnergyUtils.getCapacity(player.getHeldItemOffhand(),
+							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
 				}
 				targetBlock = false;
 			} else {
@@ -154,7 +150,8 @@ public class ItemMultimeter extends Item {
 					return;
 				}
 				if (sync == 0)
-					EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, target.getBlockPos(), target.sideHit, CJCore.MODID);
+					EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, target.getBlockPos(), target.sideHit,
+							CJCore.MODID);
 				data = EnergyUtils.getCachedEnergyData(CJCore.MODID);
 			}
 			sync++;
