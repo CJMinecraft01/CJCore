@@ -1,14 +1,17 @@
 package cjminecraft.core.energy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.ReadableColor;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.EnergyBar;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -94,14 +97,19 @@ public class EnergyUnits {
 			return unlocalizedName;
 		}
 
-		@SideOnly(Side.CLIENT)
 		public String getName() {
-			return I18n.format("energy.unit." + unlocalizedName + ".name");
+			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
+				return I18n.format("energy.unit." + unlocalizedName + ".name");
+			return WordUtils.capitalize(unlocalizedName.replace('_', ' '));
 		}
 
-		@SideOnly(Side.CLIENT)
 		public String getSuffix() {
-			return I18n.format("energy.unit." + unlocalizedName + ".suffix");
+			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
+				return I18n.format("energy.unit." + unlocalizedName + ".suffix");
+			String initials = "";
+			for(String word : unlocalizedName.split("_"))
+				initials += word.charAt(0);
+			return initials.toUpperCase();
 		}
 
 		public int getMultiplier() {
@@ -112,6 +120,10 @@ public class EnergyUnits {
 			return colour;
 		}
 
+		public void setColour(ReadableColor colour) {
+			setColour(colour.getRed(), colour.getGreen(), colour.getBlue());
+		}
+		
 		public void setColour(int r, int g, int b) {
 			this.colour = new int[] { r, g, b };
 		}
@@ -227,6 +239,7 @@ public class EnergyUnits {
 	public static EnergyUnit FORGE_ENERGY;
 	public static EnergyUnit JOULES;
 	public static EnergyUnit MINECRAFT_JOULES;
+	public static EnergyUnit ENERGY_UNIT; //The IC2 Unit
 
 	/**
 	 * Should not be called outside of {@link CJCore}
@@ -237,6 +250,7 @@ public class EnergyUnits {
 		FORGE_ENERGY = createEnergyUnit("forge_energy", 10, Color.ORANGE);
 		JOULES = createEnergyUnit("joules", 4, Color.GREEN);
 		MINECRAFT_JOULES = createEnergyUnit("minecraft_joules", 1, Color.YELLOW);
+		ENERGY_UNIT = createEnergyUnit("energy_unit", 6, Color.BLUE);
 	}
 
 }

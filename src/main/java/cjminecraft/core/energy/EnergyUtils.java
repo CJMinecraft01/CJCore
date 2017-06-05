@@ -17,6 +17,7 @@ import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
 import cjminecraft.core.energy.support.IEnergySupport;
+import cjminecraft.core.energy.support.IndustrialCraftSupport;
 import cjminecraft.core.energy.support.TeslaSupport;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.energy.PacketGetCapacity;
@@ -74,6 +75,12 @@ public class EnergyUtils {
 			addEnergyHolderSupport(new BuildCraftSupport.BuildCraftHolderSupport());
 			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
 			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
+		}
+		if(Loader.isModLoaded("ic2")) {
+			CJCore.logger.info("Adding Industrial Craft 2 Support!");
+			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
+			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());
+			addEnergyProducerSupport(new IndustrialCraftSupport.IndustrialCraftSourceSupport());
 		}
 	}
 

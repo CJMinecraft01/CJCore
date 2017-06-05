@@ -17,6 +17,8 @@ energy.unit.joules.name=Joules
 energy.unit.joules.suffix=J
 energy.unit.minecraft_joules.name=Minecraft Joules
 energy.unit.minecraft_joules.suffix=MJ
+energy.unit.energy_unit.name=Energy Unit
+energy.unit.energy_unit.suffix=EU
 
 energy.container.energy=Energy
 energy.container.capacity=Capacity

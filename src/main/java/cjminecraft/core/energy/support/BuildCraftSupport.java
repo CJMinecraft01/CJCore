@@ -28,15 +28,12 @@ public class BuildCraftSupport {
 
 		@Override
 		public long getEnergyStored(IMjReadable container, EnumFacing from) {
-			return container.getStored() / 1000000;
+			return container.getStored() / MjAPI.ONE_MINECRAFT_JOULE;
 		}
 
 		@Override
 		public long getCapacity(IMjReadable container, EnumFacing from) {
-			return container.getCapacity() / 1000000; // Convert from
-															// micro
-			// joules to Minecraft
-			// Joules
+			return container.getCapacity() / MjAPI.ONE_MINECRAFT_JOULE; // Convert from micro joules to Minecraft Joules
 		}
 
 		@Override
@@ -105,7 +102,7 @@ public class BuildCraftSupport {
 
 		@Override
 		public long giveEnergy(IMjReceiver container, long energy, boolean simulate, EnumFacing from) {
-			return container.receivePower(energy * 1000000, simulate) / 1000000;
+			return Math.abs(energy - container.receivePower(energy * MjAPI.ONE_MINECRAFT_JOULE, simulate) / MjAPI.ONE_MINECRAFT_JOULE);
 		}
 
 		@Override
@@ -174,7 +171,7 @@ public class BuildCraftSupport {
 
 		@Override
 		public long takeEnergy(IMjPassiveProvider container, long energy, boolean simulate, EnumFacing from) {
-			return container.extractPower(energy * 1000000, energy, simulate) / 1000000;
+			return Math.abs(energy - container.extractPower(energy * MjAPI.ONE_MINECRAFT_JOULE, energy, simulate) / MjAPI.ONE_MINECRAFT_JOULE);
 		}
 
 		@Override

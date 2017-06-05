@@ -3,6 +3,8 @@ package cjminecraft.core.items;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.util.Color;
+
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.EnergyBarOverlay;
 import cjminecraft.core.config.CJCoreConfig;
