@@ -42,7 +42,7 @@ public class CJCore {
 	
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
-	public static final String VERSION = "0.0.1.4";
+	public static final String VERSION = "0.0.1.5";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.11,1.11.2]";
 	public static final String ACCEPTED_MC_VERSION = "1.11.2";
 	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";

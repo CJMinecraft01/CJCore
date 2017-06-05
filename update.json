@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.1.4",
+	"version": "0.0.1.5",
 	"changelog": [
-		"Fixed Energy Units localization", "Improved accuracy of energy conversion"
+		"=Fixed Buildcraft Support Bugs", "=Fixed Energy Unit Localisation (finally)", "+Added Industrial Craft Support"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
