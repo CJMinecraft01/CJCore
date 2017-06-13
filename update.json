@@ -1,5 +1,6 @@
 {
 	"name": "CJCore",
+	"modid": "cjcore",
 	"version": "0.0.1.5",
 	"changelog": [
 		"=Fixed Buildcraft Support Bugs", "=Fixed Energy Unit Localisation (finally)", "+Added Industrial Craft Support"
