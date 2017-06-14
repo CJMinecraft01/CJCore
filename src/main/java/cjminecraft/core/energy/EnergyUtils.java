@@ -76,7 +76,7 @@ public class EnergyUtils {
 			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
 			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
 		}
-		if(Loader.isModLoaded("ic2")) {
+		if (Loader.isModLoaded("ic2")) {
 			CJCore.logger.info("Adding Industrial Craft 2 Support!");
 			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
 			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());
@@ -360,7 +360,24 @@ public class EnergyUtils {
 	 * @return The converted energy
 	 */
 	public static long convertEnergy(EnergyUnit from, EnergyUnit to, long energy) {
-		return (long)((double)energy / (double)from.getMultiplier() * (double)to.getMultiplier());
+		return (long) ((double) energy / (double) from.getMultiplier() * (double) to.getMultiplier());
+	}
+
+	/**
+	 * Displays any energy in a short and simplified {@link String}
+	 * 
+	 * @param energy
+	 *            The energy
+	 * @param unit
+	 *            The {@link EnergyUnit} for the energy
+	 * @return The simple {@link String} representation of the energy
+	 */
+	public static String getEnergyAsString(long energy, EnergyUnit unit) {
+		if (energy < 1000)
+			return energy + " " + unit.getSuffix();
+		int exp = (int) (Math.log(energy) / Math.log(1000));
+		char prefix = "KMGTPE".charAt(exp - 1);
+		return String.format("%.1f %s" + unit.getSuffix(), energy / Math.pow(1000, exp), prefix);
 	}
 
 	/**
@@ -1073,8 +1090,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergy(BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
+				new Exception().getStackTrace()[1].getClassName()));
 	}
 
 	/**
@@ -1096,7 +1113,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergy(BlockPos pos, EnumFacing side, String modid, String className) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
+		PacketHandler.INSTANCE
+				.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
 
 	/**
@@ -1116,8 +1134,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncCapacity(BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
+				new Exception().getStackTrace()[1].getClassName()));
 	}
 
 	/**
@@ -1139,7 +1157,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncCapacity(BlockPos pos, EnumFacing side, String modid, String className) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
+		PacketHandler.INSTANCE
+				.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
 
 	/**
@@ -1158,8 +1177,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergyData(BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false,
+				modid, new Exception().getStackTrace()[1].getClassName()));
 	}
 
 	/**
@@ -1181,7 +1200,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergyData(BlockPos pos, EnumFacing side, String modid, String className) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
+		PacketHandler.INSTANCE.sendToServer(
+				new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
 
 	/**
@@ -1222,7 +1242,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergyField(BlockPos pos, EnumFacing side, String className, String energyFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, energyFieldName));
+		PacketHandler.INSTANCE.sendToServer(
+				new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, energyFieldName));
 	}
 
 	/**
@@ -1263,7 +1284,8 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncCapacityField(BlockPos pos, EnumFacing side, String className, String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, capacityFieldName));
+		PacketHandler.INSTANCE.sendToServer(
+				new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, capacityFieldName));
 	}
 
 	/**
@@ -1312,8 +1334,8 @@ public class EnergyUtils {
 	@Deprecated
 	public static void syncEnergyDataFields(BlockPos pos, EnumFacing side, String className, String energyFieldName,
 			String capacityFieldName) {
-		PacketHandler.INSTANCE
-				.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, energyFieldName, capacityFieldName));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
+				className, energyFieldName, capacityFieldName));
 	}
 
 	/**
@@ -1324,8 +1346,7 @@ public class EnergyUtils {
 	 * class in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
@@ -1347,8 +1368,7 @@ public class EnergyUtils {
 	 * path provided in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
@@ -1382,8 +1402,8 @@ public class EnergyUtils {
 	 *            The modid for mod specific data
 	 */
 	public static void syncCapacity(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetCapacity(unit, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(unit, pos, side, false, modid,
+				new Exception().getStackTrace()[1].getClassName()));
 	}
 
 	/**
@@ -1417,8 +1437,8 @@ public class EnergyUtils {
 	 * the calling class in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy data will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the energy data will be
+	 *            returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
@@ -1428,8 +1448,8 @@ public class EnergyUtils {
 	 *            The modid for mod specific data
 	 */
 	public static void syncEnergyData(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetEnergyData(unit, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(unit, pos, side, false, modid,
+				new Exception().getStackTrace()[1].getClassName()));
 	}
 
 	/**
@@ -1440,8 +1460,8 @@ public class EnergyUtils {
 	 * path provided in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy data will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the energy data will be
+	 *            returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
@@ -1462,8 +1482,7 @@ public class EnergyUtils {
 	 * {@link BlockPos}
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
@@ -1484,8 +1503,7 @@ public class EnergyUtils {
 	 * {@link BlockPos}
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
@@ -1497,7 +1515,8 @@ public class EnergyUtils {
 	 *            The name of the field which will hold the energy. Must be a
 	 *            <code>long</code>
 	 */
-	public static void syncEnergyField(EnergyUnit unit, BlockPos pos, EnumFacing side, String className, String energyFieldName) {
+	public static void syncEnergyField(EnergyUnit unit, BlockPos pos, EnumFacing side, String className,
+			String energyFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(unit, pos, side, true, className, energyFieldName));
 	}
 

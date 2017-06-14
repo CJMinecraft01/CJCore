@@ -2,13 +2,16 @@ package cjminecraft.core.config;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.proxy.ClientProxy;
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -32,14 +35,50 @@ public class CJCoreConfig {
 	public static final String CATEGORY_NAME_ENERGY = "energy";
 
 	/**
+	 * The name of the category for the update checkers
+	 */
+	public static final String CATEGORY_NAME_VERSION_CHECKER = "version_checker";
+
+	/*
+	 * Energy Config
+	 */
+	/**
 	 * The default {@link EnergyUnit}
 	 */
 	public static EnergyUnit DEFAULT_ENERGY_UNIT;
 
+	/**
+	 * The position of the multimeter on the X axis from the left hand side
+	 */
 	public static int MULTIMETER_OFFSET_X;
+
+	/**
+	 * The position of the multimeter on the Y axis from the bottom
+	 */
 	public static int MULTIMETER_OFFSET_Y;
 
+	/**
+	 * Whether or not the multimeter should show capacity
+	 */
 	public static boolean MULTIMETER_SHOW_CAPACITY;
+
+	/**
+	 * Whether the multimeter should simplify the energy displayed
+	 */
+	public static boolean MULTIMETER_SIMPLIFY_ENERGY;
+
+	/*
+	 * Update Checkers Config
+	 */
+	/**
+	 * Whether or not a specific mod's update checker is disabled (the key is
+	 * the mod's modid)
+	 */
+	public static HashMap<String, Boolean> UPDATE_CHECKER_MODS = new HashMap<String, Boolean>();
+	/**
+	 * A list of {@link Property}'s for use with the config. Each property has the modid attached
+	 */
+	public static List<Pair<String, Property>> UPDATE_CHECKER_MOD_PROPERTIES = new ArrayList<Pair<String, Property>>();
 
 	private static Configuration config = null;
 
@@ -101,6 +140,9 @@ public class CJCoreConfig {
 		if (loadConfigFromFile)
 			config.load();
 
+		/*
+		 * Energy Config
+		 */
 		List<String> energyUnits = new ArrayList<String>();
 		EnergyUnits.getEnergyUnits().forEach(unit -> {
 			energyUnits.add(unit.getUnlocalizedName());
@@ -125,24 +167,68 @@ public class CJCoreConfig {
 		propertyMultimeterShowCapacity.setComment("Whether or not to show the capacity when using the multimeter");
 		propertyMultimeterShowCapacity.setLanguageKey("gui.config.energy.multimeter_show_capacity.name");
 
+		Property propertyMultimeterSimplifyEnergy = config.get(CATEGORY_NAME_ENERGY, "MultimeterSimplifyEnergy", false);
+		propertyMultimeterSimplifyEnergy
+				.setComment("Whether or not to simplify the way the energy is displayed when using the multimeter");
+		propertyMultimeterSimplifyEnergy.setLanguageKey("gui.config.energy.multimeter_simplify_energy.name");
+
 		List<String> propertyOrderEnergy = new ArrayList<String>();
 		propertyOrderEnergy.add(propertyDefaultEnergyUnit.getName());
 		propertyOrderEnergy.add(propertyMultimeterOffsetX.getName());
 		propertyOrderEnergy.add(propertyMultimeterOffsetY.getName());
 		propertyOrderEnergy.add(propertyMultimeterShowCapacity.getName());
+		propertyOrderEnergy.add(propertyMultimeterSimplifyEnergy.getName());
 		config.setCategoryPropertyOrder(CATEGORY_NAME_ENERGY, propertyOrderEnergy);
 
+		/*
+		 * Update Checkers Config
+		 */
+		List<String> propertyOrderUpdateChecker = new ArrayList<String>();
+		Iterator<String> mods = UPDATE_CHECKER_MODS.keySet().iterator();
+		while (mods.hasNext()) {
+			String modid = mods.next();
+			Property propertyUpdateCheckerEnabled = config.get(CATEGORY_NAME_VERSION_CHECKER, modid, true);
+			propertyUpdateCheckerEnabled.setComment("Whether the update checker for " + modid + " is enabled");
+			propertyUpdateCheckerEnabled.setLanguageKey("gui.config.update_checker.enabled.name");
+			UPDATE_CHECKER_MOD_PROPERTIES.add(Pair.of(modid, propertyUpdateCheckerEnabled));
+			propertyOrderUpdateChecker.add(propertyUpdateCheckerEnabled.getName());
+		}
+		config.setCategoryPropertyOrder(CATEGORY_NAME_VERSION_CHECKER, propertyOrderUpdateChecker);
+
 		if (readFieldsFromConfig) {
+			/*
+			 * Energy Config
+			 */
 			DEFAULT_ENERGY_UNIT = EnergyUnits.byUnlocalizedName(propertyDefaultEnergyUnit.getString());
 			MULTIMETER_OFFSET_X = propertyMultimeterOffsetX.getInt();
 			MULTIMETER_OFFSET_Y = propertyMultimeterOffsetY.getInt();
 			MULTIMETER_SHOW_CAPACITY = propertyMultimeterShowCapacity.getBoolean();
+			MULTIMETER_SIMPLIFY_ENERGY = propertyMultimeterSimplifyEnergy.getBoolean();
+
+			/*
+			 * Update Checkers Config
+			 */
+			for (Pair<String, Property> mod : UPDATE_CHECKER_MOD_PROPERTIES) {
+				UPDATE_CHECKER_MODS.remove(mod.getLeft());
+				UPDATE_CHECKER_MODS.put(mod.getLeft(), mod.getRight().getBoolean());
+			}
 		}
 
+		/*
+		 * Energy Config
+		 */
 		propertyDefaultEnergyUnit.set(DEFAULT_ENERGY_UNIT.getUnlocalizedName());
 		propertyMultimeterOffsetX.set(MULTIMETER_OFFSET_X);
 		propertyMultimeterOffsetY.set(MULTIMETER_OFFSET_Y);
 		propertyMultimeterShowCapacity.set(MULTIMETER_SHOW_CAPACITY);
+		propertyMultimeterSimplifyEnergy.set(MULTIMETER_SIMPLIFY_ENERGY);
+
+		/*
+		 * Update Checkers Config
+		 */
+		for (Pair<String, Property> mod : UPDATE_CHECKER_MOD_PROPERTIES) {
+			mod.getRight().set(UPDATE_CHECKER_MODS.get(mod.getLeft()));
+		}
 
 		if (config.hasChanged())
 			config.save();

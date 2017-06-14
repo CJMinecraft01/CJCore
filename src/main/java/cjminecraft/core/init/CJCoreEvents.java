@@ -9,7 +9,7 @@ public class CJCoreEvents {
 	
 	@SubscribeEvent
 	public void onPlayerLogIn(PlayerLoggedInEvent event) {
-		VersionChecker.checkForUpdate(VersionChecker.cjcoreURL, CJCore.VERSION, event.player);
+		VersionChecker.checkForUpdate(VersionChecker.cjcoreURL, CJCore.MODID, CJCore.VERSION, event.player);
 	}
 
 }

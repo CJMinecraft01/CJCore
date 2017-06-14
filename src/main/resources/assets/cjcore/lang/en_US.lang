@@ -25,7 +25,8 @@ energy.container.capacity=Capacity
 energy.container.max_input=Max Input
 energy.container.max_output=Max Output
 
-gui.config.main_title=CJMinecraft Core Configuration
+gui.config.main_title=CJCore Configuration
+
 gui.config.category.energy=Energy Configuration
 gui.config.category.energy.tooltip=Everything to do with energy
 gui.config.energy.default_energy_unit.name=Default Energy Unit
@@ -36,12 +37,19 @@ gui.config.energy.multimeter_offset_y.name=Multimeter Offset Y
 gui.config.energy.multimeter_offset_y.comment=The offset from the bottom when using the Multimeter
 gui.config.energy.multimeter_show_capacity.name=Show Multimeter Capacity
 gui.config.energy.multimeter_show_capacity.comment=Whether or not to show the capacity when using the multimeter
+gui.config.energy.multimeter_simplify_energy.name=Simplify Energy Displayed For Multimeter
+gui.config.energy.multimeter_simplify_energy.comment=Whether or not to simplify the way the energy is displayed when using the multimeter
+
+gui.config.category.update_checker=Update Checkers
+gui.config.category.update_checker.tooltip=Disable any of the update checkers which use CJCore
+gui.config.update_checker.enabled.comment=Whether this mod's update checker is disabled
 
 item.multimeter.name=Multimeter
 
 update.ready=There is an update for %s available!
 update.version=Current Version: %s, newest Version: %s
 update.download=Click To Download
+update.changelog=Hover to show change log
 
 command.tileentity.usage=/tileenitty <x> <y> <z> energy get [side] or /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side]
 command.tileentity.nosupport=There is no support for the tile entity at position %s %s %s

@@ -1,9 +1,8 @@
 {
 	"name": "CJCore",
-	"modid": "cjcore",
-	"version": "0.0.1.5",
+	"version": "0.0.1.6",
 	"changelog": [
-		"=Fixed Buildcraft Support Bugs", "=Fixed Energy Unit Localisation (finally)", "+Added Industrial Craft Support"
+		"=Improved Update Checker", "+Added ability to disable update checker for every mod which uses the CJCore Update Checker"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }

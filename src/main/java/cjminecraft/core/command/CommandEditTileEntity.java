@@ -127,14 +127,8 @@ public class CommandEditTileEntity extends CommandBase {
 					throw new CommandException("command.tileentity.usage");
 				long energy = Long.valueOf(args[5]);
 				EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
-				if (!args[6].isEmpty()) {
-					for (EnergyUnit u : EnergyUnits.getEnergyUnits())
-						if (u.getUnlocalizedName().equalsIgnoreCase(args[6])
-								|| u.getSuffix().equalsIgnoreCase(args[6])) {
-							unit = u;
-							break;
-						}
-				}
+				if (!args[6].isEmpty())
+					unit = EnergyUnits.byUnlocalizedName(args[6]);
 				if (EnergyUtils.setEnergy(te, energy, unit, side) == 0)
 					throw new CommandException("command.tileentity.noset");
 			}
@@ -151,14 +145,8 @@ public class CommandEditTileEntity extends CommandBase {
 					throw new CommandException("command.tileentity.usage");
 				long energy = Long.valueOf(args[5]);
 				EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
-				if (!args[6].isEmpty()) {
-					for (EnergyUnit u : EnergyUnits.getEnergyUnits())
-						if (u.getUnlocalizedName().equalsIgnoreCase(args[6])
-								|| u.getSuffix().equalsIgnoreCase(args[6])) {
-							unit = u;
-							break;
-						}
-				}
+				if (!args[6].isEmpty())
+					unit = EnergyUnits.byUnlocalizedName(args[6]);
 				if (EnergyUtils.giveEnergy(te, energy, unit, false, side) == 0)
 					throw new CommandException("command.tileentity.nogive");
 			}
@@ -167,14 +155,8 @@ public class CommandEditTileEntity extends CommandBase {
 					throw new CommandException("command.tileentity.usage");
 				long energy = Long.valueOf(args[5]);
 				EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
-				if (!args[6].isEmpty()) {
-					for (EnergyUnit u : EnergyUnits.getEnergyUnits())
-						if (u.getUnlocalizedName().equalsIgnoreCase(args[6])
-								|| u.getSuffix().equalsIgnoreCase(args[6])) {
-							unit = u;
-							break;
-						}
-				}
+				if (!args[6].isEmpty())
+					unit = EnergyUnits.byUnlocalizedName(args[6]);
 				if (EnergyUtils.takeEnergy(te, energy, unit, false, side) == 0)
 					throw new CommandException("command.tileentity.notake");
 			}

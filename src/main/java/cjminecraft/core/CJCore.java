@@ -1,5 +1,8 @@
 package cjminecraft.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,62 +11,114 @@ import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.support.BuildCraftSupport;
-import cjminecraft.core.energy.support.TeslaSupport;
 import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.items.ItemMultimeter;
 import cjminecraft.core.proxy.CommonProxy;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 
 /**
  * The main class for the API
+ * 
  * @author CJMinecraft
  *
  */
-@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, guiFactory = CJCore.GUI_FACTORY, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS)
+@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, guiFactory = CJCore.GUI_FACTORY, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, customProperties = {
+		@CustomProperty(k = "useUpdateChecker", v = "true") })
 public class CJCore {
-	
+
+	public static final List<String> DEPENDANTS = new ArrayList<String>();
+
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
-	public static final String VERSION = "0.0.1.5";
+	public static final String VERSION = "0.0.1.6";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.11,1.11.2]";
-	public static final String ACCEPTED_MC_VERSION = "1.11.2";
+	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
 	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";
 	public static final String SERVER_PROXY_CLASS = "cjminecraft.core.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "cjminecraft.core.proxy.ClientProxy";
 	public static final Logger logger = LogManager.getFormatterLogger(NAME);
-	
+
+	/**
+	 * Update the API's list of mods which use it
+	 */
+	private static void updateDependants() {
+		CJCoreConfig.UPDATE_CHECKER_MODS.put(MODID, true);
+		for (ModContainer mod : Loader.instance().getActiveModList()) {
+			for (ArtifactVersion version : mod.getDependencies()) {
+				if (version.getLabel().equals(MODID)) {
+					if (!DEPENDANTS.contains(mod.getModId())) {
+						DEPENDANTS.add(mod.getModId());
+						if (mod.getCustomModProperties().containsKey("useUpdateChecker")) {
+							if (Boolean.getBoolean(mod.getCustomModProperties().get("useUpdateChecker"))) {
+								if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
+									CJCoreConfig.UPDATE_CHECKER_MODS.put(mod.getModId(), true);
+								}
+							}
+						} else {
+							logger.error("Mod " + mod.getModId() + " does not say whether it uses an update checker! Please fix this!");
+							Runtime.getRuntime().exit(0);
+						}
+					}
+				}
+			}
+			for (ArtifactVersion version : mod.getRequirements()) {
+				if (version.getLabel().equals(MODID)) {
+					if (!DEPENDANTS.contains(mod.getModId())) {
+						DEPENDANTS.add(mod.getModId());
+						if (mod.getCustomModProperties().containsKey("useUpdateChecker")) {
+							if (Boolean.getBoolean(mod.getCustomModProperties().get("useUpdateChecker"))) {
+								if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
+									CJCoreConfig.UPDATE_CHECKER_MODS.put(mod.getModId(), true);
+								}
+							}
+						} else {
+							logger.error("Mod " + mod.getModId() + " does not say whether it uses an update checker! Please fix this!");
+							Runtime.getRuntime().exit(0);
+						}
+					}
+				}
+			}
+		}
+		DEPENDANTS.forEach(mod -> {
+			CJCore.logger.info("Found dependant: " + mod);
+		});
+		CJCoreConfig.UPDATE_CHECKER_MODS.forEach((key, value) -> {
+			CJCore.logger
+					.info("Mod " + key + " says it has an " + (value ? "active" : "disabled") + " update checker!");
+		});
+	}
+
 	/**
 	 * The instance for guis
 	 */
 	@Mod.Instance(MODID)
 	public static CJCore instance;
-	
+
 	/**
 	 * The proxy
 	 */
 	@SidedProxy(serverSide = SERVER_PROXY_CLASS, clientSide = CLIENT_PROXY_CLASS)
 	public static CommonProxy proxy;
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		updateDependants();
 		CJCoreItems.init();
 		CJCoreItems.register();
 		EnergyUnits.preInit();
@@ -71,31 +126,32 @@ public class CJCore {
 		CJCoreConfig.preInit();
 		proxy.preInit();
 	}
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		CraftingHandler.registerCraftingRecipes();
 		proxy.init();
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit();
 	}
-	
+
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		ICommandManager command = event.getServer().getCommandManager();
 		ServerCommandManager manager = (ServerCommandManager) command;
 		manager.registerCommand(new CommandEditTileEntity());
 	}
-	
+
 	@EventHandler
 	public void imcEvent(IMCEvent event) {
-		for(IMCMessage message : event.getMessages()) {
-			if(message.isResourceLocationMessage() && message.key == "multimeterBlacklist") {
+		for (IMCMessage message : event.getMessages()) {
+			if (message.isResourceLocationMessage() && message.key == "multimeterBlacklist") {
 				ItemMultimeter.MultimeterOverlay.blacklistBlocks.add(message.getResourceLocationValue());
-				logger.info("Blacklisting block: " + message.getResourceLocationValue().getResourceDomain() + ":" + message.getResourceLocationValue().getResourcePath());
+				logger.info("Blacklisting block: " + message.getResourceLocationValue().getResourceDomain() + ":"
+						+ message.getResourceLocationValue().getResourcePath());
 			}
 		}
 	}
