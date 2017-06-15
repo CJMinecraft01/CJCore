@@ -39,14 +39,14 @@ import net.minecraftforge.fml.common.versioning.ArtifactVersion;
  *
  */
 @Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, guiFactory = CJCore.GUI_FACTORY, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, customProperties = {
-		@CustomProperty(k = "useUpdateChecker", v = "true") })
+		@CustomProperty(k = "useVersionChecker", v = "true") }, useMetadata = true)
 public class CJCore {
 
 	public static final List<String> DEPENDANTS = new ArrayList<String>();
 
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
-	public static final String VERSION = "0.0.1.6";
+	public static final String VERSION = "0.0.1.7";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.11,1.11.2]";
 	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
 	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";
@@ -64,15 +64,15 @@ public class CJCore {
 				if (version.getLabel().equals(MODID)) {
 					if (!DEPENDANTS.contains(mod.getModId())) {
 						DEPENDANTS.add(mod.getModId());
-						if (mod.getCustomModProperties().containsKey("useUpdateChecker")) {
-							if (Boolean.getBoolean(mod.getCustomModProperties().get("useUpdateChecker"))) {
+						if (mod.getCustomModProperties().containsKey("useVersionChecker")) {
+							if (Boolean.valueOf(mod.getCustomModProperties().get("useVersionChecker"))) {
 								if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
 									CJCoreConfig.UPDATE_CHECKER_MODS.put(mod.getModId(), true);
 								}
 							}
 						} else {
-							logger.error("Mod " + mod.getModId() + " does not say whether it uses an update checker! Please fix this!");
-							Runtime.getRuntime().exit(0);
+							logger.error("Mod " + mod.getModId() + " does not say whether it uses an version checker! Please fix this!");
+							FMLCommonHandler.instance().exitJava(0, false);
 						}
 					}
 				}
@@ -81,15 +81,15 @@ public class CJCore {
 				if (version.getLabel().equals(MODID)) {
 					if (!DEPENDANTS.contains(mod.getModId())) {
 						DEPENDANTS.add(mod.getModId());
-						if (mod.getCustomModProperties().containsKey("useUpdateChecker")) {
-							if (Boolean.getBoolean(mod.getCustomModProperties().get("useUpdateChecker"))) {
+						if (mod.getCustomModProperties().containsKey("useVersionChecker")) {
+							if (Boolean.valueOf(mod.getCustomModProperties().get("useVersionChecker"))) {
 								if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
 									CJCoreConfig.UPDATE_CHECKER_MODS.put(mod.getModId(), true);
 								}
 							}
 						} else {
-							logger.error("Mod " + mod.getModId() + " does not say whether it uses an update checker! Please fix this!");
-							Runtime.getRuntime().exit(0);
+							logger.error("Mod " + mod.getModId() + " does not say whether it uses an version checker! Please fix this!");
+							FMLCommonHandler.instance().exitJava(0, false);
 						}
 					}
 				}
@@ -100,7 +100,7 @@ public class CJCore {
 		});
 		CJCoreConfig.UPDATE_CHECKER_MODS.forEach((key, value) -> {
 			CJCore.logger
-					.info("Mod " + key + " says it has an " + (value ? "active" : "disabled") + " update checker!");
+					.info("Mod " + key + " says it has an " + (value ? "active" : "disabled") + " version checker!");
 		});
 	}
 

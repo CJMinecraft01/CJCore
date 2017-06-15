@@ -72,6 +72,7 @@ public class ItemMultimeter extends Item {
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_furnace_solar"));
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_heat_collector"));
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_leaf_generator"));
+			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_player_interface"));
 		}
 
 		/**
