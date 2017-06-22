@@ -13,18 +13,34 @@ import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.util.InventoryUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.actors.threadpool.Arrays;
 
 /**
  * The item which shows how much energy is in any {@link TileEntity}
@@ -45,6 +61,56 @@ public class ItemMultimeter extends Item {
 		this.setRegistryName(new ResourceLocation(CJCore.MODID, unlocalizedName));
 		this.setMaxStackSize(1);
 		this.setCreativeTab(CreativeTabs.REDSTONE);
+	}
+
+	/**
+	 * Allows the player to remove the target block
+	 */
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		if (!player.isSneaking()) {
+			player.getHeldItem(hand).setTagCompound(new NBTTagCompound());
+		}
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+	}
+
+	/**
+	 * Add the target block
+	 */
+	@Override
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX,
+			float hitY, float hitZ, EnumHand hand) {
+		if (player.isSneaking() && EnergyUtils.hasSupport(world.getTileEntity(pos), side)) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setIntArray("BlockPos", new int[] { pos.getX(), pos.getY(), pos.getZ() });
+			player.getHeldItem(hand).setTagCompound(nbt);
+			IBlockState state = world.getBlockState(pos);
+			String blockName = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))
+					.getDisplayName();
+			player.sendMessage(new TextComponentString(TextFormatting.GREEN
+					+ I18n.format("item.multimeter.tooltip.blockpos", blockName, pos.getX(), pos.getY(), pos.getZ())));
+			return EnumActionResult.SUCCESS;
+		}
+		return EnumActionResult.PASS;
+	}
+
+	/**
+	 * Add the tooltip
+	 */
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockPos")) {
+			BlockPos pos = new BlockPos(stack.getTagCompound().getIntArray("BlockPos")[0],
+					stack.getTagCompound().getIntArray("BlockPos")[1],
+					stack.getTagCompound().getIntArray("BlockPos")[2]);
+			IBlockState state = Minecraft.getMinecraft().world.getBlockState(pos);
+			ItemStack blockStack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+			String blockName = blockStack.getDisplayName();
+			tooltip.add(TextFormatting.GREEN
+					+ I18n.format("item.multimeter.tooltip.blockpos", blockName, pos.getX(), pos.getY(), pos.getZ()));
+		}
+		tooltip.add(I18n.format("item.multimeter.tooltip"));
 	}
 
 	/**
@@ -79,7 +145,7 @@ public class ItemMultimeter extends Item {
 		 * The overlay to be drawn
 		 */
 		public static EnergyBarOverlay overlay = new EnergyBarOverlay(0, CJCoreConfig.MULTIMETER_OFFSET_X,
-				CJCoreConfig.MULTIMETER_OFFSET_Y, 0, 0);
+				CJCoreConfig.MULTIMETER_OFFSET_Y, CJCoreConfig.MULTIMETER_WIDTH, CJCoreConfig.MULTIMETER_HEIGHT, 0, 0);
 
 		/**
 		 * Sync with the server Used every 10 ticks
@@ -111,56 +177,81 @@ public class ItemMultimeter extends Item {
 			if (player == null)
 				return;
 
-			if (!InventoryUtils.hasInHotbar(new ItemStack(CJCoreItems.multimeter), player, true, true))
-				return;
-			if (EnergyUtils.hasSupport(player.getHeldItemMainhand(), player.getAdjustedHorizontalFacing())) {
-				if (sync == 0) {
-					if (data == null)
-						data = new EnergyData();
-					data.setEnergy(EnergyUtils.getEnergyStored(player.getHeldItemMainhand(),
-							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
-					data.setCapacity(EnergyUtils.getCapacity(player.getHeldItemMainhand(),
-							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
+			if (sync == 0) {
+				if (!InventoryUtils.hasInHotbar(new ItemStack(CJCoreItems.multimeter), player, true, true))
+					return;
+				ItemStack found = InventoryUtils.findInHotbar(new ItemStack(CJCoreItems.multimeter), player, true,
+						false);
+				if (found.hasTagCompound() && found.getTagCompound().hasKey("BlockPos")) {
+					NBTTagCompound nbt = found.getTagCompound();
+					BlockPos pos = new BlockPos(nbt.getIntArray("BlockPos")[0], nbt.getIntArray("BlockPos")[1],
+							nbt.getIntArray("BlockPos")[2]);
+					if (blacklistBlocks.contains(Minecraft.getMinecraft().world
+							.getBlockState(Minecraft.getMinecraft().objectMouseOver.getBlockPos()).getBlock()
+							.getRegistryName()))
+						return;
+					TileEntity te = Minecraft.getMinecraft().world.getTileEntity(pos);
+					if (te == null)
+						return;
+					if (!EnergyUtils.hasSupport(te, player.getAdjustedHorizontalFacing())) {
+						if (data == null)
+							data = new EnergyData();
+						data.setEnergy(0).setEnergy(0);
+						return;
+					}
+					EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, pos,
+							player.getAdjustedHorizontalFacing(), CJCore.MODID);
+					data = EnergyUtils.getCachedEnergyData(CJCore.MODID);
+				} else {
+					if (EnergyUtils.hasSupport(player.getHeldItemMainhand(), player.getAdjustedHorizontalFacing())) {
+						if (data == null)
+							data = new EnergyData();
+						data.setEnergy(EnergyUtils.getEnergyStored(player.getHeldItemMainhand(),
+								player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
+						data.setCapacity(EnergyUtils.getCapacity(player.getHeldItemMainhand(),
+								player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
+						targetBlock = false;
+					} else if (EnergyUtils.hasSupport(player.getHeldItemOffhand(),
+							player.getAdjustedHorizontalFacing())) {
+						if (data == null)
+							data = new EnergyData();
+						data.setEnergy(EnergyUtils.getEnergyStored(player.getHeldItemOffhand(),
+								player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
+						data.setCapacity(EnergyUtils.getCapacity(player.getHeldItemOffhand(),
+								player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
+						targetBlock = false;
+					} else {
+						targetBlock = true;
+					}
+					if (targetBlock) {
+						RayTraceResult target = Minecraft.getMinecraft().objectMouseOver;
+						if (target.typeOfHit != RayTraceResult.Type.BLOCK)
+							return;
+						if (blacklistBlocks.contains(Minecraft.getMinecraft().world.getBlockState(target.getBlockPos())
+								.getBlock().getRegistryName()))
+							return;
+						TileEntity te = Minecraft.getMinecraft().world.getTileEntity(target.getBlockPos());
+						if (te == null)
+							return;
+						if (!EnergyUtils.hasSupport(te, target.sideHit)) {
+							if (data == null)
+								data = new EnergyData();
+							data.setEnergy(0).setEnergy(0);
+							return;
+						}
+						EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, target.getBlockPos(),
+								target.sideHit, CJCore.MODID);
+						data = EnergyUtils.getCachedEnergyData(CJCore.MODID);
+					}
 				}
-				targetBlock = false;
-			} else if (EnergyUtils.hasSupport(player.getHeldItemOffhand(), player.getAdjustedHorizontalFacing())) {
-				if (sync == 0) {
-					if (data == null)
-						data = new EnergyData();
-					data.setEnergy(EnergyUtils.getEnergyStored(player.getHeldItemOffhand(),
-							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
-					data.setCapacity(EnergyUtils.getCapacity(player.getHeldItemOffhand(),
-							player.getAdjustedHorizontalFacing(), CJCoreConfig.DEFAULT_ENERGY_UNIT));
-				}
-				targetBlock = false;
-			} else {
-				targetBlock = true;
 			}
-			if (targetBlock) {
-				RayTraceResult target = Minecraft.getMinecraft().objectMouseOver;
-				if (target.typeOfHit != RayTraceResult.Type.BLOCK)
-					return;
-				if (blacklistBlocks.contains(Minecraft.getMinecraft().world.getBlockState(target.getBlockPos())
-						.getBlock().getRegistryName()))
-					return;
-				TileEntity te = Minecraft.getMinecraft().world.getTileEntity(target.getBlockPos());
-				if (te == null)
-					return;
-				if (!EnergyUtils.hasSupport(te, target.sideHit)) {
-					if (data == null)
-						data = new EnergyData();
-					data.setEnergy(0).setEnergy(0);
-					return;
-				}
-				if (sync == 0)
-					EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, target.getBlockPos(), target.sideHit,
-							CJCore.MODID);
-				data = EnergyUtils.getCachedEnergyData(CJCore.MODID);
-			}
+
 			sync++;
 			sync %= 10;
 
 			if (event.getType() == ElementType.ALL) {
+				overlay.width = CJCoreConfig.MULTIMETER_WIDTH;
+				overlay.height = CJCoreConfig.MULTIMETER_HEIGHT;
 				overlay.updateEnergyBar(data);
 				overlay.xPosition = CJCoreConfig.MULTIMETER_OFFSET_X;
 				overlay.yPosition = event.getResolution().getScaledHeight() - overlay.height

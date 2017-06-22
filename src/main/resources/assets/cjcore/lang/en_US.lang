@@ -35,6 +35,10 @@ gui.config.energy.multimeter_offset_x.name=Multimeter Offset X
 gui.config.energy.multimeter_offset_x.comment=The offset from the left hand side when using the Multimeter
 gui.config.energy.multimeter_offset_y.name=Multimeter Offset Y
 gui.config.energy.multimeter_offset_y.comment=The offset from the bottom when using the Multimeter
+gui.config.energy.multimeter_width.name=Multimeter Width
+gui.config.energy.multimeter_width.comment=The width of the Multimeter gui
+gui.config.energy.multimeter_height.name=Multimeter Height
+gui.config.energy.multimeter_height.comment=The height of the Multimeter gui
 gui.config.energy.multimeter_show_capacity.name=Show Multimeter Capacity
 gui.config.energy.multimeter_show_capacity.comment=Whether or not to show the capacity when using the multimeter
 gui.config.energy.multimeter_simplify_energy.name=Simplify Energy Displayed For Multimeter
@@ -45,6 +49,8 @@ gui.config.category.update_checker.tooltip=Disable any of the update checkers wh
 gui.config.update_checker.enabled.comment=Whether this mod's update checker is disabled
 
 item.multimeter.name=Multimeter
+item.multimeter.tooltip.blockpos=Targeting block %s at %s %s %s
+item.multimeter.tooltip=The multimeter allows users to see energy inside of any block without actually opening their gui! Sneak right click on a block to set the target block so the multimeter will only show the energy inside of that block. By right clicking air, the target block will reset
 
 update.ready=There is an update for %s available!
 update.version=Current Version: %s, newest Version: %s

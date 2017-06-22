@@ -1,6 +1,7 @@
 package cjminecraft.core.util;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -62,7 +63,7 @@ public class InventoryUtils {
 	 * @return Whether the two {@link ItemStack}s are the same
 	 */
 	public static boolean isStackEqual(ItemStack a, ItemStack b, boolean ignoreNBT, boolean ignoreMetaData) {
-		if(a == null || b == null)
+		if (a == null || b == null)
 			return false;
 		if (ignoreNBT && ignoreMetaData)
 			return a.getItem() == b.getItem();
@@ -73,6 +74,68 @@ public class InventoryUtils {
 		if (!ignoreNBT && !ignoreMetaData)
 			return a.isItemEqual(b) && a.getTagCompound().equals(b.getTagCompound());
 		return false;
+	}
+
+	/**
+	 * Will find the target {@link ItemStack} in the player's inventory in the
+	 * range chosen. Will return the {@link ItemStack} from the player's
+	 * inventory if it is found, otherwise it will just return the target
+	 * {@link ItemStack}
+	 * 
+	 * @param toFind
+	 *            The {@link ItemStack} to find in the player's inventory
+	 * @param player
+	 *            The player to search
+	 * @param ignoreNBT
+	 *            Whether NBT data should be ignored. If not, both
+	 *            {@link ItemStack}s will need to have the same
+	 *            {@link NBTTagCompound}. Reference
+	 *            {@link #isStackEqual(ItemStack, ItemStack, boolean, boolean)}
+	 * @param ignoreMetaData
+	 *            Whether meta data should be ignored. If not, both
+	 *            {@link ItemStack}s will need to have the same damage.
+	 *            Reference
+	 *            {@link #isStackEqual(ItemStack, ItemStack, boolean, boolean)}
+	 * @param from
+	 *            The first slot to search
+	 * @param to
+	 *            The last slot to search
+	 * @return The {@link ItemStack} from the player's inventory if it is found.
+	 *         If not it will return the target {@link ItemStack}
+	 */
+	public static ItemStack findInInventory(ItemStack toFind, EntityPlayer player, boolean ignoreNBT,
+			boolean ignoreMetaData, int from, int to) {
+		for (int slot = from; slot < player.inventory.getSizeInventory() && slot <= to; slot++) {
+			ItemStack stack = player.inventory.getStackInSlot(slot);
+			if (isStackEqual(toFind, stack, ignoreNBT, ignoreMetaData)) {
+				return stack;
+			}
+		}
+		return toFind;
+	}
+
+	/**
+	 * Will find the target {@link ItemStack} in the player's hotbar or offhand
+	 * 
+	 * @param toFind
+	 *            The {@link ItemStack} to find in the player's inventory
+	 * @param player
+	 *            The player to search
+	 * @param ignoreNBT
+	 *            Whether NBT data should be ignored. Reference
+	 *            {@link #findInInventory(ItemStack, EntityPlayer, boolean, boolean, int, int)}
+	 * @param ignoreMetaData
+	 *            Whether meta data should be ignored. Reference
+	 *            {@link #findInInventory(ItemStack, EntityPlayer, boolean, boolean, int, int)}
+	 * @return The {@link ItemStack} from the player's inventory if it is found.
+	 *         If not, it will return the target {@link ItemStack}
+	 */
+	public static ItemStack findInHotbar(ItemStack toFind, EntityPlayer player, boolean ignoreNBT,
+			boolean ignoreMetaData) {
+		ItemStack stack = findInInventory(toFind, player, ignoreNBT, ignoreMetaData, 0, 8);
+		if (stack == toFind)
+			stack = findInInventory(toFind, player, ignoreNBT, ignoreMetaData, 40, 40);
+		return stack;
 	}
 
 	/**

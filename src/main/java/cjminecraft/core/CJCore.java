@@ -46,7 +46,7 @@ public class CJCore {
 
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
-	public static final String VERSION = "0.0.1.7";
+	public static final String VERSION = "0.0.1.8";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.11,1.11.2]";
 	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
 	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";
@@ -100,7 +100,7 @@ public class CJCore {
 		});
 		CJCoreConfig.UPDATE_CHECKER_MODS.forEach((key, value) -> {
 			CJCore.logger
-					.info("Mod " + key + " says it has an " + (value ? "active" : "disabled") + " version checker!");
+					.info("Mod " + key + " says it has a version checker!");
 		});
 	}
 

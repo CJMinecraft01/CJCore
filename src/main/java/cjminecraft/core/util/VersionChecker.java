@@ -19,6 +19,7 @@ import com.google.gson.stream.JsonReader;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
+import joptsimple.internal.Strings;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
@@ -100,7 +101,8 @@ public class VersionChecker {
 				for (JsonElement e : cl) {
 					changeLog.add(e.getAsString());
 				}
-				downloadURL = jo.get("download").getAsString();
+				if(jo.has("download"))
+					downloadURL = jo.get("download").getAsString();
 			}
 		} catch (Exception e) {
 			CJCore.logger.info("Error reading update url: " + url);
@@ -114,7 +116,7 @@ public class VersionChecker {
 					+ I18n.format("update.version", TextFormatting.DARK_RED + currentVersion + TextFormatting.WHITE,
 							TextFormatting.DARK_GREEN + version)));
 			ITextComponent changeLogAndVersion = new TextComponentString("");
-			if (downloadURL != null || downloadURL != "")
+			if (!Strings.isNullOrEmpty(downloadURL))
 				changeLogAndVersion.appendSibling(new TextComponentString(TextFormatting.WHITE + "["
 						+ TextFormatting.DARK_AQUA + I18n.format("update.download") + TextFormatting.WHITE + "]")
 								.setStyle(new Style()

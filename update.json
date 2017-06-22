@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.1.7",
+	"version": "0.0.1.8",
 	"changelog": [
-		"=Fixed ability to disable the Version Checker for any specific mod"
+		"+Added ability to resize energy bar", "+Added ability to easily sync the energy bar", "+Added ability for the multimeter to target only a specific block", "=Improved Forge Energy Support", "=Improved Version Checker"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }

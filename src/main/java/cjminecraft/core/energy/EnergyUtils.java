@@ -55,9 +55,9 @@ public class EnergyUtils {
 	 */
 	public static void preInit() {
 		CJCore.logger.info("Adding Forge Energy Support!");
-		addEnergyHolderSupport(new ForgeEnergySupport());
-		addEnergyConsumerSupport(new ForgeEnergySupport());
-		addEnergyProducerSupport(new ForgeEnergySupport());
+		addEnergyHolderSupport(new ForgeEnergySupport.ForgeEnergyHolder());
+		addEnergyConsumerSupport(new ForgeEnergySupport.ForgeEnergyConsumer());
+		addEnergyProducerSupport(new ForgeEnergySupport.ForgeEnergyProducer());
 
 		CJCore.logger.info("Adding CoFH Support!");
 		addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());

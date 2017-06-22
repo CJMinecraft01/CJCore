@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import cjminecraft.core.CJCore;
+import cjminecraft.core.client.gui.EnergyBar;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.proxy.ClientProxy;
@@ -58,6 +59,16 @@ public class CJCoreConfig {
 	public static int MULTIMETER_OFFSET_Y;
 
 	/**
+	 * The width of the multimeter
+	 */
+	public static int MULTIMETER_WIDTH;
+
+	/**
+	 * The height of the multimeter
+	 */
+	public static int MULTIMETER_HEIGHT;
+
+	/**
 	 * Whether or not the multimeter should show capacity
 	 */
 	public static boolean MULTIMETER_SHOW_CAPACITY;
@@ -76,7 +87,8 @@ public class CJCoreConfig {
 	 */
 	public static HashMap<String, Boolean> UPDATE_CHECKER_MODS = new HashMap<String, Boolean>();
 	/**
-	 * A list of {@link Property}'s for use with the config. Each property has the modid attached
+	 * A list of {@link Property}'s for use with the config. Each property has
+	 * the modid attached
 	 */
 	public static List<Pair<String, Property>> UPDATE_CHECKER_MOD_PROPERTIES = new ArrayList<Pair<String, Property>>();
 
@@ -163,6 +175,19 @@ public class CJCoreConfig {
 		propertyMultimeterOffsetY.setComment("The offset from the bottom when using the Multimeter");
 		propertyMultimeterOffsetY.setLanguageKey("gui.config.energy.multimeter_offset_y.name");
 
+		Property propertyMultimeterWidth = config.get(CATEGORY_NAME_ENERGY, "MultimeterWidth", EnergyBar.DEFAULT_WIDTH);
+		propertyMultimeterWidth.setMinValue(1);
+		propertyMultimeterWidth.setMaxValue(EnergyBar.DEFAULT_WIDTH);
+		propertyMultimeterWidth.setComment("The width of the multimeter gui");
+		propertyMultimeterWidth.setLanguageKey("gui.config.energy.multimeter_width.name");
+
+		Property propertyMultimeterHeight = config.get(CATEGORY_NAME_ENERGY, "MultimeterHeight",
+				EnergyBar.DEFAULT_HEIGHT);
+		propertyMultimeterHeight.setMinValue(1);
+		propertyMultimeterHeight.setMaxValue(EnergyBar.DEFAULT_HEIGHT);
+		propertyMultimeterHeight.setComment("The height of the multimeter gui");
+		propertyMultimeterHeight.setLanguageKey("gui.config.energy.multimeter_height.name");
+
 		Property propertyMultimeterShowCapacity = config.get(CATEGORY_NAME_ENERGY, "MultimeterShowCapacity", false);
 		propertyMultimeterShowCapacity.setComment("Whether or not to show the capacity when using the multimeter");
 		propertyMultimeterShowCapacity.setLanguageKey("gui.config.energy.multimeter_show_capacity.name");
@@ -176,6 +201,8 @@ public class CJCoreConfig {
 		propertyOrderEnergy.add(propertyDefaultEnergyUnit.getName());
 		propertyOrderEnergy.add(propertyMultimeterOffsetX.getName());
 		propertyOrderEnergy.add(propertyMultimeterOffsetY.getName());
+		propertyOrderEnergy.add(propertyMultimeterWidth.getName());
+		propertyOrderEnergy.add(propertyMultimeterHeight.getName());
 		propertyOrderEnergy.add(propertyMultimeterShowCapacity.getName());
 		propertyOrderEnergy.add(propertyMultimeterSimplifyEnergy.getName());
 		config.setCategoryPropertyOrder(CATEGORY_NAME_ENERGY, propertyOrderEnergy);
@@ -202,6 +229,8 @@ public class CJCoreConfig {
 			DEFAULT_ENERGY_UNIT = EnergyUnits.byUnlocalizedName(propertyDefaultEnergyUnit.getString());
 			MULTIMETER_OFFSET_X = propertyMultimeterOffsetX.getInt();
 			MULTIMETER_OFFSET_Y = propertyMultimeterOffsetY.getInt();
+			MULTIMETER_WIDTH = propertyMultimeterWidth.getInt();
+			MULTIMETER_HEIGHT = propertyMultimeterHeight.getInt();
 			MULTIMETER_SHOW_CAPACITY = propertyMultimeterShowCapacity.getBoolean();
 			MULTIMETER_SIMPLIFY_ENERGY = propertyMultimeterSimplifyEnergy.getBoolean();
 
@@ -220,6 +249,8 @@ public class CJCoreConfig {
 		propertyDefaultEnergyUnit.set(DEFAULT_ENERGY_UNIT.getUnlocalizedName());
 		propertyMultimeterOffsetX.set(MULTIMETER_OFFSET_X);
 		propertyMultimeterOffsetY.set(MULTIMETER_OFFSET_Y);
+		propertyMultimeterWidth.set(MULTIMETER_WIDTH);
+		propertyMultimeterHeight.set(MULTIMETER_HEIGHT);
 		propertyMultimeterShowCapacity.set(MULTIMETER_SHOW_CAPACITY);
 		propertyMultimeterSimplifyEnergy.set(MULTIMETER_SIMPLIFY_ENERGY);
 
