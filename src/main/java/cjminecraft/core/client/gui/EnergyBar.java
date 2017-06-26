@@ -136,7 +136,7 @@ public class EnergyBar extends GuiButton {
 	 */
 	public void actionPerformed(Minecraft mc, TileEntity te) {
 		ItemStack selectedItem = mc.player.inventory.getItemStack();
-		if (selectedItem != ItemStack.EMPTY || !selectedItem.isEmpty()) {
+		if (selectedItem != ItemStack.EMPTY && !selectedItem.isEmpty()) {
 			if (EnergyUtils.hasSupport(selectedItem, null)) {
 				EnergyUtils.giveEnergy(selectedItem, EnergyUtils.takeEnergy(te,
 						Math.abs(EnergyUtils.getCapacity(selectedItem, null, CJCoreConfig.DEFAULT_ENERGY_UNIT)

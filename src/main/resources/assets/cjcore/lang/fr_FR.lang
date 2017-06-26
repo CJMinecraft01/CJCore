@@ -1,0 +1,72 @@
+energy.utils.repeat_support=Un support pour l'énergie %s a déjà été enregistré - SKIPPING
+energy.utils.support_success=Enregistrement du support pour le type d'énergie %s réussi
+
+energy.unit.repeat_registration=Une unitée d'énergie pour %s a déjà été enregistré - SKIPPING
+energy.unit.registration_success=Enregistrement de l'unitée d'énergie %s réussi
+energy.unit.name=Name: %s
+energy.unit.suffix=Suffix: %s
+energy.unit.multiplier=Multiplier: %
+
+energy.unit.forge_energy.name=Forge Energy
+energy.unit.forge_energy.suffix=FE
+energy.unit.redstone_flux.name=Redstone Flux
+energy.unit.redstone_flux.suffix=RF
+energy.unit.tesla.name=Tesla
+energy.unit.tesla.suffix=T
+energy.unit.joules.name=Joules
+energy.unit.joules.suffix=J
+energy.unit.minecraft_joules.name=Minecraft Joules
+energy.unit.minecraft_joules.suffix=MJ
+energy.unit.energy_unit.name=Energy Unit
+energy.unit.energy_unit.suffix=EU
+
+energy.container.energy=Energie
+energy.container.capacity=Capacitée
+energy.container.max_input=Energie entrante max
+energy.container.max_output=Energie sortante max
+
+gui.config.main_title=Configuration de CJCore
+
+gui.config.category.energy=Configuration générale
+gui.config.category.energy.tooltip=Tout ce qui concerne l'énergie
+gui.config.energy.default_energy_unit.name=Unitée d'énergie par défaut
+gui.config.energy.default_energy_unit.comment=L'unitée d'énergie que vous souhaitez voir par défaut
+gui.config.energy.multimeter_offset_x.name=Position X du multimètre
+gui.config.energy.multimeter_offset_x.comment=La position du multimètre depuis la gauche de l'écran
+gui.config.energy.multimeter_offset_y.name=Position Y du multimètre
+gui.config.energy.multimeter_offset_y.comment=La position du multimètre depuis le bas de l'écran
+gui.config.energy.multimeter_show_capacity.name=Affichage de la capacitée avec le multimètre
+gui.config.energy.multimeter_show_capacity.comment=Afficher ou non la capacitée d'une machine lors de l'utilisation du multimètre
+gui.config.energy.multimeter_simplify_energy.name=Simplifier l'énergie affichée par le multimètre
+gui.config.energy.multimeter_simplify_energy.comment=Cocher pour simplifer la façon dont l'énergie est affichée avec le multimètre
+
+gui.config.category.update_checker=Vérification des mises à jours
+gui.config.category.update_checker.tooltip=Désactivez n'importe quel mod vérifiant les mises à jours à l'aide de CJCore
+gui.config.update_checker.enabled.comment=Activez/Désactivez la recherche de mises à jours pour ce mod
+
+item.multimeter.name=Multimètre
+item.multimeter.tooltip.blockpos=Le bloc visée %s aest en %s %s %s
+item.multimeter.tooltip=Le multimètre permet de voir l'énergie contenu dans un bloc sans à avoir à ouvrir leur interface ! Fait un sneak + clique droit pour enregistrer les coordonnées du bloc pour que le multimètre affiche uniquement son énergie. En faisant un clique droit dans les airs , le multimètre perdra les coordonnées enregistrées.
+
+update.ready=There is an update for %s available!
+update.version=Current Version: %s, newest Version: %s
+update.download=Click To Download
+update.changelog=Hover to show change log
+
+command.tileentity.usage=/tileenitty <x> <y> <z> energy get [side] or /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side]
+command.tileentity.nosupport=There is no support for the tile entity at position %s %s %s
+command.tileentity.notake=This tile entity does not allow energy to be taken
+command.tileentity.nogive=This tile entity does not allow energy to be given
+command.tileentity.noset=This tile entity does not allow energy to be set
+
+
+update.ready=Une mise à jour pour %s est disponible !
+update.version=Version actuelle : %s, Nouvelle version : %s
+update.download=Cliquez ici pour télécharger
+update.changelog=Survolez pour voir les nouveautés
+
+command.tileentity.usage=/tileenitty <x> <y> <z> energy get [side] ou /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side]
+command.tileentity.nosupport=Il n'y a pas de support pour le bloc de coordonnées %s %s %s
+command.tileentity.notake=Ce bloc n'autorise pas le fait de supprimer de l'énergie
+command.tileentity.nogive=Ce bloc n'autorise pas le fait d'y ajouter de l'énergie
+command.tileentity.noset=Ce bloc n'autorise pas le fait de définir la quantité d'énergie
