@@ -962,6 +962,8 @@ public class EnergyUtils {
 			if (hasSupport(te, side))
 				tiles.put(side, te);
 		}
+		if(tiles.size() <= 0)
+			return 0;
 		long energyPerSide = energy / tiles.size();
 		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
 		long energyTaken = 0;
@@ -1008,6 +1010,8 @@ public class EnergyUtils {
 			if (hasSupport(te, side))
 				tiles.put(side, te);
 		}
+		if(tiles.size() <= 0)
+			return 0;
 		long energyPerSide = energy / tiles.size();
 		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
 		long energyGiven = 0;

@@ -118,7 +118,7 @@ public class VersionChecker {
 			ITextComponent changeLogAndVersion = new TextComponentString("");
 			if (!Strings.isNullOrEmpty(downloadURL))
 				changeLogAndVersion.appendSibling(new TextComponentString(TextFormatting.WHITE + "["
-						+ TextFormatting.DARK_AQUA + I18n.format("update.download") + TextFormatting.WHITE + "]")
+						+ TextFormatting.DARK_AQUA + I18n.format("update.download") + TextFormatting.WHITE + "] ")
 								.setStyle(new Style()
 										.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL))));
 			if (changeLog.size() > 0) {
@@ -136,7 +136,7 @@ public class VersionChecker {
 				}
 				changeLogString = changeLogString.substring(0, changeLogString.length() - 1);
 				changeLogAndVersion.appendSibling(new TextComponentString(
-						" [" + TextFormatting.DARK_AQUA + I18n.format("update.changelog") + TextFormatting.WHITE + "]")
+						"[" + TextFormatting.DARK_AQUA + I18n.format("update.changelog") + TextFormatting.WHITE + "]")
 								.setStyle(new Style().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new TextComponentString(changeLogString)))));
 			}
