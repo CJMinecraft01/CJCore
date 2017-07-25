@@ -1,0 +1,68 @@
+#############################
+##   Lang- Swedish(SE)     ##
+##   Made By- DrSteam1111  ##
+#############################
+
+energy.utils.repeat_support=energi stöd från typ %s har redan blivit registrerad - HOPPAR
+energy.utils.support_success=Framgångsrikt registrerat energistöd %s
+
+energy.unit.repeat_registration=energienhet av typ %s har redan blivit registrerad - HOPPAR
+energy.unit.registration_success=Framgångsrikt registrerat energienhet %s
+energy.unit.name=Namn: %s
+energy.unit.suffix=Ändelse: %s
+energy.unit.multiplier=Multiplikator: %
+
+energy.unit.forge_energy.name=Forge Energy
+energy.unit.forge_energy.suffix=FE
+energy.unit.redstone_flux.name=Redstone Flux
+energy.unit.redstone_flux.suffix=RF
+energy.unit.tesla.name=Tesla
+energy.unit.tesla.suffix=T
+energy.unit.joules.name=Joules
+energy.unit.joules.suffix=J
+energy.unit.minecraft_joules.name=Minecraft Joules
+energy.unit.minecraft_joules.suffix=MJ
+energy.unit.energy_unit.name=Energy Unit
+energy.unit.energy_unit.suffix=EU
+
+energy.container.energy=Energi
+energy.container.capacity=Kapacitet
+energy.container.max_input=Max Inmatning
+energy.container.max_output=Max Utmatning
+
+gui.config.main_title=CJCore Konfiguration
+
+gui.config.category.energy=Energi Konfiguration
+gui.config.category.energy.tooltip=Allt med energi
+gui.config.energy.default_energy_unit.name=Standard Energienhet
+gui.config.energy.default_energy_unit.comment=Energienheten som du normalt kommer att se
+gui.config.energy.multimeter_offset_x.name=Flermätare Offset X
+gui.config.energy.multimeter_offset_x.comment=Offsetet från den vänstra siden vid användning av Flermätaren
+gui.config.energy.multimeter_offset_y.name=Flermätare Offset Y
+gui.config.energy.multimeter_offset_y.comment=Offsetet från den botten vid användning av Flermätaren
+gui.config.energy.multimeter_width.name=Flermätarens Längd
+gui.config.energy.multimeter_width.comment=Längden av Flermätarens gui
+gui.config.energy.multimeter_height.name=Flermätarens Brädd
+gui.config.energy.multimeter_height.comment=Brädden av Flermätarens gui
+gui.config.energy.multimeter_show_capacity.name=Visa Flermätarens Kapacitet
+gui.config.energy.multimeter_show_capacity.comment=Huruvidare att kapaciteten ska visas vid användning av Flermätaren
+gui.config.energy.multimeter_simplify_energy.name=Förenkla Energi Uppvisningen För Flermätaren
+gui.config.energy.multimeter_simplify_energy.comment=Huruvidare att förenkla energi uppvisnigen vid användning av Flermätaren
+gui.config.category.update_checker=Uppdatering Kontrollant
+gui.config.category.update_checker.tooltip=Inaktivera alla uppdatering kontrollanter som använder CJCore
+gui.config.update_checker.enabled.comment=Huruvidare att det här moddens uppdatering kontrollanter är inaktivera
+
+item.multimeter.name=Flermätare
+item.multimeter.tooltip.blockpos=Inriktning på block %s vid %s %s %s
+item.multimeter.tooltip=Flermätaren tillåter användare att se energi inuti ett block utan att öppna deras gui! smyg höger klivka på ett block för att sätta inriktning så att Flermätaren bara visar energi på insidan av det blocket. Genom att höger klicka i luften, kommer det inriktade blocket att återställas
+
+update.ready=Det finns en updatering för %s tillgänglig!
+update.version=Nuvarande Verison: %s, Nyaste Versionen: %s
+update.download=Tryck För Att Ladda Ner
+update.changelog=Håll För Att Visa Ändrings Loggen
+
+command.tileentity.usage=/tileenitty <x> <y> <z> energi få [sida] eller /tileenitty <x> <y> <z> energi <sätt:ge:ta> <energi> <enhet> [sida]
+command.tileentity.nosupport=Det finns inget stöd för tile entityn vid positionen %s %s %s
+command.tileentity.notake=Den här tile entityn tillåter inte att energi tas från den
+command.tileentity.nogive=Den här tile entityn tillåter inte att energi ges till den
+command.tileentity.noset=Den här tile entityn tillåter inte att sätta energin i den
