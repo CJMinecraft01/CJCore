@@ -85,5 +85,4 @@ public class NetworkUtils {
 	public static EnergyUnit readEnergyUnit(ByteBuf buf) {
 		return EnergyUnits.byUnlocalizedName(ByteBufUtils.readUTF8String(buf));
 	}
-
 }

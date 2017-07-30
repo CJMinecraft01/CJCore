@@ -1,29 +1,15 @@
 package cjminecraft.core.energy;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import javax.annotation.Nullable;
-
 import cjminecraft.core.CJCore;
-import cjminecraft.core.client.gui.EnergyBarOverlay;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
 import cjminecraft.core.energy.support.IEnergySupport;
-import cjminecraft.core.energy.support.IndustrialCraftSupport;
 import cjminecraft.core.energy.support.TeslaSupport;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.energy.PacketGetCapacity;
 import cjminecraft.core.network.energy.PacketGetEnergy;
 import cjminecraft.core.network.energy.PacketGetEnergyData;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -33,22 +19,31 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.Loader;
 import scala.annotation.meta.field;
 
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
 /**
  * Utility class for energy
  * 
  * @author CJMinecraft
  *
  */
+@SuppressWarnings({"WeakerAccess", "unchecked"})
 public class EnergyUtils {
 
-	private static HashMap<String, HashMap<String, EnergyData>> cachedEnergyData = new HashMap<String, HashMap<String, EnergyData>>();
+	private static HashMap<String, HashMap<String, EnergyData>> cachedEnergyData = new HashMap<>();
 
 	/**
 	 * Lists of registered support
 	 */
-	private static List<IEnergySupport> energyHolderSupport = new ArrayList<IEnergySupport>();
-	private static List<IEnergySupport> energyConsumerSupport = new ArrayList<IEnergySupport>();
-	private static List<IEnergySupport> energyProducerSupport = new ArrayList<IEnergySupport>();
+	private static List<IEnergySupport> energyHolderSupport = new ArrayList<>();
+	private static List<IEnergySupport> energyConsumerSupport = new ArrayList<>();
+	private static List<IEnergySupport> energyProducerSupport = new ArrayList<>();
 
 	/**
 	 * Should not be called outside of {@link CJCore}
@@ -69,18 +64,6 @@ public class EnergyUtils {
 			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());
 			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
 			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
-		}
-		if (Loader.isModLoaded("buildcraftcore")) {
-			CJCore.logger.info("Adding Buildcraft Support!");
-			addEnergyHolderSupport(new BuildCraftSupport.BuildCraftHolderSupport());
-			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
-			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
-		}
-		if (Loader.isModLoaded("ic2")) {
-			CJCore.logger.info("Adding Industrial Craft 2 Support!");
-			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
-			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());
-			addEnergyProducerSupport(new IndustrialCraftSupport.IndustrialCraftSourceSupport());
 		}
 	}
 
@@ -143,18 +126,16 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} which holds energy
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has support.
+	 * 		   Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(TileEntity te, EnumFacing from) {
-		if (te == null)
-			return null;
+		if (te == null) return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
-			if (support.hasSupport(te, from))
-				return support;
+			if (support.hasSupport(te, from)) 
+			    return support;
 		return null;
 	}
 
@@ -166,15 +147,13 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} which consumes energy
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has support.
+	 *         Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(TileEntity te, EnumFacing from) {
-		if (te == null)
-			return null;
+		if (te == null) return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(te, from))
 				return support;
@@ -190,15 +169,13 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} which produces energy
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has support.
+	 *         Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(TileEntity te, EnumFacing from) {
-		if (te == null)
-			return null;
+		if (te == null) return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(te, from))
 				return support;
@@ -213,14 +190,13 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} which holds energy
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has support.
+	 *         Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(ItemStack stack, EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
+		if (stack == null || stack.isEmpty())
 			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(stack, from))
@@ -236,15 +212,13 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} which consumes energy
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has support.
+	 *         Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(ItemStack stack, EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
-			return null;
+		if (stack == null || stack.isEmpty()) return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(stack, from))
 				return support;
@@ -259,15 +233,13 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} which produces energy
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has support.
+	 *         Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(ItemStack stack, EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
-			return null;
+		if (stack == null || stack.isEmpty()) return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(stack, from))
 				return support;
@@ -282,10 +254,9 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} which handles energy
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link TileEntity} if it has support.
+	 *         Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergySupport(TileEntity te, EnumFacing from) {
@@ -305,10 +276,9 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} which handles energy
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has
-	 *         support. Can be <code>null</code>
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
+	 * @return The {@link IEnergySupport} for the {@link ItemStack} if it has support.
+	 *         Can be <code>null</code>
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergySupport(ItemStack stack, EnumFacing from) {
@@ -326,8 +296,7 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} to test
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @return Whether the {@link TileEntity} has a compatible energy support
 	 */
 	public static boolean hasSupport(TileEntity te, EnumFacing from) {
@@ -340,14 +309,12 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} to test
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
 	 * @return Whether the {@link ItemStack} has a compatible energy support
 	 */
 	public static boolean hasSupport(ItemStack stack, EnumFacing from) {
 		return getEnergySupport(stack, from) != null;
 	}
-
 	/**
 	 * Convert one energy unit to another energy unit
 	 * 
@@ -362,7 +329,6 @@ public class EnergyUtils {
 	public static long convertEnergy(EnergyUnit from, EnergyUnit to, long energy) {
 		return (long) ((double) energy / (double) from.getMultiplier() * (double) to.getMultiplier());
 	}
-
 	/**
 	 * Displays any energy in a short and simplified {@link String}
 	 * 
@@ -379,73 +345,37 @@ public class EnergyUtils {
 		char prefix = "KMGTPE".charAt(exp - 1);
 		return String.format("%.1f %s" + unit.getSuffix(), energy / Math.pow(1000, exp), prefix);
 	}
-
 	/**
 	 * Get the energy stored from the given {@link TileEntity}
 	 * 
 	 * @param te
 	 *            The {@link TileEntity} which holds the energy
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The amount of energy stored in the {@link TileEntity} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long getEnergyStored(TileEntity te, EnumFacing from) {
-		return getEnergyStored(te, from, EnergyUnits.MINECRAFT_JOULES);
-	}
-
-	/**
-	 * Get the energy stored from the given {@link ItemStack}
-	 * 
-	 * @param stack
-	 *            The {@link ItemStack} which holds the energy
-	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The amount of energy stored in the {@link ItemStack} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long getEnergyStored(ItemStack stack, EnumFacing from) {
-		return getEnergyStored(stack, from, EnergyUnits.MINECRAFT_JOULES);
-	}
-
-	/**
-	 * Get the energy stored from the given {@link TileEntity}
-	 * 
-	 * @param te
-	 *            The {@link TileEntity} which holds the energy
-	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param unit
 	 *            The unit the energy stored will be returned in
-	 * @return The amount of energy stored in the {@link TileEntity} in the
-	 *         {@link EnergyUnit} provided
+	 * @return The amount of energy stored in the {@link TileEntity} in the {@link EnergyUnit} provided
 	 */
-	public static long getEnergyStored(TileEntity te, EnumFacing from, EnergyUnit unit) {
+	@SuppressWarnings("unchecked")
+    public static long getEnergyStored(TileEntity te, EnumFacing from, EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(te, from);
 		if (support != null)
 			return convertEnergy(support.defaultEnergyUnit(), unit,
 					support.getEnergyStored(support.getContainer(te, from), from));
 		return 0;
 	}
-
 	/**
 	 * Get the energy stored from the given {@link ItemStack}
 	 * 
 	 * @param stack
 	 *            The {@link ItemStack} which holds the energy
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
 	 * @param unit
 	 *            The unit the energy stored will be returned in
-	 * @return The amount of energy stored in the {@link ItemStack} in the
-	 *         {@link EnergyUnit} provided
+	 * @return The amount of energy stored in the {@link ItemStack} in the {@link EnergyUnit} provided
 	 */
+   
 	public static long getEnergyStored(ItemStack stack, EnumFacing from, EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(stack, from);
 		if (support != null)
@@ -453,51 +383,16 @@ public class EnergyUtils {
 					support.getEnergyStored(support.getContainer(stack, from), from));
 		return 0;
 	}
-
 	/**
 	 * Get the capacity from the given {@link TileEntity}
 	 * 
 	 * @param te
 	 *            The {@link TileEntity} which holds the energy
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The maximum amount of energy in the {@link TileEntity} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long getCapacity(TileEntity te, EnumFacing from) {
-		return getCapacity(te, from, EnergyUnits.MINECRAFT_JOULES);
-	}
-
-	/**
-	 * Get the capacity from the given {@link ItemStack}
-	 * 
-	 * @param stack
-	 *            The {@link ItemStack} which holds the energy
-	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The maximum amount of energy in the {@link ItemStack} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long getCapacity(ItemStack stack, EnumFacing from) {
-		return getCapacity(stack, from, EnergyUnits.MINECRAFT_JOULES);
-	}
-
-	/**
-	 * Get the capacity from the given {@link TileEntity}
-	 * 
-	 * @param te
-	 *            The {@link TileEntity} which holds the energy
-	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param unit
 	 *            The unit the capacity will be returned in
-	 * @return The maximum amount of energy in the {@link TileEntity} in the
-	 *         {@link EnergyUnit} provided
+	 * @return The maximum amount of energy in the {@link TileEntity} in the {@link EnergyUnit} provided
 	 */
 	public static long getCapacity(TileEntity te, EnumFacing from, EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(te, from);
@@ -513,12 +408,10 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} which holds the energy
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
 	 * @param unit
 	 *            The unit the capacity will be returned in
-	 * @return The maximum amount of energy in the {@link ItemStack} in the
-	 *         {@link EnergyUnit} provided
+	 * @return The maximum amount of energy in the {@link ItemStack} in the {@link EnergyUnit} provided
 	 */
 	public static long getCapacity(ItemStack stack, EnumFacing from, EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(stack, from);
@@ -534,64 +427,17 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} which will receive energy
 	 * @param energy
-	 *            The energy to be given in the
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} unit
-	 * @param simulate
-	 *            Whether or not it is a simulation. If so, no energy is
-	 *            actually given
-	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The amount of energy which was given (or would have been given if
-	 *         it is simulated) in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long giveEnergy(TileEntity te, long energy, boolean simulate, EnumFacing from) {
-		return giveEnergy(te, energy, EnergyUnits.MINECRAFT_JOULES, simulate, from);
-	}
-
-	/**
-	 * Give energy to the given {@link ItemStack}
-	 * 
-	 * @param stack
-	 *            The {@link ItemStack} which will receive energy
-	 * @param energy
-	 *            The energy to be given in the
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} unit
-	 * @param simulate
-	 *            Whether or not it is a simulation. If so, no energy is
-	 *            actually given
-	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The amount of energy which was given (or would have been given if
-	 *         it is simulated) in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long giveEnergy(ItemStack stack, long energy, boolean simulate, EnumFacing from) {
-		return giveEnergy(stack, energy, EnergyUnits.MINECRAFT_JOULES, simulate, from);
-	}
-
-	/**
-	 * Give energy to the given {@link TileEntity}
-	 * 
-	 * @param te
-	 *            The {@link TileEntity} which will receive energy
-	 * @param energy
 	 *            The energy to be given in the provided {@link EnergyUnit}
 	 * @param unit
-	 *            The {@link EnergyUnit} of the energy to give and the energy
-	 *            returned
+	 *            The {@link EnergyUnit} of the energy to give and the energy returned
 	 * @param simulate
-	 *            Whether or not it is a simulation. If so, no energy is
-	 *            actually given
+	 *            Whether or not it is a simulation.
+	 *            If so, no energy is actually given
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The amount of energy which was given (or would have been given if
-	 *         it is simulated) in the {@link EnergyUnit} provided
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
+	 * @return The amount of energy which was given
+	 *         (or would have been given if it is simulated)
+	 *         in the {@link EnergyUnit} provided
 	 */
 	public static long giveEnergy(TileEntity te, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(te, from);
@@ -609,16 +455,16 @@ public class EnergyUtils {
 	 * @param energy
 	 *            The energy to be given in the provided {@link EnergyUnit}
 	 * @param unit
-	 *            The {@link EnergyUnit} of the energy to give and the energy
-	 *            returned
+	 *            The {@link EnergyUnit} of the energy to give and the energy returned
 	 * @param simulate
-	 *            Whether or not it is a simulation. If so, no energy is
-	 *            actually given
+	 *            Whether or not it is a simulation.
+	 *            If so, no energy is actually given
 	 * @param from
 	 *            The side of the {@link ItemStack} for use with
 	 *            {@link Capability}
-	 * @return The amount of energy which was given (or would have been given if
-	 *         it is simulated) in the {@link EnergyUnit} provided
+	 * @return The amount of energy which was given
+	 *         (or would have been given if it is simulated)
+	 *         in the {@link EnergyUnit} provided
 	 */
 	public static long giveEnergy(ItemStack stack, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(stack, from);
@@ -644,9 +490,9 @@ public class EnergyUtils {
 	 * @param from
 	 *            The side of the {@link TileEntity} for use with
 	 *            {@link Capability}
-	 * @return The amount of energy which was taken (or would have been taken if
-	 *         it is simulated) in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 * @return The amount of energy which was taken
+	 *         (or would have been taken if it is simulated)
+	 *         in the {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long takeEnergy(TileEntity te, long energy, boolean simulate, EnumFacing from) {
@@ -686,13 +532,13 @@ public class EnergyUtils {
 	 * @param unit
 	 *            The {@link EnergyUnit} the energy will be returned in
 	 * @param simulate
-	 *            Whether or not it is a simulation. If so, no energy is
-	 *            actually taken
+	 *            Whether or not it is a simulation.
+	 *            If so, no energy is actually taken
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @return The amount of energy which was taken (or would have been taken if
-	 *         it is simulated) in the {@link EnergyUnit} provided
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
+	 * @return The amount of energy which was taken
+	 *         (or would have been taken if it is simulated)
+	 *         in the {@link EnergyUnit} provided
 	 */
 	public static long takeEnergy(TileEntity te, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
 		IEnergySupport support = getEnergyProducerSupport(te, from);
@@ -714,13 +560,13 @@ public class EnergyUtils {
 	 * @param unit
 	 *            The {@link EnergyUnit} the energy will be returned in
 	 * @param simulate
-	 *            Whether or not it is a simulation. If so, no energy is
-	 *            actually taken
+	 *            Whether or not it is a simulation.
+     *            If so, no energy is actually taken
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The amount of energy which was taken (or would have been taken if
-	 *         it is simulated) in the {@link EnergyUnit} provided
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
+	 * @return The amount of energy which was taken
+     *         (or would have been taken if it is simulated)
+     *         in the {@link EnergyUnit} provided
 	 */
 	public static long takeEnergy(ItemStack stack, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
 		IEnergySupport support = getEnergyProducerSupport(stack, from);
@@ -738,13 +584,12 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} which holds energy
 	 * @param energy
-	 *            The energy to set in the {@link EnergyUnits#MINECRAFT_JOULES}
-	 *            unit
+	 *            The energy to set in the
+     *            {@link EnergyUnits#MINECRAFT_JOULES} unit
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability} {@link Capability}
-	 * @return The energy which was set in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
+	 * @return The energy which was set in the
+     *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long setEnergy(TileEntity te, long energy, EnumFacing from) {
@@ -760,10 +605,9 @@ public class EnergyUtils {
 	 *            The energy to set in the {@link EnergyUnits#MINECRAFT_JOULES}
 	 *            unit
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
-	 * @return The energy which was set in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
+	 * @return The energy which was set in the
+     *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long setEnergy(ItemStack stack, long energy, EnumFacing from) {
@@ -780,8 +624,7 @@ public class EnergyUtils {
 	 * @param unit
 	 *            The unit of the energy will be returned in
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @return The energy which was set
 	 */
 	public static long setEnergy(TileEntity te, long energy, EnergyUnit unit, EnumFacing from) {
@@ -805,8 +648,7 @@ public class EnergyUtils {
 	 * @param unit
 	 *            The unit of the energy will be returned in
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
 	 * @return The energy which was set
 	 */
 	public static long setEnergy(ItemStack stack, long energy, EnergyUnit unit, EnumFacing from) {
@@ -826,15 +668,12 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} to test
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @return Whether the {@link TileEntity} can receive energy
 	 */
 	public static boolean canReceive(TileEntity te, EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(te, from);
-		if (support != null)
-			return support.canReceive(support.getContainer(te, from), from);
-		return false;
+		return support != null && support.canReceive(support.getContainer(te, from), from);
 	}
 
 	/**
@@ -843,16 +682,13 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} to test
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
 	 * @return Whether the {@link ItemStack} can receive energy
 	 */
 	public static boolean canReceive(ItemStack stack, EnumFacing from) {
-		IEnergySupport support = getEnergyConsumerSupport(stack, from);
-		if (support != null)
-			return support.canReceive(support.getContainer(stack, from), from);
-		return false;
-	}
+        IEnergySupport support = getEnergyConsumerSupport(stack, from);
+        return support != null && support.canReceive(support.getContainer(stack, from), from);
+    }
 
 	/**
 	 * Checks whether the {@link TileEntity} can have energy extracted
@@ -860,16 +696,13 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} to test
 	 * @param from
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @return Whether the {@link TileEntity} can have energy extracted
 	 */
 	public static boolean canExtract(TileEntity te, EnumFacing from) {
-		IEnergySupport support = getEnergyProducerSupport(te, from);
-		if (support != null)
-			return support.canExtract(support.getContainer(te, from), from);
-		return false;
-	}
+        IEnergySupport support = getEnergyProducerSupport(te, from);
+        return support != null && support.canExtract(support.getContainer(te, from), from);
+    }
 
 	/**
 	 * Checks whether the {@link ItemStack} can have energy extracted
@@ -877,84 +710,34 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} to test
 	 * @param from
-	 *            The side of the {@link ItemStack} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link ItemStack} for use with {@link Capability}
 	 * @return Whether the {@link ItemStack} can have energy extracted
 	 */
 	public static boolean canExtract(ItemStack stack, EnumFacing from) {
-		IEnergySupport support = getEnergyProducerSupport(stack, from);
-		if (support != null)
-			return support.canExtract(support.getContainer(stack, from), from);
-		return false;
-	}
+        IEnergySupport support = getEnergyProducerSupport(stack, from);
+        return support != null && support.canExtract(support.getContainer(stack, from), from);
+    }
 
 	/**
-	 * Takes energy from all connecting energy handlers surrounding the target
-	 * block
+	 * Takes energy from all connecting energy handlers surrounding the target block
 	 * 
 	 * @param world
 	 *            The world to get the {@link TileEntity} from
 	 * @param pos
 	 *            The center position
 	 * @param energy
-	 *            The energy to take altogether. Will be distributed evenly
-	 *            between the {@link TileEntity}s. Needs to be in the
-	 *            {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
-	 * @param simulate
-	 *            Whether it is a simulation or not. If so, the energy won't
-	 *            actually be taken
-	 * @return The amount of energy taken in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long takeEnergyAllFaces(World world, BlockPos pos, long energy, boolean simulate) {
-		return takeEnergyAllFaces(world, pos, energy, EnergyUnits.MINECRAFT_JOULES, simulate);
-	}
-
-	/**
-	 * Gives energy to all connecting energy handlers surrounding the target
-	 * block
-	 * 
-	 * @param world
-	 *            The world to get the {@link TileEntity} from
-	 * @param pos
-	 *            The center position
-	 * @param energy
-	 *            The energy to give altogether. Will be distributed evenly
-	 *            between the {@link TileEntity}s. Needs to be in the
-	 *            {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
-	 * @param simulate
-	 *            Whether it is a simulation or not. If so, the energy won't
-	 *            actually be given
-	 * @return The amount of energy given in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
-	 */
-	@Deprecated
-	public static long giveEnergyAllFaces(World world, BlockPos pos, long energy, boolean simulate) {
-		return giveEnergyAllFaces(world, pos, energy, EnergyUnits.MINECRAFT_JOULES, simulate);
-	}
-
-	/**
-	 * Takes energy from all connecting energy handlers surrounding the target
-	 * block
-	 * 
-	 * @param world
-	 *            The world to get the {@link TileEntity} from
-	 * @param pos
-	 *            The center position
-	 * @param energy
-	 *            The energy to take altogether. Will be distributed evenly
-	 *            between the {@link TileEntity}s. Needs to be in the
-	 *            {@link EnergyUnit} provided
+	 *            The energy to take altogether.
+     *            Will be distributed evenly between the {@link TileEntity}s.
+     *            Needs to be in the {@link EnergyUnit} provided
 	 * @param unit
 	 *            The unit the energy taken will be returned in
 	 * @param simulate
-	 *            Whether it is a simulation or not. If so, the energy won't
-	 *            actually be taken
+	 *            Whether it is a simulation or not.
+     *            If so, the energy won't actually be taken
 	 * @return The amount of energy taken in the {@link EnergyUnit} provided
 	 */
 	public static long takeEnergyAllFaces(World world, BlockPos pos, long energy, EnergyUnit unit, boolean simulate) {
-		HashMap<EnumFacing, TileEntity> tiles = new HashMap<EnumFacing, TileEntity>();
+		HashMap<EnumFacing, TileEntity> tiles = new HashMap<>();
 		for (EnumFacing side : EnumFacing.VALUES) {
 			TileEntity te = world.getTileEntity(pos.offset(side));
 			if (te == null)
@@ -983,26 +766,25 @@ public class EnergyUtils {
 	}
 
 	/**
-	 * Gives energy to all connecting energy handlers surrounding the target
-	 * block
+	 * Gives energy to all connecting energy handlers surrounding the target block
 	 * 
 	 * @param world
 	 *            The world to get the {@link TileEntity} from
 	 * @param pos
 	 *            The center position
 	 * @param energy
-	 *            The energy to give altogether. Will be distributed evenly
-	 *            between the {@link TileEntity}s. Needs to be in the
-	 *            {@link EnergyUnit} provided
+	 *            The energy to give altogether.
+     *            Will be distributed evenly between the {@link TileEntity}s.
+     *            Needs to be in the {@link EnergyUnit} provided
 	 * @param unit
 	 *            The {@link EnergyUnit} the energy given will be returned in
 	 * @param simulate
-	 *            Whether it is a simulation or not. If so, the energy won't
-	 *            actually be given
+	 *            Whether it is a simulation or not.
+     *            If so, the energy won't actually be given
 	 * @return The amount of energy given in the {@link EnergyUnit} provided
 	 */
 	public static long giveEnergyAllFaces(World world, BlockPos pos, long energy, EnergyUnit unit, boolean simulate) {
-		HashMap<EnumFacing, TileEntity> tiles = new HashMap<EnumFacing, TileEntity>();
+		HashMap<EnumFacing, TileEntity> tiles = new HashMap<>();
 		for (EnumFacing side : EnumFacing.VALUES) {
 			TileEntity te = world.getTileEntity(pos.offset(side));
 			if (te == null)
@@ -1042,7 +824,7 @@ public class EnergyUtils {
 	 */
 	public static void addCachedEnergyData(String modid, String className, EnergyData data) {
 		if (!cachedEnergyData.containsKey(modid))
-			cachedEnergyData.put(modid, new HashMap<String, EnergyData>());
+			cachedEnergyData.put(modid, new HashMap<>());
 		if (!cachedEnergyData.get(modid).containsKey(className))
 			cachedEnergyData.get(modid).put(className, data);
 	}
@@ -1081,281 +863,15 @@ public class EnergyUtils {
 	 * Sync energy with the server. To get the data use
 	 * {@link #getCachedEnergyData(String)} or
 	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getEnergy()}. This will store the data in the calling
-	 * class in the cache
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param modid
-	 *            The modid for mod specific data
-	 */
-	@Deprecated
-	public static void syncEnergy(BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
-				new Exception().getStackTrace()[1].getClassName()));
-	}
-
-	/**
-	 * Sync energy with the server. To get the data use
-	 * {@link #getCachedEnergyData(String)} or
-	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getEnergy()}. This will store the data in the class
-	 * path provided in the cache
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param modid
-	 *            The modid for mod specific data
-	 * @param className
-	 *            The name of the class for the cache
-	 */
-	@Deprecated
-	public static void syncEnergy(BlockPos pos, EnumFacing side, String modid, String className) {
-		PacketHandler.INSTANCE
-				.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
-	}
-
-	/**
-	 * Sync capacity with the server. To get the data use
-	 * {@link #getCachedEnergyData(String)} or
-	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getCapacity()}. This will store the data in the calling
-	 * class in the cache
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param modid
-	 *            The modid for mod specific data
-	 */
-	@Deprecated
-	public static void syncCapacity(BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
-				new Exception().getStackTrace()[1].getClassName()));
-	}
-
-	/**
-	 * Sync capacity with the server. To get the data use
-	 * {@link #getCachedEnergyData(String)} or
-	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getEnergy()}. This will store the data in the class
-	 * path provided in the cache
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param modid
-	 *            The modid for mod specific data
-	 * @param className
-	 *            The name of the class for the cache
-	 */
-	@Deprecated
-	public static void syncCapacity(BlockPos pos, EnumFacing side, String modid, String className) {
-		PacketHandler.INSTANCE
-				.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
-	}
-
-	/**
-	 * Sync {@link EnergyData} with the server. To get the data use
-	 * {@link #getCachedEnergyData(String)} or
-	 * {@link #getCachedEnergyData(String, String)}. This will store the data in
-	 * the calling class in the cache
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param modid
-	 *            The modid for mod specific data
-	 */
-	@Deprecated
-	public static void syncEnergyData(BlockPos pos, EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false,
-				modid, new Exception().getStackTrace()[1].getClassName()));
-	}
-
-	/**
-	 * Sync {@link EnergyData} with the server. To get the data use
-	 * {@link #getCachedEnergyData(String)} or
-	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getEnergy()}. This will store the data in the class
-	 * path provided in the cache
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param modid
-	 *            The modid for mod specific data
-	 * @param className
-	 *            The name of the class for the cache
-	 */
-	@Deprecated
-	public static void syncEnergyData(BlockPos pos, EnumFacing side, String modid, String className) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
-	}
-
-	/**
-	 * Sync energy using a {@link Field} in the calling class. This will set the
-	 * fields value to the energy of the {@link TileEntity} at the given
-	 * {@link BlockPos}
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
-	 */
-	@Deprecated
-	public static void syncEnergyField(BlockPos pos, EnumFacing side, String energyFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
-				new Exception().getStackTrace()[1].getClassName(), energyFieldName));
-	}
-
-	/**
-	 * Sync energy using a {@link Field} in the class provided. This will set
-	 * the fields value to the energy of the {@link TileEntity} at the given
-	 * {@link BlockPos}
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param className
-	 *            The name of the class which holds the {@link field}
-	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
-	 */
-	@Deprecated
-	public static void syncEnergyField(BlockPos pos, EnumFacing side, String className, String energyFieldName) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, energyFieldName));
-	}
-
-	/**
-	 * Sync capacity using a {@link Field} in the calling class. This will set
-	 * the fields value to the capacity of the {@link TileEntity} at the given
-	 * {@link BlockPos}
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
-	 */
-	@Deprecated
-	public static void syncCapacityField(BlockPos pos, EnumFacing side, String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
-				new Exception().getStackTrace()[1].getClassName(), capacityFieldName));
-	}
-
-	/**
-	 * Sync capacity using a {@link Field} in the class provided. This will set
-	 * the fields value to the capacity of the {@link TileEntity} at the given
-	 * {@link BlockPos}
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param className
-	 *            The name of the class which holds the {@link field}
-	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
-	 */
-	@Deprecated
-	public static void syncCapacityField(BlockPos pos, EnumFacing side, String className, String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, capacityFieldName));
-	}
-
-	/**
-	 * Sync energy and capacity using {@link Field}s in the calling class. This
-	 * will set the fields values to the energy and capacity (each respectively)
-	 * of the {@link TileEntity} at the given {@link BlockPos}
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
-	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
-	 */
-	@Deprecated
-	public static void syncEnergyDataFields(BlockPos pos, EnumFacing side, String energyFieldName,
-			String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
-				new Exception().getStackTrace()[1].getClassName(), energyFieldName, capacityFieldName));
-	}
-
-	/**
-	 * Sync energy and capacity using {@link Field}s in the class provided. This
-	 * will set the fields values to the energy and capacity (each respectively)
-	 * of the {@link TileEntity} at the given {@link BlockPos}
-	 * 
-	 * @param pos
-	 *            The position of the {@link TileEntity}
-	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
-	 * @param className
-	 *            The name of the class which holds the {@link field}
-	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
-	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
-	 */
-	@Deprecated
-	public static void syncEnergyDataFields(BlockPos pos, EnumFacing side, String className, String energyFieldName,
-			String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
-				className, energyFieldName, capacityFieldName));
-	}
-
-	/**
-	 * Sync energy with the server. To get the data use
-	 * {@link #getCachedEnergyData(String)} or
-	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getEnergy()}. This will store the data in the calling
-	 * class in the cache
+	 * {@link EnergyData#getEnergy()}.
+     * This will store the data in the calling class in the cache
 	 * 
 	 * @param unit
 	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param modid
 	 *            The modid for mod specific data
 	 */
@@ -1368,16 +884,15 @@ public class EnergyUtils {
 	 * Sync energy with the server. To get the data use
 	 * {@link #getCachedEnergyData(String)} or
 	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getEnergy()}. This will store the data in the class
-	 * path provided in the cache
+	 * {@link EnergyData#getEnergy()}.
+     * This will store the data in the class path provided in the cache
 	 * 
 	 * @param unit
 	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param modid
 	 *            The modid for mod specific data
 	 * @param className
@@ -1391,17 +906,15 @@ public class EnergyUtils {
 	 * Sync capacity with the server. To get the data use
 	 * {@link #getCachedEnergyData(String)} or
 	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getCapacity()}. This will store the data in the calling
-	 * class in the cache
+	 * {@link EnergyData#getCapacity()}.
+     * This will store the data in the calling class in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the capacity will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the capacity will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param modid
 	 *            The modid for mod specific data
 	 */
@@ -1418,13 +931,11 @@ public class EnergyUtils {
 	 * path provided in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the capacity will be returned
-	 *            in
+	 *            The {@link EnergyUnit} in which the capacity will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param modid
 	 *            The modid for mod specific data
 	 * @param className
@@ -1437,17 +948,15 @@ public class EnergyUtils {
 	/**
 	 * Sync {@link EnergyData} with the server. To get the data use
 	 * {@link #getCachedEnergyData(String)} or
-	 * {@link #getCachedEnergyData(String, String)}. This will store the data in
-	 * the calling class in the cache
+	 * {@link #getCachedEnergyData(String, String)}.
+     * This will store the data in the calling class in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy data will be
-	 *            returned in
+	 *            The {@link EnergyUnit} in which the energy data will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param modid
 	 *            The modid for mod specific data
 	 */
@@ -1460,17 +969,15 @@ public class EnergyUtils {
 	 * Sync {@link EnergyData} with the server. To get the data use
 	 * {@link #getCachedEnergyData(String)} or
 	 * {@link #getCachedEnergyData(String, String)} and then use
-	 * {@link EnergyData#getEnergy()}. This will store the data in the class
-	 * path provided in the cache
+	 * {@link EnergyData#getEnergy()}.
+     * This will store the data in the class path provided in the cache
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy data will be
-	 *            returned in
+	 *            The {@link EnergyUnit} in which the energy data will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param modid
 	 *            The modid for mod specific data
 	 * @param className
@@ -1482,19 +989,17 @@ public class EnergyUtils {
 
 	/**
 	 * Sync energy using a {@link Field} in the calling class. This will set the
-	 * fields value to the energy of the {@link TileEntity} at the given
-	 * {@link BlockPos}
+	 * fields value to the energy of the {@link TileEntity} at the given {@link BlockPos}
 	 * 
 	 * @param unit
 	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the energy.
+     *            Must be a <code>long</code>
 	 */
 	public static void syncEnergyField(EnergyUnit unit, BlockPos pos, EnumFacing side, String energyFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(unit, pos, side, true,
@@ -1503,21 +1008,19 @@ public class EnergyUtils {
 
 	/**
 	 * Sync energy using a {@link Field} in the class provided. This will set
-	 * the fields value to the energy of the {@link TileEntity} at the given
-	 * {@link BlockPos}
+	 * the fields value to the energy of the {@link TileEntity} at the given {@link BlockPos}
 	 * 
 	 * @param unit
 	 *            The {@link EnergyUnit} in which the energy will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param className
 	 *            The name of the class which holds the {@link field}
 	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the energy.
+     *            Must be a <code>long</code>
 	 */
 	public static void syncEnergyField(EnergyUnit unit, BlockPos pos, EnumFacing side, String className,
 			String energyFieldName) {
@@ -1526,8 +1029,7 @@ public class EnergyUtils {
 
 	/**
 	 * Sync capacity using a {@link Field} in the calling class. This will set
-	 * the fields value to the capacity of the {@link TileEntity} at the given
-	 * {@link BlockPos}
+	 * the fields value to the capacity of the {@link TileEntity} at the given {@link BlockPos}
 	 * 
 	 * @param unit
 	 *            The {@link EnergyUnit} in which the capacity will be returned
@@ -1535,11 +1037,10 @@ public class EnergyUtils {
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the capacity.
+     *            Must be a <code>long</code>
 	 */
 	public static void syncCapacityField(EnergyUnit unit, BlockPos pos, EnumFacing side, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(unit, pos, side, true,
@@ -1548,8 +1049,7 @@ public class EnergyUtils {
 
 	/**
 	 * Sync capacity using a {@link Field} in the class provided. This will set
-	 * the fields value to the capacity of the {@link TileEntity} at the given
-	 * {@link BlockPos}
+	 * the fields value to the capacity of the {@link TileEntity} at the given {@link BlockPos}
 	 * 
 	 * @param unit
 	 *            The {@link EnergyUnit} in which the capacity will be returned
@@ -1557,13 +1057,12 @@ public class EnergyUtils {
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param className
 	 *            The name of the class which holds the {@link field}
 	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the capacity.
+     *            Must be a <code>long</code>
 	 */
 	public static void syncCapacityField(EnergyUnit unit, BlockPos pos, EnumFacing side, String className,
 			String capacityFieldName) {
@@ -1576,19 +1075,17 @@ public class EnergyUtils {
 	 * of the {@link TileEntity} at the given {@link BlockPos}
 	 * 
 	 * @param unit
-	 *            The {@link EnergyUnit} in which the energy data will be
-	 *            returned in
+	 *            The {@link EnergyUnit} in which the energy data will be returned in
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the energy.
+     *            Must be a <code>long</code>
 	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the capacity.
+     *            Must be a <code>long</code>
 	 */
 	public static void syncEnergyDataFields(EnergyUnit unit, BlockPos pos, EnumFacing side, String energyFieldName,
 			String capacityFieldName) {
@@ -1607,21 +1104,19 @@ public class EnergyUtils {
 	 * @param pos
 	 *            The position of the {@link TileEntity}
 	 * @param side
-	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            The side of the {@link TileEntity} for use with {@link Capability}
 	 * @param className
 	 *            The name of the class which holds the {@link field}
 	 * @param energyFieldName
-	 *            The name of the field which will hold the energy. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the energy.
+     *            Must be a <code>long</code>
 	 * @param capacityFieldName
-	 *            The name of the field which will hold the capacity. Must be a
-	 *            <code>long</code>
+	 *            The name of the field which will hold the capacity.
+     *            Must be a <code>long</code>
 	 */
 	public static void syncEnergyDataFields(EnergyUnit unit, BlockPos pos, EnumFacing side, String className,
 			String energyFieldName, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetEnergyData(unit, pos, side, true, className, energyFieldName, capacityFieldName));
 	}
-
 }

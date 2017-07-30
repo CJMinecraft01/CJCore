@@ -1,15 +1,13 @@
 package cjminecraft.core.client.gui;
 
-import java.text.NumberFormat;
-
-import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
-import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.items.ItemMultimeter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
+import java.text.NumberFormat;
 
 /**
  * The overlay for use with {@link ItemMultimeter}
@@ -37,8 +35,7 @@ public class EnergyBarOverlay extends EnergyBar {
 	 * @param energy
 	 *            The amount of energy in the (@link EnergyBar) (can be 0)
 	 * @param capacity
-	 *            The maximum amount of energy in the (@link EnergyBar) (can be
-	 *            0)
+	 *            The maximum amount of energy in the (@link EnergyBar) (can be 0)
 	 */
 	public EnergyBarOverlay(int buttonId, int x, int y, long energy, long capacity) {
 		super(buttonId, x + 4, y + 4, energy, capacity);
@@ -62,8 +59,7 @@ public class EnergyBarOverlay extends EnergyBar {
 	 * @param energy
 	 *            The amount of energy in the {@link EnergyBar} (can be 0)
 	 * @param capacity
-	 *            The maximum amount of energy in the {@link EnergyBar} (can be
-	 *            0)
+	 *            The maximum amount of energy in the {@link EnergyBar} (can be 0)
 	 */
 	public EnergyBarOverlay(int buttonId, int x, int y, int width, int height, long energy, long capacity) {
 		super(buttonId, x + 4, y + 4, width, height, energy, capacity);
@@ -75,29 +71,29 @@ public class EnergyBarOverlay extends EnergyBar {
 	 * Draws the overlay
 	 */
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-		super.drawButton(mc, mouseX, mouseY); // Draws the actual bar
+	public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		super.drawButton(mc, mouseX, mouseY, partialTicks); // Draws the actual bar
 		// Outer rim
 		// Top
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 4, 0xFF000000);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 3, 0xFFFFFFFF);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 2, 0xFFFFFFFF);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 1, 0xFFC6C6C6);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y - 4, 0xFF000000);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y - 3, 0xFFFFFFFF);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y - 2, 0xFFFFFFFF);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y - 1, 0xFFC6C6C6);
 		// Right
-		this.drawVerticalLine(xPosition + width, yPosition - 1, yPosition + height + 1, 0xFFC6C6C6);
-		this.drawVerticalLine(xPosition + width + 1, yPosition - 1, yPosition + height + 1, 0xFF555555);
-		this.drawVerticalLine(xPosition + width + 2, yPosition - 1, yPosition + height + 1, 0xFF555555);
-		this.drawVerticalLine(xPosition + width + 3, yPosition - 1, yPosition + height + 1, 0xFF000000);
+		this.drawVerticalLine(this.x + width, this.y - 1, this.y + height + 1, 0xFFC6C6C6);
+		this.drawVerticalLine(this.x + width + 1, this.y - 1, this.y + height + 1, 0xFF555555);
+		this.drawVerticalLine(this.x + width + 2, this.y - 1, this.y + height + 1, 0xFF555555);
+		this.drawVerticalLine(this.x + width + 3, this.y - 1, this.y + height + 1, 0xFF000000);
 		// Bottom
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 1, 0xFFC6C6C6);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 2, 0xFF555555);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 3, 0xFF555555);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 4, 0xFF000000);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y + height + 1, 0xFFC6C6C6);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y + height + 2, 0xFF555555);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y + height + 3, 0xFF555555);
+		this.drawHorizontalLine(this.x, this.x + width - 1, this.y + height + 4, 0xFF000000);
 		// Left
-		this.drawVerticalLine(xPosition - 1, yPosition - 1, yPosition + height + 1, 0xFFC6C6C6);
-		this.drawVerticalLine(xPosition - 2, yPosition - 1, yPosition + height + 1, 0xFFFFFFFF);
-		this.drawVerticalLine(xPosition - 3, yPosition - 1, yPosition + height + 1, 0xFFFFFFFF);
-		this.drawVerticalLine(xPosition - 4, yPosition - 1, yPosition + height + 1, 0xFF000000);
+		this.drawVerticalLine(this.x - 1, this.y - 1, this.y + height + 1, 0xFFC6C6C6);
+		this.drawVerticalLine(this.x - 2, this.y - 1, this.y + height + 1, 0xFFFFFFFF);
+		this.drawVerticalLine(this.x - 3, this.y - 1, this.y + height + 1, 0xFFFFFFFF);
+		this.drawVerticalLine(this.x - 4, this.y - 1, this.y + height + 1, 0xFF000000);
 
 		// Allows alpha not to be drawn as black but transparent
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -107,32 +103,31 @@ public class EnergyBarOverlay extends EnergyBar {
 				GlStateManager.DestFactor.ZERO);
 		// Top left
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition - 4, yPosition - 4, 0, 85, 4, 4);
+		this.drawTexturedModalRect(this.x - 4, this.y - 4, 0, 85, 4, 4);
 		// Top right
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition + width, yPosition - 4, 4, 85, 4, 4);
+		this.drawTexturedModalRect(this.x + width, this.y - 4, 4, 85, 4, 4);
 		// Bottom Left
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition - 4, yPosition + height + 1, 0, 89, 4, 4);
+		this.drawTexturedModalRect(this.x - 4, this.y + height + 1, 0, 89, 4, 4);
 		// Bottom Right
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition + width, yPosition + height + 1, 4, 89, 4, 4);
+		this.drawTexturedModalRect(this.x + width, this.y + height + 1, 4, 89, 4, 4);
 		GlStateManager.disableBlend();
 
 		// Shows the energy inside of the {@link TileEntity}
 		if (!CJCoreConfig.MULTIMETER_SIMPLIFY_ENERGY) {
-			mc.fontRendererObj.drawStringWithShadow(NumberFormat.getNumberInstance().format(energy) + " "
+			mc.fontRenderer.drawStringWithShadow(NumberFormat.getNumberInstance().format(energy) + " "
 					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
 					+ (CJCoreConfig.MULTIMETER_SHOW_CAPACITY ? " / " + NumberFormat.getNumberInstance().format(capacity)
 							+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""),
-					xPosition + width + 6, yPosition + height - 7, 0xFFFFFF);
+					this.x + width + 6, this.y + height - 7, 0xFFFFFF);
 		} else {
-			mc.fontRendererObj.drawStringWithShadow(EnergyUtils.getEnergyAsString(energy,
+			mc.fontRenderer.drawStringWithShadow(EnergyUtils.getEnergyAsString(energy,
 					CJCoreConfig.DEFAULT_ENERGY_UNIT)
 					+ (CJCoreConfig.MULTIMETER_SHOW_CAPACITY
 							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig.DEFAULT_ENERGY_UNIT) : ""),
-					xPosition + width + 6, yPosition + height - 7, 0xFFFFFF);
+					this.x + width + 6, this.y + height - 7, 0xFFFFFF);
 		}
 	}
-
 }

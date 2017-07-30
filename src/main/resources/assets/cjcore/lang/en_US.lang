@@ -57,7 +57,7 @@ update.version=Current Version: %s, newest Version: %s
 update.download=Click To Download
 update.changelog=Hover to show change log
 
-command.tileentity.usage=/tileenitty <x> <y> <z> energy get [side] or /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side]
+command.tileentity.usage=/tileentity <x> <y> <z> energy get [side] or /tileentity <x> <y> <z> energy <set:give:take> <energy> <unit> [side]
 command.tileentity.nosupport=There is no support for the tile entity at position %s %s %s
 command.tileentity.notake=This tile entity does not allow energy to be taken
 command.tileentity.nogive=This tile entity does not allow energy to be given

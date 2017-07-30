@@ -82,8 +82,7 @@ public class PacketGetEnergyData implements IMessage {
 		if(this.updateFields) {
 			ByteBufUtils.writeUTF8String(buf, this.energyFieldName);
 			ByteBufUtils.writeUTF8String(buf, this.capacityFieldName);
-		} else
-			ByteBufUtils.writeUTF8String(buf, this.modid);
+		} else ByteBufUtils.writeUTF8String(buf, this.modid);
 	}
 	
 	public static class Handler implements IMessageHandler<PacketGetEnergyData, IMessage> {
@@ -97,7 +96,7 @@ public class PacketGetEnergyData implements IMessage {
 		}
 		
 		void processMessage(PacketGetEnergyData message, MessageContext ctx) {
-			TileEntity te = ctx.getServerHandler().playerEntity.getServerWorld().getTileEntity(message.pos);
+			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
 			if (!EnergyUtils.hasSupport(te, message.side))
@@ -105,11 +104,9 @@ public class PacketGetEnergyData implements IMessage {
 			long energy = EnergyUtils.getEnergyStored(te, message.side, message.unit);
 			long capacity = EnergyUtils.getCapacity(te, message.side, message.unit);
 			if(message.updateFields)
-				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergyData(energy, capacity, true, message.className, message.energyFieldName, message.capacityFieldName), ctx.getServerHandler().playerEntity);
+				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergyData(energy, capacity, true, message.className, message.energyFieldName, message.capacityFieldName), ctx.getServerHandler().player);
 			else
-				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergyData(energy, capacity, false, message.modid, message.className), ctx.getServerHandler().playerEntity);
+				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergyData(energy, capacity, false, message.modid, message.className), ctx.getServerHandler().player);
 		}
-		
 	}
-
 }

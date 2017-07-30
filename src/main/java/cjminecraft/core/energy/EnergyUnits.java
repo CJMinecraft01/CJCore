@@ -1,19 +1,16 @@
 package cjminecraft.core.energy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.text.WordUtils;
-import org.lwjgl.util.Color;
-import org.lwjgl.util.ReadableColor;
-
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.EnergyBar;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.text.WordUtils;
+import org.lwjgl.util.Color;
+import org.lwjgl.util.ReadableColor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handler of all the different types of {@link EnergyUnit}
@@ -37,8 +34,12 @@ public class EnergyUnits {
 		private String unlocalizedName;
 		/**
 		 * The multiplier to convert to the unit. The multiplier is how to
-		 * convert to {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10T = 1MJ
-		 * 10FE = 1MJ 4J = 1MJ 6EU = 1MJ
+		 * convert to {@link EnergyUnits#MINECRAFT_JOULES}
+		 * 		10RF = 1MJ
+		 * 		10T = 1MJ
+		 * 		10FE = 1MJ
+		 * 		4J = 1MJ
+		 * 		6EU = 1MJ
 		 */
 		private int multiplier;
 		/**
@@ -59,8 +60,11 @@ public class EnergyUnits {
 		 *            to your language file
 		 * @param multiplier
 		 *            The multiplier to convert to the unit from
-		 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ
-		 *            4J = 1MJ 6EU = 1MJ
+		 *            {@link EnergyUnits#MINECRAFT_JOULES}
+         *            10RF = 1MJ
+         *            10FE = 1MJ
+		 *            4J = 1MJ
+         *            6EU = 1MJ
 		 * @param colour
 		 *            The colour of the {@link EnergyBar}
 		 */
@@ -82,8 +86,11 @@ public class EnergyUnits {
 		 *            to your language file
 		 * @param multiplier
 		 *            The multiplier to convert to the unit from
-		 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ
-		 *            4J = 1MJ 6EU = 1MJ
+		 *            {@link EnergyUnits#MINECRAFT_JOULES}
+         *            10RF = 1MJ
+         *            10FE = 1MJ
+		 *            4J = 1MJ
+         *            6EU = 1MJ
 		 * @param colour
 		 *            The colour of the {@link EnergyBar}
 		 */
@@ -106,10 +113,10 @@ public class EnergyUnits {
 		public String getSuffix() {
 			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
 				return I18n.format("energy.unit." + unlocalizedName + ".suffix");
-			String initials = "";
+			StringBuilder initials = new StringBuilder();
 			for(String word : unlocalizedName.split("_"))
-				initials += word.charAt(0);
-			return initials.toUpperCase();
+				initials.append(word.charAt(0));
+			return initials.toString().toUpperCase();
 		}
 
 		public int getMultiplier() {
@@ -148,7 +155,7 @@ public class EnergyUnits {
 	/**
 	 * List of energy units
 	 */
-	private static List<EnergyUnit> energyUnits = new ArrayList<EnergyUnit>();
+	private static List<EnergyUnit> energyUnits = new ArrayList<>();
 
 	/**
 	 * Register an energy unit
@@ -161,8 +168,11 @@ public class EnergyUnits {
 	 *            to your language file
 	 * @param multiplier
 	 *            The multiplier to convert to the unit from
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ 4J
-	 *            = 1MJ 6EU = 1MJ
+	 *            {@link EnergyUnits#MINECRAFT_JOULES}
+     *            10RF = 1MJ
+     *            10FE = 1MJ
+     *            4J = 1MJ
+     *            6EU = 1MJ
 	 * @param colour
 	 *            The colour of the {@link EnergyBar}
 	 * @return The registered energy unit
@@ -191,8 +201,11 @@ public class EnergyUnits {
 	 *            to your language file
 	 * @param multiplier
 	 *            The multiplier to convert to the unit from
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ 4J
-	 *            = 1MJ 6EU = 1MJ
+	 *            {@link EnergyUnits#MINECRAFT_JOULES}
+     *            10RF = 1MJ
+     *            10FE = 1MJ
+     *            4J = 1MJ
+     *            6EU = 1MJ
 	 * @param colour
 	 *            The colour of the {@link EnergyBar}
 	 * @return The registered energy unit
@@ -231,7 +244,7 @@ public class EnergyUnits {
 		for (EnergyUnit unit : energyUnits)
 			if (unit.unlocalizedName.equalsIgnoreCase(unlocalizedName))
 				return unit;
-		return EnergyUnits.MINECRAFT_JOULES;
+		return EnergyUnits.REDSTONE_FLUX;
 	}
 
 	public static EnergyUnit REDSTONE_FLUX;

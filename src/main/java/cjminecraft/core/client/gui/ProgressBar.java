@@ -32,7 +32,7 @@ public class ProgressBar extends Gui {
 	 *            The width of the {@link ProgressBar}
 	 * @param height
 	 *            The height of the {@link ProgressBar}
-	 * @param positonX
+	 * @param positionX
 	 *            The x position
 	 * @param positionY
 	 *            The y position
@@ -41,13 +41,13 @@ public class ProgressBar extends Gui {
 	 * @param textureY
 	 *            The y position of the texture
 	 */
-	public ProgressBar(ResourceLocation texture, ProgressBarDirection direction, int width, int height, int positonX,
+	public ProgressBar(ResourceLocation texture, ProgressBarDirection direction, int width, int height, int positionX,
 			int positionY, int textureX, int textureY) {
 		this.texture = texture;
 		this.direction = direction;
 		this.width = width;
 		this.height = height;
-		this.positionX = positonX;
+		this.positionX = positionX;
 		this.positionY = positionY;
 		this.textureX = textureX;
 		this.textureY = textureY;
@@ -151,8 +151,7 @@ public class ProgressBar extends Gui {
 	 * @author CJMinecraft
 	 *
 	 */
-	public static enum ProgressBarDirection {
-		LEFT_TO_RIGHT, RIGHT_TO_LEFT, UP_TO_DOWN, DOWN_TO_UP, DIAGONAL_UP_RIGHT, DIAGONAL_UP_LEFT, DIAGONAL_DOWN_RIGHT, DIAGONAL_DOWN_LEFT;
+	public enum ProgressBarDirection {
+		LEFT_TO_RIGHT, RIGHT_TO_LEFT, UP_TO_DOWN, DOWN_TO_UP, DIAGONAL_UP_RIGHT, DIAGONAL_UP_LEFT, DIAGONAL_DOWN_RIGHT, DIAGONAL_DOWN_LEFT
 	}
-
 }

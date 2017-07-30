@@ -8,6 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * A normal {@link TileEntity} which automatically should save
  * 
@@ -17,16 +19,16 @@ import net.minecraft.world.World;
 public abstract class GenericTileEntity extends TileEntity {
 
 	/**
-	 * Unless the actual block has changed, don't remove the tile entity when a
-	 * block update occurs
+	 * Unless the actual block has changed, don't remove the tile entity
+	 * when a block update occurs
 	 */
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+	public boolean shouldRefresh(World world, BlockPos pos, @Nonnull IBlockState oldState, @Nonnull IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 
 	/**
-	 * Should write all the nbt data the client needs but just incase there is
+	 * Should write all the nbt data the client needs but just in case there is
 	 * nothing specific use {@link #writeToNBT(NBTTagCompound)}
 	 * 
 	 * @param nbt The nbt to write client data to
@@ -34,7 +36,7 @@ public abstract class GenericTileEntity extends TileEntity {
 	public abstract void writeClientDataToNBT(NBTTagCompound nbt);
 
 	/**
-	 * Should read all the nbt data the client needs but just incase there is
+	 * Should read all the nbt data the client needs but just in case there is
 	 * nothing specific use {@link #readFromNBT(NBTTagCompound)}
 	 * 
 	 * @param nbt The nbt to read data from
@@ -62,11 +64,11 @@ public abstract class GenericTileEntity extends TileEntity {
 	/**
 	 * Returns the tag with all of the client data saved
 	 */
+	@Nonnull
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound nbt = super.getUpdateTag();
 		writeClientDataToNBT(nbt);
 		return nbt;
 	}
-
 }

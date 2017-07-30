@@ -1,15 +1,9 @@
 package cjminecraft.core.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.util.Color;
-
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.EnergyBarOverlay;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyData;
-import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.util.InventoryUtils;
@@ -17,18 +11,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
@@ -36,11 +26,14 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.actors.threadpool.Arrays;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The item which shows how much energy is in any {@link TileEntity}
@@ -66,17 +59,19 @@ public class ItemMultimeter extends Item {
 	/**
 	 * Allows the player to remove the target block
 	 */
+	@Nonnull
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
 		if (!player.isSneaking()) {
 			player.getHeldItem(hand).setTagCompound(new NBTTagCompound());
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 	}
 
 	/**
 	 * Add the target block
 	 */
+	@Nonnull
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX,
 			float hitY, float hitZ, EnumHand hand) {
@@ -97,9 +92,10 @@ public class ItemMultimeter extends Item {
 	/**
 	 * Add the tooltip
 	 */
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("ConstantConditions")
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockPos")) {
 			BlockPos pos = new BlockPos(stack.getTagCompound().getIntArray("BlockPos")[0],
 					stack.getTagCompound().getIntArray("BlockPos")[1],
@@ -126,7 +122,7 @@ public class ItemMultimeter extends Item {
 		 * The blacklist of blocks which should not display the
 		 * {@link EnergyBarOverlay}
 		 */
-		public static List<ResourceLocation> blacklistBlocks = new ArrayList<ResourceLocation>();
+		public static List<ResourceLocation> blacklistBlocks = new ArrayList<>();
 
 		public MultimeterOverlay() {
 			blacklistBlocks.add(new ResourceLocation("actuallyadditions", "block_shock_suppressor"));
@@ -144,6 +140,7 @@ public class ItemMultimeter extends Item {
 		/**
 		 * The overlay to be drawn
 		 */
+		@SuppressWarnings("WeakerAccess")
 		public static EnergyBarOverlay overlay = new EnergyBarOverlay(0, CJCoreConfig.MULTIMETER_OFFSET_X,
 				CJCoreConfig.MULTIMETER_OFFSET_Y, CJCoreConfig.MULTIMETER_WIDTH, CJCoreConfig.MULTIMETER_HEIGHT, 0, 0);
 
@@ -170,6 +167,7 @@ public class ItemMultimeter extends Item {
 		 *            The event
 		 */
 		@SubscribeEvent(receiveCanceled = true)
+		@SuppressWarnings("ConstantConditions")
 		public void onEvent(RenderGameOverlayEvent.Pre event) {
 			if (Minecraft.getMinecraft().currentScreen != null)
 				return;
@@ -253,13 +251,11 @@ public class ItemMultimeter extends Item {
 				overlay.width = CJCoreConfig.MULTIMETER_WIDTH;
 				overlay.height = CJCoreConfig.MULTIMETER_HEIGHT;
 				overlay.updateEnergyBar(data);
-				overlay.xPosition = CJCoreConfig.MULTIMETER_OFFSET_X;
-				overlay.yPosition = event.getResolution().getScaledHeight() - overlay.height
+				overlay.x = CJCoreConfig.MULTIMETER_OFFSET_X;
+				overlay.y = event.getResolution().getScaledHeight() - overlay.height
 						- CJCoreConfig.MULTIMETER_OFFSET_Y;
-				overlay.drawButton(Minecraft.getMinecraft(), 0, 0);
+				overlay.drawButton(Minecraft.getMinecraft(), 0, 0, event.getPartialTicks());
 			}
 		}
-
 	}
-
 }

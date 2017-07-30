@@ -1,10 +1,11 @@
 package cjminecraft.core.proxy;
 
 import cjminecraft.core.config.CJCoreConfig;
-import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.items.ItemMultimeter;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 
 /**
  * For all things client
@@ -17,9 +18,14 @@ public class ClientProxy extends CommonProxy {
 	public void preInit() {
 		super.preInit();
 		CJCoreConfig.clientPreInit();
+	}
+
+	@Override
+	public void onItemRegister(RegistryEvent.Register<Item> register) {
+		super.onItemRegister(register);
 		CJCoreItems.registerRenders();
 	}
-	
+
 	@Override
 	public void init() {
 		super.init();
@@ -30,5 +36,4 @@ public class ClientProxy extends CommonProxy {
 		super.postInit();
 		MinecraftForge.EVENT_BUS.register(new ItemMultimeter.MultimeterOverlay());
 	}
-
 }

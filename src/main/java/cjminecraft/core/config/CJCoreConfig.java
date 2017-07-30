@@ -1,13 +1,5 @@
 package cjminecraft.core.config;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.EnergyBar;
 import cjminecraft.core.energy.EnergyUnits;
@@ -19,8 +11,13 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * The config for the {@link CJCore}
@@ -85,12 +82,12 @@ public class CJCoreConfig {
 	 * Whether or not a specific mod's update checker is disabled (the key is
 	 * the mod's modid)
 	 */
-	public static HashMap<String, Boolean> UPDATE_CHECKER_MODS = new HashMap<String, Boolean>();
+	public static HashMap<String, Boolean> UPDATE_CHECKER_MODS = new HashMap<>();
 	/**
 	 * A list of {@link Property}'s for use with the config. Each property has
 	 * the modid attached
 	 */
-	public static List<Pair<String, Property>> UPDATE_CHECKER_MOD_PROPERTIES = new ArrayList<Pair<String, Property>>();
+	public static List<Pair<String, Property>> UPDATE_CHECKER_MOD_PROPERTIES = new ArrayList<>();
 
 	private static Configuration config = null;
 
@@ -155,10 +152,8 @@ public class CJCoreConfig {
 		/*
 		 * Energy Config
 		 */
-		List<String> energyUnits = new ArrayList<String>();
-		EnergyUnits.getEnergyUnits().forEach(unit -> {
-			energyUnits.add(unit.getUnlocalizedName());
-		});
+		List<String> energyUnits = new ArrayList<>();
+		EnergyUnits.getEnergyUnits().forEach(unit -> energyUnits.add(unit.getUnlocalizedName()));
 		Property propertyDefaultEnergyUnit = config.get(CATEGORY_NAME_ENERGY, "DefaultEnergyUnit",
 				EnergyUnits.FORGE_ENERGY.getUnlocalizedName());
 		propertyDefaultEnergyUnit.setValidValues(energyUnits.toArray(new String[] {}));
@@ -197,7 +192,7 @@ public class CJCoreConfig {
 				.setComment("Whether or not to simplify the way the energy is displayed when using the multimeter");
 		propertyMultimeterSimplifyEnergy.setLanguageKey("gui.config.energy.multimeter_simplify_energy.name");
 
-		List<String> propertyOrderEnergy = new ArrayList<String>();
+		List<String> propertyOrderEnergy = new ArrayList<>();
 		propertyOrderEnergy.add(propertyDefaultEnergyUnit.getName());
 		propertyOrderEnergy.add(propertyMultimeterOffsetX.getName());
 		propertyOrderEnergy.add(propertyMultimeterOffsetY.getName());
@@ -210,12 +205,10 @@ public class CJCoreConfig {
 		/*
 		 * Update Checkers Config
 		 */
-		List<String> propertyOrderUpdateChecker = new ArrayList<String>();
-		Iterator<String> mods = UPDATE_CHECKER_MODS.keySet().iterator();
-		while (mods.hasNext()) {
-			String modid = mods.next();
+		List<String> propertyOrderUpdateChecker = new ArrayList<>();
+		for (String modid : UPDATE_CHECKER_MODS.keySet()) {
 			Property propertyUpdateCheckerEnabled = config.get(CATEGORY_NAME_VERSION_CHECKER, modid, true);
-			propertyUpdateCheckerEnabled.setComment("Whether the update checker for " + modid + " is enabled");
+			propertyUpdateCheckerEnabled.setComment(String.format("Whether the update checker for %s is enabled", modid));
 			propertyUpdateCheckerEnabled.setLanguageKey("gui.config.update_checker.enabled.name");
 			UPDATE_CHECKER_MOD_PROPERTIES.add(Pair.of(modid, propertyUpdateCheckerEnabled));
 			propertyOrderUpdateChecker.add(propertyUpdateCheckerEnabled.getName());
@@ -266,21 +259,17 @@ public class CJCoreConfig {
 	}
 
 	/**
-	 * Makes sure to save the config when changes are made in the
-	 * {@link GuiConfig}
+	 * Makes sure to save the config when changes are made in the {@link GuiConfig}
 	 * 
 	 * @author CJMinecraft
 	 *
 	 */
 	public static class ConfigEventHandler {
-
-		@SubscribeEvent(priority = EventPriority.NORMAL)
+		@SubscribeEvent
 		public void onEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
 			if (CJCore.MODID.equalsIgnoreCase(event.getModID())) {
 				syncFromGUI();
 			}
 		}
-
 	}
-
 }

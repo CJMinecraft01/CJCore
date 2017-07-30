@@ -11,5 +11,4 @@ public class CJCoreEvents {
 	public void onPlayerLogIn(PlayerLoggedInEvent event) {
 		VersionChecker.checkForUpdate(VersionChecker.cjcoreURL, CJCore.MODID, CJCore.VERSION, event.player);
 	}
-
 }

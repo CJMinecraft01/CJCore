@@ -77,5 +77,4 @@ public class CustomForgeEnergyStorage extends EnergyStorage {
 	public void setEnergyStored(int energy) {
 		this.energy = energy;
 	}
-
 }

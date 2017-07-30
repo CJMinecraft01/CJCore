@@ -1,7 +1,5 @@
 package cjminecraft.core.energy;
 
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-
 /**
  * Holds energy data for use with syncing to servers. See {@link EnergyUtils}
  * 
@@ -62,5 +60,4 @@ public class EnergyData {
 	public long getCapacity() {
 		return capacity;
 	}
-
 }

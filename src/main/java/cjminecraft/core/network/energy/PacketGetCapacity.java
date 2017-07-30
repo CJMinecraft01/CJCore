@@ -77,10 +77,8 @@ public class PacketGetCapacity implements IMessage {
 		NetworkUtils.writeEnumFacing(buf, this.side);
 		buf.writeBoolean(this.updateField);
 		ByteBufUtils.writeUTF8String(buf, this.className);
-		if (this.updateField)
-			ByteBufUtils.writeUTF8String(buf, this.capacityFieldName);
-		else
-			ByteBufUtils.writeUTF8String(buf, this.modid);
+		if (this.updateField) ByteBufUtils.writeUTF8String(buf, this.capacityFieldName);
+		else ByteBufUtils.writeUTF8String(buf, this.modid);
 
 	}
 
@@ -88,15 +86,14 @@ public class PacketGetCapacity implements IMessage {
 
 		@Override
 		public IMessage onMessage(PacketGetCapacity message, MessageContext ctx) {
-			if (!message.messageValid && ctx.side != Side.SERVER)
-				return null;
+			if (!message.messageValid && ctx.side != Side.SERVER) return null;
 			FMLCommonHandler.instance().getWorldThread(ctx.netHandler)
 					.addScheduledTask(() -> processMessage(message, ctx));
 			return null;
 		}
 
 		void processMessage(PacketGetCapacity message, MessageContext ctx) {
-			TileEntity te = ctx.getServerHandler().playerEntity.getServerWorld().getTileEntity(message.pos);
+			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
 			if (!EnergyUtils.hasSupport(te, message.side))
@@ -105,13 +102,11 @@ public class PacketGetCapacity implements IMessage {
 			if (message.updateField)
 				PacketHandler.INSTANCE.sendTo(
 						new PacketReturnCapacity(capacity, true, message.className, message.capacityFieldName),
-						ctx.getServerHandler().playerEntity);
+						ctx.getServerHandler().player);
 			else
 				PacketHandler.INSTANCE.sendTo(
 						new PacketReturnCapacity(capacity, false, message.modid, message.className),
-						ctx.getServerHandler().playerEntity);
+						ctx.getServerHandler().player);
 		}
-
 	}
-
 }

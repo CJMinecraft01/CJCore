@@ -52,8 +52,6 @@ public class PacketHandler {
 		// Client Messages
 		INSTANCE.registerMessage(PacketReturnEnergy.Handler.class, PacketReturnEnergy.class, nextID(), Side.CLIENT);
 		INSTANCE.registerMessage(PacketReturnCapacity.Handler.class, PacketReturnCapacity.class, nextID(), Side.CLIENT);
-		INSTANCE.registerMessage(PacketReturnEnergyData.Handler.class, PacketReturnEnergyData.class, nextID(),
-				Side.CLIENT);
+		INSTANCE.registerMessage(PacketReturnEnergyData.Handler.class, PacketReturnEnergyData.class, nextID(), Side.CLIENT);
 	}
-
 }

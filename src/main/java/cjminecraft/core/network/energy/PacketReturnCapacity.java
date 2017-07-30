@@ -1,11 +1,7 @@
 package cjminecraft.core.network.energy;
 
-import java.lang.reflect.Field;
-
 import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyData;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.util.NetworkUtils;
 import cjminecraft.core.energy.EnergyUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -14,6 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.Field;
 
 public class PacketReturnCapacity implements IMessage {
 
@@ -68,18 +66,15 @@ public class PacketReturnCapacity implements IMessage {
 		buf.writeLong(this.capacity);
 		ByteBufUtils.writeUTF8String(buf, this.className);
 		buf.writeBoolean(this.updateFields);
-		if (this.updateFields)
-			ByteBufUtils.writeUTF8String(buf, this.capacityFieldName);
-		else
-			ByteBufUtils.writeUTF8String(buf, this.modid);
+		if (this.updateFields) ByteBufUtils.writeUTF8String(buf, this.capacityFieldName);
+		else ByteBufUtils.writeUTF8String(buf, this.modid);
 	}
 
 	public static class Handler implements IMessageHandler<PacketReturnCapacity, IMessage> {
 
 		@Override
 		public IMessage onMessage(PacketReturnCapacity message, MessageContext ctx) {
-			if (!message.messageValid && ctx.side != Side.CLIENT)
-				return null;
+			if (!message.messageValid && ctx.side != Side.CLIENT) return null;
 			Minecraft.getMinecraft().addScheduledTask(() -> processMessage(message));
 			return null;
 		}
@@ -92,14 +87,11 @@ public class PacketReturnCapacity implements IMessage {
 					capacityField.setLong(clazz, message.capacity);
 				} catch (Exception e) {
 					CJCore.logger.catching(e);
-					return;
 				}
 			} else {
 				EnergyData data = new EnergyData().setCapacity(message.capacity);
 				EnergyUtils.addCachedEnergyData(message.modid, message.className, data);
 			}
 		}
-
 	}
-
 }

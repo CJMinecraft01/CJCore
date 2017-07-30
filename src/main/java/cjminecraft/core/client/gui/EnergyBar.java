@@ -15,17 +15,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nonnull;
+
 /**
- * Draw a simple {@link EnergyBar} which represents the energy inside of a
- * {@link TileEntity}
+ * Draw a simple {@link EnergyBar} which represents the energy inside of a {@link TileEntity}
  * 
  * @author CJMinecraft
  *
  */
 public class EnergyBar extends GuiButton {
 	
-	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(CJCore.MODID,
-			"textures/gui/energy_bar.png");
+	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(CJCore.MODID, "textures/gui/energy_bar.png");
 	public static final int DEFAULT_WIDTH = 18;
 	public static final int DEFAULT_HEIGHT = 84;
 
@@ -51,8 +51,7 @@ public class EnergyBar extends GuiButton {
 	 * @param energy
 	 *            The amount of energy in the {@link EnergyBar} (can be 0)
 	 * @param capacity
-	 *            The maximum amount of energy in the {@link EnergyBar} (can be
-	 *            0)
+	 *            The maximum amount of energy in the {@link EnergyBar} (can be 0)
 	 */
 	public EnergyBar(int buttonId, int x, int y, long energy, long capacity) {
 		super(buttonId, x, y, "");
@@ -80,8 +79,7 @@ public class EnergyBar extends GuiButton {
 	 * @param energy
 	 *            The amount of energy in the {@link EnergyBar} (can be 0)
 	 * @param capacity
-	 *            The maximum amount of energy in the {@link EnergyBar} (can be
-	 *            0)
+	 *            The maximum amount of energy in the {@link EnergyBar} (can be 0)
 	 */
 	public EnergyBar(int buttonId, int x, int y, int width, int height, long energy, long capacity) {
 		super(buttonId, x, y, "");
@@ -97,29 +95,28 @@ public class EnergyBar extends GuiButton {
 	 * Draw the button on the screen
 	 */
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-		this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width
-				&& mouseY < this.yPosition + this.height;
+	public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 
 		// Outer rim of bar
-		this.drawVerticalLine(xPosition, yPosition - 1, yPosition + height, 0xFF373737);
-		this.drawHorizontalLine(xPosition + 1, xPosition + width - 2, yPosition, 0xFF373737);
-		this.drawHorizontalLine(xPosition + width - 1, xPosition + width - 1, yPosition, 0xFF8B8B8B);
-		this.drawHorizontalLine(xPosition, xPosition, yPosition + height, 0xFF8B8B8B);
-		this.drawVerticalLine(xPosition + width - 1, yPosition, yPosition + height, 0xFFFFFFFF);
-		this.drawHorizontalLine(xPosition + 1, xPosition + width - 1, yPosition + height, 0xFFE2E2E2);
+		this.drawVerticalLine(x, y - 1, y + height, 0xFF373737);
+		this.drawHorizontalLine(x + 1, x + width - 2, y, 0xFF373737);
+		this.drawHorizontalLine(x + width - 1, x + width - 1, y, 0xFF8B8B8B);
+		this.drawHorizontalLine(x, x, y + height, 0xFF8B8B8B);
+		this.drawVerticalLine(x + width - 1, y, y + height, 0xFFFFFFFF);
+		this.drawHorizontalLine(x + 1, x + width - 1, y + height, 0xFFE2E2E2);
 
 		// Actual background energy bar
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
 		int[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
 		GlStateManager.color(colour[0], colour[1], colour[2]);
-		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
+		this.drawTexturedModalRect(x + 1, y + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
 				textureY + 1, width - 2, height - 1);
 
 		// The overlay to show the amount of energy in the {@link TileEntity}
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
+		this.drawTexturedModalRect(x + 1, y + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
 				textureY + 1, width - 2, height - getEnergyBarHeight() - 1);
 		
 		updateEnergyBar(EnergyUtils.getCachedEnergyData(CJCore.MODID));
@@ -182,8 +179,7 @@ public class EnergyBar extends GuiButton {
 	}
 
 	/**
-	 * Calculates the height of the {@link EnergyBar} from the {@link #capacity}
-	 * {@link #energy}
+	 * Calculates the height of the {@link EnergyBar} from the {@link #capacity} {@link #energy}
 	 * 
 	 * @return the height of the energy bar
 	 */
@@ -199,5 +195,4 @@ public class EnergyBar extends GuiButton {
 	public void syncData(BlockPos pos, EnumFacing side) {
 		EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, pos, side, CJCore.MODID);
 	}
-
 }

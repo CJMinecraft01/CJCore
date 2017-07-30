@@ -15,10 +15,10 @@ hs_err_pid*
 .classpath
 .gradle/
 .project
-.settings/
 BitOfEverything_Client.launch
 BitOfEverything_Server.launch
 build.gradle
+.idea/
 build/
 eclipse/
 bin/

@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.event.RegistryEvent.Register;
 
 /**
  * Handles all of {@link CJCore}s items
@@ -21,15 +21,16 @@ public class CJCoreItems {
 	/**
 	 * Initialize the items
 	 */
-	public static void init() {
+	private static void init() {
 		multimeter = new ItemMultimeter("multimeter");
 	}
 
 	/**
 	 * Register the items
 	 */
-	public static void register() {
-		registerItem(multimeter);
+	public static void register(Register<Item> register) {
+		init();
+		registerItem(multimeter, register);
 	}
 
 	/**
@@ -45,19 +46,18 @@ public class CJCoreItems {
 	 * @param item
 	 *            The item to register
 	 */
-	public static void registerItem(Item item) {
-		GameRegistry.register(item);
+	private static void registerItem(Item item, Register<Item> register) {
+		register.getRegistry().register(item);
 	}
 
 	/**
 	 * Register the render for the item
 	 * 
 	 * @param item
-	 *            The item to render
+	 *            The item to register a render for
 	 */
-	public static void registerRender(Item item) {
+	private static void registerRender(Item item) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(
 				new ResourceLocation(CJCore.MODID, item.getUnlocalizedName().substring(5)), "inventory"));
 	}
-
 }

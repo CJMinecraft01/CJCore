@@ -1,7 +1,7 @@
 package cjminecraft.core.util;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,18 +28,18 @@ public class InventoryUtils {
 	 *            The {@link EntityPlayer} which should have the
 	 *            {@link ItemStack} in their hotbar
 	 * @param ignoreNBT
-	 *            Whether NBT data should be ignored. Reference -
-	 *            {@link #isStackEqual(ItemStack, ItemStack, boolean, boolean)}
+	 *            Whether NBT data should be ignored.
+     *            Reference - {@link #isStackEqual(ItemStack, ItemStack, boolean, boolean)}
 	 * @param ignoreMetaData
-	 *            Whether meta data should be ignored. Reference -
-	 *            {@link #isStackEqual(ItemStack, ItemStack, boolean, boolean)}
+	 *            Whether meta data should be ignored.
+	 *            Reference - {@link #isStackEqual(ItemStack, ItemStack, boolean, boolean)}
 	 * @return Whether the {@link EntityPlayer} has the stack in their hotbar
 	 */
 	public static boolean hasInHotbar(ItemStack stack, EntityPlayer player, boolean ignoreNBT, boolean ignoreMetaData) {
 		if (isStackEqual(stack, player.getHeldItemOffhand(), ignoreNBT, ignoreMetaData))
 			return true;
 
-		for (int slot = 0; slot < player.inventory.getHotbarSize(); slot++) {
+		for (int slot = 0; slot < InventoryPlayer.getHotbarSize(); slot++) {
 			if (isStackEqual(stack, player.inventory.getStackInSlot(slot), ignoreNBT, ignoreMetaData))
 				return true;
 		}
@@ -54,12 +54,13 @@ public class InventoryUtils {
 	 * @param b
 	 *            The second {@link ItemStack}
 	 * @param ignoreNBT
-	 *            Whether NBT data should be ignored. If not, both
-	 *            {@link ItemStack}s will need to have the same
-	 *            {@link NBTTagCompound}
+	 *            Whether NBT data should be ignored.
+     *            If not, both {@link ItemStack}s
+     *            will need to have the same {@link NBTTagCompound}
 	 * @param ignoreMetaData
-	 *            Whether meta data should be ignored. If not, both
-	 *            {@link ItemStack}s will need to have the same damage
+	 *            Whether meta data should be ignored.
+     *            If not, both {@link ItemStack}s
+     *            will need to have the same damage
 	 * @return Whether the two {@link ItemStack}s are the same
 	 */
 	public static boolean isStackEqual(ItemStack a, ItemStack b, boolean ignoreNBT, boolean ignoreMetaData) {
@@ -244,9 +245,9 @@ public class InventoryUtils {
 	 * 
 	 * @param stack
 	 *            The {@link ItemStack} to test
-	 * @return The {@link EnumDyeColor} of the {@link ItemStack} to test. If the
-	 *         stack is not registered as a dye, the {@link EnumDyeColor#WHITE}
-	 *         will be used
+	 * @return The {@link EnumDyeColor} of the {@link ItemStack} to test.
+     *         If the stack is not registered as a dye,
+     *         the {@link EnumDyeColor#WHITE} will be used
 	 */
 	public static EnumDyeColor getColourFromDye(ItemStack stack) {
 		for (int id : OreDictionary.getOreIDs(stack)) {
@@ -285,5 +286,4 @@ public class InventoryUtils {
 		}
 		return EnumDyeColor.WHITE;
 	}
-
 }

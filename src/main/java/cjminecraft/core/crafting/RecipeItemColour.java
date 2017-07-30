@@ -1,7 +1,5 @@
 package cjminecraft.core.crafting;
 
-import java.util.Arrays;
-import java.util.List;
 import cjminecraft.core.util.InventoryUtils;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
@@ -13,25 +11,32 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The recipe for items which can be coloured
  * @author CJMinecraft
  *
  */
-public class RecipeItemColour implements IRecipe {
+public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	/**
 	 * Use if you want to see if the item stack is a dye {@link #getCraftingResult(InventoryCrafting)}
 	 */
-	public static final List<Integer> dyeODs = Arrays.asList(OreDictionary.getOreID("dye"),
-			OreDictionary.getOreID("dyeBlack"), OreDictionary.getOreID("dyeRed"), OreDictionary.getOreID("dyeGreen"),
-			OreDictionary.getOreID("dyeBrown"), OreDictionary.getOreID("dyeBlue"), OreDictionary.getOreID("dyePurple"),
+	public static final List<Integer> dyeOreDicts = Arrays.asList(OreDictionary.getOreID("dye"),
+			OreDictionary.getOreID("dyeBlack"), OreDictionary.getOreID("dyeRed"),
+            OreDictionary.getOreID("dyeGreen"), OreDictionary.getOreID("dyeBrown"),
+            OreDictionary.getOreID("dyeBlue"), OreDictionary.getOreID("dyePurple"),
 			OreDictionary.getOreID("dyeCyan"), OreDictionary.getOreID("dyeLightGray"),
-			OreDictionary.getOreID("dyeGray"), OreDictionary.getOreID("dyePink"), OreDictionary.getOreID("dyeLime"),
-			OreDictionary.getOreID("dyeYellow"), OreDictionary.getOreID("dyeLightBlue"),
-			OreDictionary.getOreID("dyeMagenta"), OreDictionary.getOreID("dyeOrange"),
-			OreDictionary.getOreID("dyeWhite"));
+			OreDictionary.getOreID("dyeGray"), OreDictionary.getOreID("dyePink"),
+            OreDictionary.getOreID("dyeLime"), OreDictionary.getOreID("dyeYellow"),
+            OreDictionary.getOreID("dyeLightBlue"), OreDictionary.getOreID("dyeMagenta"),
+            OreDictionary.getOreID("dyeOrange"), OreDictionary.getOreID("dyeWhite")
+	);
 	
 	private ItemStack targetItemStack;
 	
@@ -39,22 +44,23 @@ public class RecipeItemColour implements IRecipe {
 	 * Default constructor for registering the recipe {@link CraftingHandler#registerCraftingRecipes()}
 	 */
 	public RecipeItemColour() {
-		this.targetItemStack = ItemStack.EMPTY;
+		this(ItemStack.EMPTY);
 	}
 	
 	/**
 	 * Creates a new recipe to colour your item
-	 * @param targetItemStack The item you want to colour
+	 * @param target The item you want to colour
 	 */
-	public RecipeItemColour(ItemStack targetItemStack) {
-		this.targetItemStack = targetItemStack;
+	public RecipeItemColour(ItemStack target) {
+		targetItemStack = target;
 	}
 
 	/**
 	 * Is the inventory the correct orientation for our recipe?
 	 */
 	@Override
-	public boolean matches(InventoryCrafting inv, World worldIn) {
+    @SuppressWarnings("ConstantConditions")
+	public boolean matches(@Nonnull InventoryCrafting inv, @Nonnull World worldIn) {
 		ItemStack itemColour = ItemStack.EMPTY;
 		boolean randomItemDetected = false;
 
@@ -69,12 +75,12 @@ public class RecipeItemColour implements IRecipe {
 				}
 				boolean cont = false;
 				for (int id : OreDictionary.getOreIDs(stackInSlot)) {
-					if (dyeODs.contains(id)) {
+					if (dyeOreDicts.contains(id)) {
 						cont = true;
 					}
 				}
 				if(cont) continue;
-				else if(stackInSlot.getItem() != targetItemStack.getItem() && stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR))
+				if(stackInSlot.getItem() != targetItemStack.getItem() && stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR))
 					randomItemDetected = true;
 			}
 		}
@@ -84,8 +90,10 @@ public class RecipeItemColour implements IRecipe {
 	/**
 	 * Returns the result of crafting with these items
 	 */
-	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inv) {
+	@Nonnull
+    @Override
+    @SuppressWarnings("ConstantConditions")
+	public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv) {
 		ItemStack stack = ItemStack.EMPTY;
 		int[] colour = new int[3]; //RGB values
 		int i = 0; //Tracker variables
@@ -99,7 +107,7 @@ public class RecipeItemColour implements IRecipe {
 			if (!stackInSlot.isEmpty()) {
 				if (stackInSlot.hasTagCompound()) {
 					if (stackInSlot.getTagCompound().hasKey("colour") || stackInSlot.getTagCompound().hasKey("color")) {
-						int currentColour = 0xFFFFFF;
+						int currentColour;
 						if (stackInSlot.getTagCompound().hasKey("colour"))
 							currentColour = stackInSlot.getTagCompound().getInteger("colour");
 						else {
@@ -122,7 +130,7 @@ public class RecipeItemColour implements IRecipe {
 					}
 				}
 				for (int id : OreDictionary.getOreIDs(stackInSlot)) { //Use this to check if the stack is a dye
-					if (dyeODs.contains(id)) {
+					if (dyeOreDicts.contains(id)) {
 						hasDye = true; //Says if the stack has a dye if not, reset the item colour to white
 					}
 				}
@@ -157,17 +165,18 @@ public class RecipeItemColour implements IRecipe {
 	}
 	
 	/**
-	 * How many slots required (10 because 9 in the table and 1 for output)
+	 * Whether the recipe fits in a given grid or not.
 	 */
-	@Override
-	public int getRecipeSize() {
-		return 10;
-	}
-	
-	/**
+    @Override
+    public boolean canFit(int width, int height) {
+        return width + height >= 9;
+    }
+
+    /**
 	 * The default output for us is nothing unless stated above
 	 */
-	@Override
+	@Nonnull
+    @Override
 	public ItemStack getRecipeOutput() {
 		return ItemStack.EMPTY;
 	}
@@ -175,9 +184,10 @@ public class RecipeItemColour implements IRecipe {
 	/**
 	 * All the items which were not used
 	 */
-	@Override
+	@Nonnull
+    @Override
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-		NonNullList<ItemStack> remaining = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+		NonNullList<ItemStack> remaining = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 		
 		for(int slot = 0; slot < remaining.size(); slot++) {
 			ItemStack stackInSlot = inv.getStackInSlot(slot);
@@ -185,5 +195,4 @@ public class RecipeItemColour implements IRecipe {
 		}
 		return remaining;
 	}
-
 }

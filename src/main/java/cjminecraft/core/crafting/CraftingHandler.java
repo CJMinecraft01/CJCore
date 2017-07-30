@@ -1,18 +1,14 @@
 package cjminecraft.core.crafting;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.init.CJCoreItems;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.RecipeSorter.Category;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IRecipeFactory;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * Handles all of the {@link CJCore} recipes
  * @author CJMinecraft
- *
  */
 public class CraftingHandler {
 	
@@ -20,10 +16,12 @@ public class CraftingHandler {
 	 * Registers the crafting recipes. Used only by {@link CJCore}
 	 */
 	public static void registerCraftingRecipes() {
-		RecipeSorter.register("clearColour", RecipeClearColour.class, Category.SHAPELESS, "after:minecraft:shapeless");
-		RecipeSorter.register("itemColour", RecipeItemColour.class, Category.SHAPELESS, "after:minecraft:shapeless");
-		
-		GameRegistry.addRecipe(new ItemStack(CJCoreItems.multimeter), new Object[] { " G ", "GRG", " G ", 'G', Items.GOLD_INGOT, 'R', Blocks.REDSTONE_BLOCK });
-	}
+		ForgeRegistries.RECIPES.register(new RecipeClearColour().setRegistryName(CJCore.MODID, "clearColor"));
+		ForgeRegistries.RECIPES.register(new RecipeItemColour().setRegistryName(CJCore.MODID, "itemColor"));
 
+		CraftingHelper.register(
+                new ResourceLocation(CJCore.MODID, "multimeter"),
+                (IRecipeFactory) (context, json) -> CraftingHelper.getRecipe(json, context)
+        );
+	}
 }

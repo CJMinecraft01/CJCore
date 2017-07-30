@@ -1,13 +1,6 @@
 package cjminecraft.core.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import com.google.common.collect.Lists;
-
 import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyUnits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -19,6 +12,10 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.CategoryEntry;
 import net.minecraftforge.fml.client.config.IConfigElement;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The {@link IModGuiFactory} for {@link CJCore}
@@ -32,16 +29,7 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 	 * Not used
 	 */
 	@Override
-	public void initialize(Minecraft minecraftInstance) {
-	}
-
-	/**
-	 * Says what our {@link GuiConfig} class is
-	 */
-	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return CJCoreConfigGui.class;
-	}
+	public void initialize(Minecraft minecraftInstance) { }
 
 	/**
 	 * No runtime gui categories
@@ -51,15 +39,17 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 		return null;
 	}
 
-	/**
-	 * Deprecated
-	 */
-	@Override
-	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-		return null;
-	}
+    @Override
+    public boolean hasConfigGui() {
+        return true;
+    }
 
-	/**
+    @Override
+    public GuiScreen createConfigGui(GuiScreen parentScreen) {
+        return new CJCoreConfigGui(parentScreen);
+    }
+
+    /**
 	 * The actual {@link GuiConfig}
 	 * 
 	 * @author CJMinecraft
@@ -83,7 +73,7 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 		 * @return A list of the elements to draw
 		 */
 		private static List<IConfigElement> getConfigElements() {
-			List<IConfigElement> list = new ArrayList<IConfigElement>();
+			List<IConfigElement> list = new ArrayList<>();
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.energy"), "gui.config.category.energy",
 					CategoryEntryEnergy.class));
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.update_checker"),
@@ -142,15 +132,4 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 		}
 
 	}
-
-	@Override
-	public boolean hasConfigGui() {
-		return true;
-	}
-
-	@Override
-	public GuiScreen createConfigGui(GuiScreen parentScreen) {
-		return new CJCoreConfigGui(parentScreen);
-	}
-
 }

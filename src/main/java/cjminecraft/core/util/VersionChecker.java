@@ -1,24 +1,12 @@
 package cjminecraft.core.util;
 
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.swing.Action;
-
+import cjminecraft.core.CJCore;
+import cjminecraft.core.config.CJCoreConfig;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-
-import cjminecraft.core.CJCore;
-import cjminecraft.core.config.CJCoreConfig;
 import joptsimple.internal.Strings;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +16,11 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles any updates required using a custom JSON file hosted on a webserver
@@ -40,7 +33,7 @@ public class VersionChecker {
 	/**
 	 * The URL for the CJCore update json file
 	 */
-	public static final String cjcoreURL = "https://raw.githubusercontent.com/CJMinecraft01/CJCore/master/update.json";
+	public static final String cjcoreURL = "https://raw.githubusercontent.com/CJMinecraft01/CJCore/1.12/update.json";
 
 	/**
 	 * States whether an update is available using the update json file
@@ -82,9 +75,9 @@ public class VersionChecker {
 	public static void checkForUpdate(String url, String modid, String currentVersion, EntityPlayer player) {
 		if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(modid) || !CJCoreConfig.UPDATE_CHECKER_MODS.get(modid))
 			return;
-		String version = "";
+		String version;
 		String name = "";
-		List<String> changeLog = new ArrayList<String>();
+		List<String> changeLog = new ArrayList<>();
 		String downloadURL = "";
 		boolean updateRequired = false;
 		try {
@@ -122,26 +115,25 @@ public class VersionChecker {
 								.setStyle(new Style()
 										.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadURL))));
 			if (changeLog.size() > 0) {
-				String changeLogString = "";
+				StringBuilder changeLogString = new StringBuilder();
 				for (String log : changeLog) {
 					if (log.startsWith("="))
-						changeLogString += TextFormatting.AQUA;
+						changeLogString.append(TextFormatting.AQUA);
 					else if (log.startsWith("-"))
-						changeLogString += TextFormatting.RED;
+						changeLogString.append(TextFormatting.RED);
 					else if (log.startsWith("+"))
-						changeLogString += TextFormatting.GREEN;
+						changeLogString.append(TextFormatting.GREEN);
 					else
-						changeLogString += TextFormatting.WHITE;
-					changeLogString += log + "\n";
+						changeLogString.append(TextFormatting.WHITE);
+					changeLogString.append(log).append("\n");
 				}
-				changeLogString = changeLogString.substring(0, changeLogString.length() - 1);
+				changeLogString = new StringBuilder(changeLogString.substring(0, changeLogString.length() - 1));
 				changeLogAndVersion.appendSibling(new TextComponentString(
 						"[" + TextFormatting.DARK_AQUA + I18n.format("update.changelog") + TextFormatting.WHITE + "]")
 								.setStyle(new Style().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-										new TextComponentString(changeLogString)))));
+										new TextComponentString(changeLogString.toString())))));
 			}
 			player.sendMessage(changeLogAndVersion);
 		}
 	}
-
 }

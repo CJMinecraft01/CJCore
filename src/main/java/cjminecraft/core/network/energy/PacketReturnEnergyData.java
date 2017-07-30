@@ -1,7 +1,5 @@
 package cjminecraft.core.network.energy;
 
-import java.lang.reflect.Field;
-
 import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyData;
 import cjminecraft.core.energy.EnergyUtils;
@@ -12,6 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.Field;
 
 public class PacketReturnEnergyData implements IMessage {
 
@@ -99,14 +99,11 @@ public class PacketReturnEnergyData implements IMessage {
 					capacityField.setLong(clazz, message.capacity);
 				} catch (Exception e) {
 					CJCore.logger.catching(e);
-					return;
 				}
 			} else {
 				EnergyData data = new EnergyData().setEnergy(message.energy).setCapacity(message.capacity);
 				EnergyUtils.addCachedEnergyData(message.modid, message.className, data);
 			}
 		}
-
 	}
-
 }

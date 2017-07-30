@@ -1,9 +1,10 @@
 package cjminecraft.core.proxy;
 
-import cjminecraft.core.command.CommandEditTileEntity;
 import cjminecraft.core.init.CJCoreEvents;
 import cjminecraft.core.network.PacketHandler;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 
 /**
  * For all things common
@@ -19,11 +20,11 @@ public class CommonProxy implements IProxy {
 	}
 
 	@Override
-	public void init() {
-	}
+	public void onItemRegister(RegistryEvent.Register<Item> register) {}
 
 	@Override
-	public void postInit() {
-	}
+	public void init() {}
 
+	@Override
+	public void postInit() {}
 }
