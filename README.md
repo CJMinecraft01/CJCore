@@ -1,4 +1,4 @@
-# CJCore
+# CJCore 1.11.2
 ## About the mod
 CJCore is a mod aimed at simplifying more complicated tasks. It works as an inbetween mod for APIs. It allows the users to easily use utility methods to allow energy integration etc. a whole lot easier.
 
