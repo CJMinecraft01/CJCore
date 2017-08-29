@@ -7,16 +7,19 @@ import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.items.ItemMultimeter;
+import cjminecraft.core.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * The overlay for use with {@link ItemMultimeter}
+ * The overlay for use with {@link ItemMultimeter}. Please use {@link GuiBase},
+ * this will be removed in the next update
  * 
  * @author CJMinecraft
  *
  */
+@Deprecated
 public class EnergyBarOverlay extends EnergyBar {
 
 	public static final int DEFAULT_OVERLAY_WIDTH = DEFAULT_WIDTH + 8;
@@ -100,7 +103,7 @@ public class EnergyBarOverlay extends EnergyBar {
 		this.drawVerticalLine(xPosition - 4, yPosition - 1, yPosition + height + 1, 0xFF000000);
 
 		// Allows alpha not to be drawn as black but transparent
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderUtils.resetColour();
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
@@ -120,16 +123,16 @@ public class EnergyBarOverlay extends EnergyBar {
 		GlStateManager.disableBlend();
 
 		// Shows the energy inside of the {@link TileEntity}
-		if (!CJCoreConfig.MULTIMETER_SIMPLIFY_ENERGY) {
+		if (!CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
 			mc.fontRendererObj.drawStringWithShadow(NumberFormat.getNumberInstance().format(energy) + " "
 					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
-					+ (CJCoreConfig.MULTIMETER_SHOW_CAPACITY ? " / " + NumberFormat.getNumberInstance().format(capacity)
+					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getNumberInstance().format(capacity)
 							+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""),
 					xPosition + width + 6, yPosition + height - 7, 0xFFFFFF);
 		} else {
 			mc.fontRendererObj.drawStringWithShadow(EnergyUtils.getEnergyAsString(energy,
 					CJCoreConfig.DEFAULT_ENERGY_UNIT)
-					+ (CJCoreConfig.MULTIMETER_SHOW_CAPACITY
+					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
 							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig.DEFAULT_ENERGY_UNIT) : ""),
 					xPosition + width + 6, yPosition + height - 7, 0xFFFFFF);
 		}

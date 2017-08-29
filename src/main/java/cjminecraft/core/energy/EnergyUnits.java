@@ -45,7 +45,7 @@ public class EnergyUnits {
 		 * The colour as its individual values. colour[0] = red colour[1] =
 		 * green colour[2] = blue
 		 */
-		private int[] colour;
+		private float[] colour;
 
 		/**
 		 * Create a energy unit
@@ -67,7 +67,7 @@ public class EnergyUnits {
 		private EnergyUnit(String unlocalizedName, int multiplier, int colour) {
 			this.unlocalizedName = unlocalizedName;
 			this.multiplier = multiplier;
-			this.colour = new int[] { colour >> 15 & 255, colour >> 8 & 255, colour & 255 };
+			this.colour = new float[] { (colour >> 15 & 255) / 255.0F, (colour >> 8 & 255) / 255.0F, (colour & 255) / 255.0F };
 		}
 
 		/**
@@ -87,7 +87,7 @@ public class EnergyUnits {
 		 * @param colour
 		 *            The colour of the {@link EnergyBar}
 		 */
-		private EnergyUnit(String unlocalizedName, int multiplier, int[] colour) {
+		private EnergyUnit(String unlocalizedName, int multiplier, float[] colour) {
 			this.unlocalizedName = unlocalizedName;
 			this.multiplier = multiplier;
 			this.colour = colour;
@@ -116,7 +116,7 @@ public class EnergyUnits {
 			return multiplier;
 		}
 
-		public int[] getColour() {
+		public float[] getColour() {
 			return colour;
 		}
 
@@ -125,11 +125,15 @@ public class EnergyUnits {
 		}
 		
 		public void setColour(int r, int g, int b) {
-			this.colour = new int[] { r, g, b };
+			this.colour = new float[] { r / 255.0F, g / 255.0F, b / 255.0F };
+		}
+		
+		public void setColour(float r, float g, float b) {
+			this.colour = new float[] { r, g, b };
 		}
 
 		public void setColour(int colour) {
-			this.colour = new int[] { colour >> 15 & 255, colour >> 8 & 255, colour & 255 };
+			this.colour = new float[] { (colour >> 15 & 255) / 255.0F, (colour >> 8 & 255) / 255.0F, (colour & 255) / 255.0F };
 		}
 
 		/**
@@ -199,7 +203,7 @@ public class EnergyUnits {
 	 */
 	public static EnergyUnit createEnergyUnit(String unlocalizedName, int multiplier, ReadableColor colour) {
 		EnergyUnit unit = new EnergyUnit(unlocalizedName, multiplier,
-				new int[] { colour.getRed(), colour.getGreen(), colour.getBlue() });
+				new float[] { colour.getRed() / 255.0F, colour.getGreen() / 255.0F, colour.getBlue() / 255.0F });
 		for (EnergyUnit u : energyUnits) {
 			if (u.unlocalizedName.equalsIgnoreCase(unit.unlocalizedName)) {
 				CJCore.logger.warn(String.format("An energy unit of type %s has already been registered - SKIPPING", unlocalizedName));

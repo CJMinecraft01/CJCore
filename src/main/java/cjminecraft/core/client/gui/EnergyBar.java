@@ -5,10 +5,10 @@ import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyData;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
+import cjminecraft.core.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -17,15 +17,17 @@ import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * Draw a simple {@link EnergyBar} which represents the energy inside of a
- * {@link TileEntity}
+ * {@link TileEntity}. Please use {@link GuiBase}, this will be removed in the
+ * next update
  * 
  * @author CJMinecraft
  *
  */
+@Deprecated
 public class EnergyBar extends GuiButton {
-	
+
 	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(CJCore.MODID,
-			"textures/gui/energy_bar.png");
+			"textures/gui/widgets.png");
 	public static final int DEFAULT_WIDTH = 18;
 	public static final int DEFAULT_HEIGHT = 84;
 
@@ -111,17 +113,17 @@ public class EnergyBar extends GuiButton {
 
 		// Actual background energy bar
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		int[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
+		float[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
 		GlStateManager.color(colour[0], colour[1], colour[2]);
 		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
 				textureY + 1, width - 2, height - 1);
 
 		// The overlay to show the amount of energy in the {@link TileEntity}
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		GlStateManager.color(1.0F, 1.0F, 1.0F);
+		RenderUtils.resetColour();
 		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
 				textureY + 1, width - 2, height - getEnergyBarHeight() - 1);
-		
+
 		updateEnergyBar(EnergyUtils.getCachedEnergyData(CJCore.MODID));
 	}
 
@@ -134,23 +136,24 @@ public class EnergyBar extends GuiButton {
 	 * @param te
 	 *            The tile entity which is holding the block's energy
 	 */
+	@Deprecated
 	public void actionPerformed(Minecraft mc, TileEntity te) {
-		ItemStack selectedItem = mc.player.inventory.getItemStack();
-		if (selectedItem != ItemStack.EMPTY && !selectedItem.isEmpty()) {
-			if (EnergyUtils.hasSupport(selectedItem, null)) {
-				EnergyUtils.giveEnergy(selectedItem, EnergyUtils.takeEnergy(te,
-						Math.abs(EnergyUtils.getCapacity(selectedItem, null, CJCoreConfig.DEFAULT_ENERGY_UNIT)
-								- EnergyUtils.getEnergyStored(selectedItem, null, CJCoreConfig.DEFAULT_ENERGY_UNIT)),
-						CJCoreConfig.DEFAULT_ENERGY_UNIT, false, null), CJCoreConfig.DEFAULT_ENERGY_UNIT, false, null);
-			}
-		} else {
-			this.playPressSound(mc.getSoundHandler());
-			EnergyUnit toBe = CJCoreConfig.DEFAULT_ENERGY_UNIT.cycleUnit();
-			this.energy = EnergyUtils.convertEnergy(CJCoreConfig.DEFAULT_ENERGY_UNIT, toBe, energy);
-			this.capacity = EnergyUtils.convertEnergy(CJCoreConfig.DEFAULT_ENERGY_UNIT, toBe, capacity);
-			CJCoreConfig.DEFAULT_ENERGY_UNIT = toBe;
-			CJCoreConfig.syncFromFields();
-		}
+		actionPerformed(mc);
+	}
+	
+	/**
+	 * Use this in the action performed to be able to cycle the
+	 * {@link EnergyUnit} when you click the {@link EnergyBar}
+	 * 
+	 * @param mc
+	 *            Instance of {@link Minecraft} used for the press sound
+	 */
+	public void actionPerformed(Minecraft mc) {
+		EnergyUnit toBe = CJCoreConfig.DEFAULT_ENERGY_UNIT.cycleUnit();
+		this.energy = EnergyUtils.convertEnergy(CJCoreConfig.DEFAULT_ENERGY_UNIT, toBe, energy);
+		this.capacity = EnergyUtils.convertEnergy(CJCoreConfig.DEFAULT_ENERGY_UNIT, toBe, capacity);
+		CJCoreConfig.DEFAULT_ENERGY_UNIT = toBe;
+		CJCoreConfig.syncFromFields();
 	}
 
 	/**
@@ -190,11 +193,16 @@ public class EnergyBar extends GuiButton {
 	private int getEnergyBarHeight() {
 		return (int) ((this.capacity != 0 && this.energy != 0) ? (this.energy * this.height) / this.capacity : 0);
 	}
-	
+
 	/**
-	 * Update the energy inside of this {@link EnergyBar} from the {@link TileEntity} at the given {@link BlockPos}
-	 * @param pos The position of the {@link TileEntity}
-	 * @param side The side of the {@link TileEntity} to get the energy from. For use with {@link Capability}s
+	 * Update the energy inside of this {@link EnergyBar} from the
+	 * {@link TileEntity} at the given {@link BlockPos}
+	 * 
+	 * @param pos
+	 *            The position of the {@link TileEntity}
+	 * @param side
+	 *            The side of the {@link TileEntity} to get the energy from. For
+	 *            use with {@link Capability}s
 	 */
 	public void syncData(BlockPos pos, EnumFacing side) {
 		EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, pos, side, CJCore.MODID);

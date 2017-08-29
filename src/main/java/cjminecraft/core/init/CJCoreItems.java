@@ -2,6 +2,7 @@ package cjminecraft.core.init;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.items.ItemMultimeter;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -36,7 +37,9 @@ public class CJCoreItems {
 	 * Register the render for the items
 	 */
 	public static void registerRenders() {
-		registerRender(multimeter);
+		ModelBakery.registerItemVariants(multimeter, new ResourceLocation(CJCore.MODID, "multimeter_energy"), new ResourceLocation(CJCore.MODID, "multimeter_item"));
+		registerRender(multimeter, 0, "multimeter_energy");
+		registerRender(multimeter, 1, "multimeter_item");
 	}
 
 	/**
@@ -58,6 +61,34 @@ public class CJCoreItems {
 	public static void registerRender(Item item) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(
 				new ResourceLocation(CJCore.MODID, item.getUnlocalizedName().substring(5)), "inventory"));
+	}
+
+	/**
+	 * Register the render for the item
+	 * 
+	 * @param item
+	 *            The item to render
+	 * @param meta
+	 *            The item's meta data
+	 */
+	public static void registerRender(Item item, int meta) {
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(
+				new ResourceLocation(CJCore.MODID, item.getUnlocalizedName().substring(5)), "inventory"));
+	}
+
+	/**
+	 * Register the render for the item
+	 * 
+	 * @param item
+	 *            The item to render
+	 * @param meta
+	 *            The item's meta data
+	 * @param fileName
+	 *            The name of the model file
+	 */
+	public static void registerRender(Item item, int meta, String fileName) {
+		ModelLoader.setCustomModelResourceLocation(item, meta,
+				new ModelResourceLocation(new ResourceLocation(CJCore.MODID, fileName), "inventory"));
 	}
 
 }

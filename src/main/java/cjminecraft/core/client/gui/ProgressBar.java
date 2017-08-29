@@ -6,11 +6,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * An easy way to draw a {@link ProgressBar}
+ * An easy way to draw a {@link ProgressBar}. Please use {@link GuiBase}, this
+ * will be removed in the next update
  * 
  * @author CJMinecraft
  *
  */
+@Deprecated
 public class ProgressBar extends Gui {
 
 	private ResourceLocation texture;

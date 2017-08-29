@@ -1,6 +1,5 @@
 package cjminecraft.core.proxy;
 
-import cjminecraft.core.command.CommandEditTileEntity;
 import cjminecraft.core.init.CJCoreEvents;
 import cjminecraft.core.network.PacketHandler;
 import net.minecraftforge.common.MinecraftForge;

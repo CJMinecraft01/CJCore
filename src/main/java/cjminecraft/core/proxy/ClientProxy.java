@@ -23,12 +23,12 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init() {
 		super.init();
+		MinecraftForge.EVENT_BUS.register(new ItemMultimeter.MultimeterOverlay());
 	}
 	
 	@Override
 	public void postInit() {
 		super.postInit();
-		MinecraftForge.EVENT_BUS.register(new ItemMultimeter.MultimeterOverlay());
 	}
 
 }

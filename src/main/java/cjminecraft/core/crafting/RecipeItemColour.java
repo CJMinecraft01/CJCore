@@ -2,7 +2,8 @@ package cjminecraft.core.crafting;
 
 import java.util.Arrays;
 import java.util.List;
-import cjminecraft.core.util.InventoryUtils;
+
+import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;

@@ -1,12 +1,8 @@
 package cjminecraft.core.network;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.network.energy.PacketGetCapacity;
-import cjminecraft.core.network.energy.PacketGetEnergy;
-import cjminecraft.core.network.energy.PacketGetEnergyData;
-import cjminecraft.core.network.energy.PacketReturnCapacity;
-import cjminecraft.core.network.energy.PacketReturnEnergy;
-import cjminecraft.core.network.energy.PacketReturnEnergyData;
+import cjminecraft.core.network.energy.*;
+import cjminecraft.core.network.inventory.*;
 import cjminecraft.core.proxy.CommonProxy;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -48,11 +44,16 @@ public class PacketHandler {
 		INSTANCE.registerMessage(PacketGetEnergy.Handler.class, PacketGetEnergy.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetCapacity.Handler.class, PacketGetCapacity.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetEnergyData.Handler.class, PacketGetEnergyData.class, nextID(), Side.SERVER);
+		INSTANCE.registerMessage(PacketTakeEnergy.Handler.class, PacketTakeEnergy.class, nextID(), Side.SERVER);
+		INSTANCE.registerMessage(PacketGiveEnergy.Handler.class, PacketGiveEnergy.class, nextID(), Side.SERVER);
+		INSTANCE.registerMessage(PacketGetInventory.Handler.class, PacketGetInventory.class, nextID(), Side.SERVER);
 
 		// Client Messages
 		INSTANCE.registerMessage(PacketReturnEnergy.Handler.class, PacketReturnEnergy.class, nextID(), Side.CLIENT);
 		INSTANCE.registerMessage(PacketReturnCapacity.Handler.class, PacketReturnCapacity.class, nextID(), Side.CLIENT);
 		INSTANCE.registerMessage(PacketReturnEnergyData.Handler.class, PacketReturnEnergyData.class, nextID(),
+				Side.CLIENT);
+		INSTANCE.registerMessage(PacketReturnInventory.Handler.class, PacketReturnInventory.class, nextID(),
 				Side.CLIENT);
 	}
 

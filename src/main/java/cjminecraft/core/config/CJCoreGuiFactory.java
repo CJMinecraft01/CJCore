@@ -88,6 +88,8 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 					CategoryEntryEnergy.class));
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.update_checker"),
 					"gui.config.category.update_checker", CategoryEntryVersionChecker.class));
+			list.add(new DummyCategoryElement(I18n.format("gui.config.category.multimeter"),
+					"gui.config.cateogry.multimeter", CategoryEntryMultimeter.class));
 			return list;
 		}
 
@@ -119,6 +121,12 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 		}
 
+		/**
+		 * All of the version checker configurations
+		 * 
+		 * @author CJMinecraft
+		 *
+		 */
 		public static class CategoryEntryVersionChecker extends CategoryEntry {
 
 			public CategoryEntryVersionChecker(GuiConfig owningScreen, GuiConfigEntries owningEntryList,
@@ -135,6 +143,34 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 				String windowTitle = I18n.format("gui.config.category.update_checker");
 				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
 						CJCoreConfig.CATEGORY_NAME_VERSION_CHECKER,
+						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
+						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
+			}
+
+		}
+
+		/**
+		 * All of the energy configurations
+		 * 
+		 * @author CJMinecraft
+		 *
+		 */
+		public static class CategoryEntryMultimeter extends CategoryEntry {
+
+			public CategoryEntryMultimeter(GuiConfig owningScreen, GuiConfigEntries owningEntryList,
+					IConfigElement configElement) {
+				super(owningScreen, owningEntryList, configElement);
+			}
+
+			@Override
+			protected GuiScreen buildChildScreen() {
+				Configuration config = CJCoreConfig.getConfig();
+				ConfigElement category_multimeter = new ConfigElement(
+						config.getCategory(CJCoreConfig.CATEGORY_NAME_MULTIMETER));
+				List<IConfigElement> propertiesOnThisScreen = category_multimeter.getChildElements();
+				String windowTitle = I18n.format("gui.config.category.multimeter");
+				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
+						CJCoreConfig.CATEGORY_NAME_MULTIMETER,
 						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
 						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
 			}
