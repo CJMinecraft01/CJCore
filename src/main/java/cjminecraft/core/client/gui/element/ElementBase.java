@@ -366,6 +366,7 @@ public abstract class ElementBase {
 	 *            The mouse button which was pressed
 	 * @return Whether it should override all other handlers
 	 * @throws IOException
+	 *             Something may go wrong. Typically due to buttons
 	 */
 	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) throws IOException {
 		return false;

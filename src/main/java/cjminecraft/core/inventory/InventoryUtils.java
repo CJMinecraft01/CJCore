@@ -218,7 +218,8 @@ public class InventoryUtils {
 		if (!ignoreNBT && !ignoreMetaData) {
 			if (a.hasTagCompound() && b.hasTagCompound())
 				return a.isItemEqual(b) && a.getTagCompound().equals(b.getTagCompound());
-			return a.isItemEqual(b) && ((!a.hasTagCompound() && !b.hasTagCompound()) || (a.getTagCompound() == null && b.getTagCompound() == null));
+			return a.isItemEqual(b) && ((!a.hasTagCompound() && !b.hasTagCompound())
+					|| (a.getTagCompound() == null && b.getTagCompound() == null));
 		}
 		return false;
 	}
@@ -1030,7 +1031,7 @@ public class InventoryUtils {
 	/**
 	 * Returns true if the inventory is full
 	 * 
-	 * @param te
+	 * @param inventory
 	 *            The {@link ItemStack} which has an inventory
 	 * @param fromSlot
 	 *            The slot to start checking at
@@ -1612,7 +1613,6 @@ public class InventoryUtils {
 	 *            The name of the class so each class can only sync one data
 	 * @param inventory
 	 *            The inventory to sync
-	 * @return
 	 */
 	public static void addCachedInventoryData(String modid, String className, ImmutableList<ItemStack> inventory) {
 		if (!cachedInventoryData.containsKey(modid))
@@ -1657,8 +1657,7 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter
+	 * in the class path provided in the cache
 	 * 
 	 * @param pos
 	 *            The position of the {@link TileEntity} with the inventory
@@ -1684,10 +1683,8 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter. The
-	 * inventory will be "stacked" - see
-	 * {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}.
+	 * in the class path provided in the cache. The inventory will be "stacked"
+	 * - see {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}.
 	 * 
 	 * @param pos
 	 *            The position of the {@link TileEntity} with the inventory
@@ -1713,8 +1710,7 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter
+	 * in the class path provided in the cache
 	 * 
 	 * @param pos
 	 *            The position of the {@link TileEntity} with the inventory
@@ -1734,10 +1730,8 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter. The
-	 * inventory will be "stacked" - see
-	 * {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}
+	 * in the class path provided in the cache. The inventory will be "stacked"
+	 * - see {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}
 	 * 
 	 * @param pos
 	 *            The position of the {@link TileEntity} with the inventory
@@ -1757,9 +1751,8 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter. The
-	 * calling class will be used as the name of the class in the cache
+	 * in the class path provided in the cache. The calling class will be used
+	 * as the name of the class in the cache
 	 * 
 	 * @param pos
 	 *            The position of the {@link TileEntity} with the inventory
@@ -1782,10 +1775,8 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter. The
-	 * inventory will be "stacked" - see
-	 * {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}. The
+	 * in the class path provided in the cache. The inventory will be "stacked"
+	 * - see {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}. The
 	 * calling class will be used as the name of the class in the cache
 	 * 
 	 * @param pos
@@ -1810,9 +1801,8 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter. The
-	 * calling class will be used as the name of the class in the cache
+	 * in the class path provided in the cache. The calling class will be used
+	 * as the name of the class in the cache
 	 * 
 	 * @param pos
 	 *            The position of the {@link TileEntity} with the inventory
@@ -1831,8 +1821,7 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. Use
-	 * {@link ImmutableList}<{@link ItemStack}> as the type parameter. The
+	 * in the class path provided in the cache. The
 	 * inventory will be "stacked" - see
 	 * {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}. The
 	 * calling class will be used as the name of the class in the cache

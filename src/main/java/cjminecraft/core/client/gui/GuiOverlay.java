@@ -71,6 +71,9 @@ public class GuiOverlay extends GuiCore {
 
 	/**
 	 * Used for the actual event
+	 * 
+	 * @param event
+	 *            The event
 	 */
 	@SubscribeEvent(receiveCanceled = true)
 	public void drawOverlay(RenderGameOverlayEvent.Pre event) {

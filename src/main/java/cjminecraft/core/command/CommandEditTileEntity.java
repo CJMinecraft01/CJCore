@@ -4,23 +4,17 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.naming.TimeLimitExceededException;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.inventory.InventoryUtils;
 import cjminecraft.core.energy.EnergyUtils;
+import cjminecraft.core.inventory.InventoryUtils;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -264,8 +258,6 @@ public class CommandEditTileEntity extends CommandBase {
 	 * @param side
 	 *            The side of the {@link TileEntity} for use with
 	 *            {@link Capability}
-	 * @param pos
-	 *            The position of the block
 	 * @param sender
 	 *            The sender who executed the command
 	 * @param args
@@ -281,6 +273,8 @@ public class CommandEditTileEntity extends CommandBase {
 				if (stack.getCount() > 0)
 					sender.sendMessage(new TextComponentString(InventoryUtils.stackToString(stack)));
 		}
+		if(args.length <= 5)
+			 throw new CommandException(I18n.format("command.tileentity.usage"));
 		if (args[4].equalsIgnoreCase("insert")) {
 			Item item = getItemByText(sender, args[5]);
 			int amount = args.length >= 7 ? parseInt(args[6]) : 1;
