@@ -36,32 +36,40 @@ gui.config.category.energy=Energi Konfiguration
 gui.config.category.energy.tooltip=Allt med energi
 gui.config.energy.default_energy_unit.name=Standard Energienhet
 gui.config.energy.default_energy_unit.comment=Energienheten som du normalt kommer att se
-gui.config.energy.multimeter_offset_x.name=Flermätare Offset X
-gui.config.energy.multimeter_offset_x.comment=Offsetet från den vänstra siden vid användning av Flermätaren
-gui.config.energy.multimeter_offset_y.name=Flermätare Offset Y
-gui.config.energy.multimeter_offset_y.comment=Offsetet från den botten vid användning av Flermätaren
-gui.config.energy.multimeter_width.name=Flermätarens Längd
-gui.config.energy.multimeter_width.comment=Längden av Flermätarens gui
-gui.config.energy.multimeter_height.name=Flermätarens Brädd
-gui.config.energy.multimeter_height.comment=Brädden av Flermätarens gui
-gui.config.energy.multimeter_show_capacity.name=Visa Flermätarens Kapacitet
-gui.config.energy.multimeter_show_capacity.comment=Huruvidare att kapaciteten ska visas vid användning av Flermätaren
-gui.config.energy.multimeter_simplify_energy.name=Förenkla Energi Uppvisningen För Flermätaren
-gui.config.energy.multimeter_simplify_energy.comment=Huruvidare att förenkla energi uppvisnigen vid användning av Flermätaren
+gui.config.energy.energy_bar_show_capacity.name=Energibar Visa Kapacitet
+gui.config.energy.energy_bar_show_capacity.comment=Huruvida om att energibaren ska visa kapaciteten eller inte
+gui.config.energy.energy_bar_simplify_energy.name=Energibar förenkla energi
+gui.config.energy.energy_bar_simplify_energy.comment=Huruvida att förenkla hur energi ska visas vid använding av en energibar
+
 gui.config.category.update_checker=Uppdatering Kontrollant
 gui.config.category.update_checker.tooltip=Inaktivera alla uppdatering kontrollanter som använder CJCore
 gui.config.update_checker.enabled.comment=Huruvidare att det här moddens uppdatering kontrollanter är inaktivera
 
-item.multimeter.name=Flermätare
+gui.config.category.multimeter=Flermätare Konfigurationer
+gui.config.category.multimeter.tooltip=Allt med flermätaren att göra
+gui.config.multimeter.offset_x.name=Flermätare Offset X
+gui.config.multimeter.offset_x.comment=Offsetet från den vänstra siden vid användning av Flermätaren
+gui.config.multimeter.offset_y.name=Flermätare Offset Y
+gui.config.multimeter.offset_y.comment=Offsetet från den botten vid användning av Flermätaren
+gui.config.multimeter.energy_width.name=Flermätarens Längd
+gui.config.multimeter.energy_width.comment=Längden av Flermätarens gui
+gui.config.multimeter.energy_height.name=Flermätarens Brädd
+gui.config.multimeter.energy_height.comment=Brädden av Flermätarens gui
+gui.config.multimeter.item_max_columns.name=Flermätaren Sakgräns kolumner
+gui.config.multimeter.item_max_columns.comment=Gränsen av mängeden kolumner för sak flermätaren
+
+item.multimeter.energy.name=Flermätare (Energi)
+item.multimeter.item.name=Flermätare (Sak)
 item.multimeter.tooltip.blockpos=Inriktning på block %s vid %s %s %s
-item.multimeter.tooltip=Flermätaren tillåter användare att se energi inuti ett block utan att öppna deras gui! smyg höger klivka på ett block för att sätta inriktning så att Flermätaren bara visar energi på insidan av det blocket. Genom att höger klicka i luften, kommer det inriktade blocket att återställas
+item.multimeter.tooltip.energy=Flermätaren tillåter användare att se energi inuti ett block utan att öppna deras gui! smyg höger klivka på ett block för att sätta inriktning så att Flermätaren bara visar energi på insidan av det blocket. Genom att höger klicka i luften, kommer det inriktade blocket att återställas
+item.multimeter.tooltip.item=Flermätaren tillåter användare att se förrådet inuti ett block utan att öppna deras gui! smyg höger klivka på ett block för att sätta inriktning så att Flermätaren bara visar förrådet på insidan av det blocket. Genom att höger klicka i luften, kommer det inriktade blocket att återställas
 
 update.ready=Det finns en updatering för %s tillgänglig!
 update.version=Nuvarande Verison: %s, Nyaste Versionen: %s
 update.download=Tryck För Att Ladda Ner
 update.changelog=Håll För Att Visa Ändrings Loggen
 
-command.tileentity.usage=/tileenitty <x> <y> <z> energi få [sida] eller /tileenitty <x> <y> <z> energi <sätt:ge:ta> <energi> <enhet> [sida]
+command.tileentity.usage=/tileenitty <x> <y> <z> <energi:förråd> få [sida] eller /tileenitty <x> <y> <z> energi <sätt:ge:ta> <energi> <energienhet> [sida] eller /tileenitty <x> <y> <z> förråd <införa:extrahera> <sak> [mängd] [data] [dataEtiket] [sida]
 command.tileentity.nosupport=Det finns inget stöd för tile entityn vid positionen %s %s %s
 command.tileentity.notake=Den här tile entityn tillåter inte att energi tas från den
 command.tileentity.nogive=Den här tile entityn tillåter inte att energi ges till den
