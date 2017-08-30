@@ -178,7 +178,7 @@ public class ItemMultimeter extends Item {
 		protected void updateElementInformation() {
 			this.overlays.get(0).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
 					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - this.overlays.get(0).getHeight());
-			if (this.overlays.get(0).isEnabled())
+			if (this.overlays.get(0).isVisible())
 				this.overlays.get(1).setPosition(this.overlays.get(0).getPosX() + this.overlays.get(0).getWidth() + 6,
 						this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - this.overlays.get(1).getHeight());
 			else
