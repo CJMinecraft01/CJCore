@@ -456,7 +456,7 @@ public class InventoryUtils {
 								if (stack.hasTagCompound())
 									inv.getStackInSlot(slot).setTagCompound(stack.getTagCompound());
 							} else
-								inSlot.grow(grow);
+								inv.getStackInSlot(slot).grow(grow);
 						}
 						remainder.shrink(grow);
 					}
@@ -487,7 +487,7 @@ public class InventoryUtils {
 							if (stack.hasTagCompound())
 								inv.getStackInSlot(slot).setTagCompound(stack.getTagCompound());
 						} else
-							inSlot.grow(grow);
+							inv.getStackInSlot(slot).grow(grow);
 					}
 					remainder.shrink(grow);
 				}
@@ -584,7 +584,7 @@ public class InventoryUtils {
 							if (stack.hasTagCompound())
 								inv.getStackInSlot(slot).setTagCompound(stack.getTagCompound());
 						} else
-							inSlot.grow(grow);
+							inv.getStackInSlot(slot).grow(grow);
 					}
 					remainder.shrink(grow);
 				}
@@ -670,7 +670,7 @@ public class InventoryUtils {
 				if (slot <= toSlot && slot >= fromSlot) {
 					ItemStack inSlot = inv.getStackInSlot(slot);
 					if (isStackEqual(stack, inSlot, false, false)) {
-						int decreaseBy = MathHelper.clamp(stack.getCount(), 0, inSlot.getCount());
+						int decreaseBy = Math.min(stack.getCount(), inSlot.getCount());
 						if (!simulate)
 							inv.decrStackSize(slot, decreaseBy);
 						stack.shrink(decreaseBy);
@@ -687,7 +687,7 @@ public class InventoryUtils {
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
 				ItemStack inSlot = inv.getStackInSlot(slot);
 				if (isStackEqual(stack, inSlot, false, false)) {
-					int decreaseBy = MathHelper.clamp(stack.getCount(), 0, inSlot.getCount());
+					int decreaseBy = Math.min(stack.getCount(), inSlot.getCount());
 					if (!simulate)
 						inv.decrStackSize(slot, decreaseBy);
 					stack.shrink(decreaseBy);

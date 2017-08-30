@@ -23,7 +23,7 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 /**
  * The {@link IModGuiFactory} for {@link CJCore}
  * 
- * @author CJMinecraft
+ * @author Callum
  *
  */
 public class CJCoreGuiFactory implements IModGuiFactory {

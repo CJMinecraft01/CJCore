@@ -129,7 +129,7 @@ public class ItemMultimeter extends Item {
 			tooltip.add(TextFormatting.GREEN
 					+ I18n.format("item.multimeter.tooltip.blockpos", blockName, pos.getX(), pos.getY(), pos.getZ()));
 		}
-		tooltip.add(I18n.format("item.multimeter.tooltip"));
+		tooltip.add(I18n.format("item.multimeter.tooltip." + (stack.getItemDamage() == 0 ? "energy" : "item")));
 	}
 
 	/**
