@@ -10,6 +10,7 @@ import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.GuiCore;
 import cjminecraft.core.client.gui.ISpecialOverlayElement;
 import cjminecraft.core.config.CJCoreConfig;
+import cjminecraft.core.energy.CustomForgeEnergyStorage;
 import cjminecraft.core.energy.EnergyData;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
@@ -38,7 +39,6 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	public static final int DEFAULT_WIDTH = 18;
 	public static final int DEFAULT_HEIGHT = 84;
 
-	protected long energyDifference = 0;
 	protected long energy = 0;
 	protected long capacity = 0;
 
@@ -95,11 +95,8 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	 * @return The updated element
 	 */
 	public ElementEnergyBar setEnergy(long energy, long capacity, EnergyUnit unit) {
-		this.energyDifference = this.energy;
 		this.energy = EnergyUtils.convertEnergy(unit, CJCoreConfig.DEFAULT_ENERGY_UNIT, energy);
 		this.capacity = EnergyUtils.convertEnergy(unit, CJCoreConfig.DEFAULT_ENERGY_UNIT, capacity);
-		if (this.energyDifference != 0)
-			this.energyDifference -= this.energy;
 		return this;
 	}
 
@@ -116,11 +113,7 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	public ElementEnergyBar setEnergy(EnergyData data) {
 		if (data == null)
 			return this;
-		this.energyDifference = this.energy;
-		this.energy = data.getEnergy();
-		this.capacity = data.getCapacity();
-		this.energyDifference -= this.energy;
-		return this;
+		return setEnergy(data.getEnergy(), data.getCapacity(), CJCoreConfig.DEFAULT_ENERGY_UNIT);
 	}
 
 	/**
@@ -247,15 +240,6 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(this.capacity)
 							+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
 		}
-		if (this.energyDifference > 0)
-			tooltip.add(TextFormatting.RED + "-" + String.valueOf(this.energyDifference) + " "
-					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() + "/t");
-		if (this.energyDifference == 0)
-			tooltip.add(TextFormatting.WHITE + String.valueOf(this.energyDifference) + " "
-					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() + "/t");
-		if (this.energyDifference < 0)
-			tooltip.add(TextFormatting.GREEN + "+" + String.valueOf(this.energyDifference).substring(1) + " "
-					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() + "/t");
 		int percentageFull = (int) ((double) this.energy / (double) this.capacity * 100.0D);
 		tooltip.add((percentageFull > 50 ? TextFormatting.GREEN
 				: percentageFull <= 50 && percentageFull >= 15 ? TextFormatting.YELLOW : TextFormatting.RED)

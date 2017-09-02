@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
+import cjminecraft.core.CJCore;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.inventory.PacketGetInventory;
 import net.minecraft.entity.item.EntityItem;
@@ -444,10 +445,8 @@ public class InventoryUtils {
 						return ItemStack.EMPTY;
 					ItemStack inSlot = inv.getStackInSlot(slot);
 					if (inSlot.getCount() >= inv.getInventoryStackLimit()
-							|| inSlot.getCount() >= inSlot.getMaxStackSize()) {
-						remainder = stack;
+							|| inSlot.getCount() >= inSlot.getMaxStackSize())
 						continue;
-					}
 					if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
 						int grow = Math.min(remainder.getCount(), inv.getInventoryStackLimit() - inSlot.getCount());
 						if (!simulate) {
@@ -474,12 +473,10 @@ public class InventoryUtils {
 					return ItemStack.EMPTY;
 				ItemStack inSlot = inv.getStackInSlot(slot);
 				if (inSlot.getCount() >= inv.getInventoryStackLimit()
-						|| inSlot.getCount() >= inSlot.getMaxStackSize()) {
-					remainder = stack;
+						|| inSlot.getCount() >= inSlot.getMaxStackSize())
 					continue;
-				}
 				if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
-					int grow = Math.min(Math.abs(inSlot.getCount() - remainder.getCount()),
+					int grow = Math.min(remainder.getCount(),
 							inv.getInventoryStackLimit() - inSlot.getCount());
 					if (!simulate) {
 						if (inSlot.isEmpty() || inSlot.getCount() <= 0) {
@@ -571,12 +568,10 @@ public class InventoryUtils {
 					return ItemStack.EMPTY;
 				ItemStack inSlot = inv.getStackInSlot(slot);
 				if (inSlot.getCount() >= inv.getInventoryStackLimit()
-						|| inSlot.getCount() >= inSlot.getMaxStackSize()) {
-					remainder = stack;
+						|| inSlot.getCount() >= inSlot.getMaxStackSize())
 					continue;
-				}
 				if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
-					int grow = Math.min(Math.abs(inSlot.getCount() - remainder.getCount()),
+					int grow = Math.min(remainder.getCount(),
 							inv.getInventoryStackLimit() - inSlot.getCount());
 					if (!simulate) {
 						if (inSlot.isEmpty() || inSlot.getCount() <= 0) {

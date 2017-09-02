@@ -199,8 +199,10 @@ public class ItemMultimeter extends Item {
 				return;
 			}
 			if (blacklistBlocksEnergy.contains(
-					this.mc.world.getBlockState(this.mc.objectMouseOver.getBlockPos()).getBlock().getRegistryName()))
+					this.mc.world.getBlockState(this.mc.objectMouseOver.getBlockPos()).getBlock().getRegistryName())) {
+				this.overlays.get(1).setEnabled(false);
 				return;
+			}
 			this.overlays.get(1).setEnabled(false);
 			ElementEnergyBar energyBar = (ElementEnergyBar) this.overlays.get(1).getElements().get(0);
 			ElementItemSlot itemSlot = (ElementItemSlot) this.overlays.get(1).getElements().get(1);
@@ -273,7 +275,6 @@ public class ItemMultimeter extends Item {
 			ElementItemSlot itemSlot = (ElementItemSlot) this.overlays.get(0).getElements().get(0);
 			OverlayInventory inv = (OverlayInventory) this.overlays.get(0);
 			inv.setEnabled(true);
-			// inv.setVisible(true);
 
 			itemSlot.setPosition(0, inv.getRows() * 18 + (inv.getExcessColumns() > 0 ? 18 : 0));
 
@@ -294,7 +295,6 @@ public class ItemMultimeter extends Item {
 			} else {
 				RayTraceResult result = this.mc.objectMouseOver;
 				if (InventoryUtils.hasSupport(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit)) {
-					// inv.setVisible(true);
 					if (inv.getPos() != result.getBlockPos() || inv.getSide() != result.sideHit)
 						inv.shouldSync(result.getBlockPos(), result.sideHit, true);
 					ItemStack block = getStackFromBlock(result.getBlockPos(), result.sideHit);
@@ -304,11 +304,6 @@ public class ItemMultimeter extends Item {
 					inv.shouldntSync();
 					inv.setVisible(false);
 				}
-				// itemSync++;
-				// itemSync %= 10;
-				// if (itemSync == 0)
-				// InventoryUtils.syncHasSupport(result.getBlockPos(),
-				// result.sideHit, CJCore.MODID);
 			}
 			if (InventoryUtils.hasSupport(this.player.getHeldItemMainhand(), null)) {
 				inv.shouldntSync();

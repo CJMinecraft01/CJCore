@@ -1,8 +1,11 @@
 package cjminecraft.core.energy;
 
+import cjminecraft.core.CJCore;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * An improved version of an {@link EnergyStorage}
@@ -165,6 +168,7 @@ public class CustomForgeEnergyStorage extends EnergyStorage {
 
 	/**
 	 * Get the maximum energy this can receive
+	 * 
 	 * @return The maximum energy this can receive
 	 */
 	public int getMaxReceive() {
@@ -173,6 +177,7 @@ public class CustomForgeEnergyStorage extends EnergyStorage {
 
 	/**
 	 * Get the maximum energy that can be extracted
+	 * 
 	 * @return The maximum energy that can be extracted
 	 */
 	public int getMaxExtract() {
