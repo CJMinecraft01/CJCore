@@ -94,7 +94,7 @@ public class ElementProgressBar extends ElementTexture {
 	 * @return The width
 	 */
 	private int getAdjustedWidth() {
-		return (int) (this.min != 0 && this.max != 0 ? this.min / this.max * this.width : 0);
+		return (int) (this.min != 0 && this.max != 0 ? (float)this.min / (float)this.max * (float)this.width : 0);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class ElementProgressBar extends ElementTexture {
 	 * @return The height
 	 */
 	private int getAdjustedHeight() {
-		return (int) (this.min != 0 && this.max != 0 ? this.min / this.max * this.height : 0);
+		return (int) (this.min != 0 && this.max != 0 ? (float)this.min / (float)this.max * (float)this.height : 0);
 	}
 
 	@Override

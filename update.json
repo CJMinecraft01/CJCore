@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.2.1",
+	"version": "0.0.2.2",
 	"changelog": [
-		"-Removed Energy per tick in energy bar", "=Fixed insert item stack method"
+		"=Fixed Progress Bar Integer Division Bug"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
