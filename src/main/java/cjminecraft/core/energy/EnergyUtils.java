@@ -220,7 +220,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
+		if (stack == null || stack.isEmpty())
 			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(stack, from))
@@ -243,7 +243,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
+		if (stack == null || stack.isEmpty())
 			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(stack, from))
@@ -266,7 +266,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
+		if (stack == null || stack.isEmpty())
 			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(stack, from))

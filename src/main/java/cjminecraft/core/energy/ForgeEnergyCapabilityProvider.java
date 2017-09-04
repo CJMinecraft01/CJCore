@@ -1,5 +1,6 @@
 package cjminecraft.core.energy;
 
+import cjminecraft.core.CJCore;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -92,6 +93,20 @@ public class ForgeEnergyCapabilityProvider implements ICapabilityProvider {
 					return stack.getTagCompound().getInteger("MaxReceive");
 				return 0;
 			}
+			
+			@Override
+			public boolean canExtract() {
+				if(stack.hasTagCompound())
+					return stack.getTagCompound().getInteger("MaxExtract") > 0;
+				return super.canExtract();
+			}
+			
+			@Override
+			public boolean canReceive() {
+				if(stack.hasTagCompound())
+					return stack.getTagCompound().getInteger("MaxReceive") > 0;
+				return super.canReceive();
+			}
 
 			@Override
 			public CustomForgeEnergyStorage setMaxReceive(int maxReceive) {
@@ -133,6 +148,27 @@ public class ForgeEnergyCapabilityProvider implements ICapabilityProvider {
 				stack.getTagCompound().setInteger("MaxExtract", transfer);
 				stack.getTagCompound().setInteger("MaxReceive", transfer);
 				return this;
+			}
+			
+			@Override
+			public int receiveEnergy(int maxReceive, boolean simulate) {
+				if (!canReceive())
+		            return 0;
+
+		        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxReceive(), maxReceive));
+		        if (!simulate)
+		        	stack.getTagCompound().setInteger("Energy", getEnergyStored() + energyReceived);
+		        return energyReceived;
+			}
+			
+			@Override
+			public int extractEnergy(int maxExtract, boolean simulate) {
+				if (!canExtract())
+		            return 0;
+		        int energyExtracted = Math.min(getEnergyStored(), Math.min(getMaxExtract(), maxExtract));
+		        if (!simulate)
+		            stack.getTagCompound().setInteger("Energy", getEnergyStored() - energyExtracted);
+		        return energyExtracted;
 			}
 		};
 	}

@@ -272,6 +272,7 @@ public class CommandEditTileEntity extends CommandBase {
 			for (ItemStack stack : inv)
 				if (stack.getCount() > 0)
 					sender.sendMessage(new TextComponentString(InventoryUtils.stackToString(stack)));
+			return;
 		}
 		if(args.length <= 5)
 			 throw new CommandException(I18n.format("command.tileentity.usage"));
