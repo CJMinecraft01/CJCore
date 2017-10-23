@@ -38,9 +38,9 @@ public class EnergyUnits {
 		/**
 		 * The multiplier to convert to the unit. The multiplier is how to
 		 * convert to {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10T = 1MJ
-		 * 10FE = 1MJ 4J = 1MJ 6EU = 1MJ
+		 * 10FE = 1MJ 4J = 1MJ 5/2EU = 1MJ
 		 */
-		private int multiplier;
+		private double multiplier;
 		/**
 		 * The colour as its individual values. colour[0] = red colour[1] =
 		 * green colour[2] = blue
@@ -64,7 +64,7 @@ public class EnergyUnits {
 		 * @param colour
 		 *            The colour of the {@link EnergyBar}
 		 */
-		private EnergyUnit(String unlocalizedName, int multiplier, int colour) {
+		private EnergyUnit(String unlocalizedName, double multiplier, int colour) {
 			this.unlocalizedName = unlocalizedName;
 			this.multiplier = multiplier;
 			this.colour = new float[] { (colour >> 15 & 255) / 255.0F, (colour >> 8 & 255) / 255.0F, (colour & 255) / 255.0F };
@@ -87,7 +87,7 @@ public class EnergyUnits {
 		 * @param colour
 		 *            The colour of the {@link EnergyBar}
 		 */
-		private EnergyUnit(String unlocalizedName, int multiplier, float[] colour) {
+		private EnergyUnit(String unlocalizedName, double multiplier, float[] colour) {
 			this.unlocalizedName = unlocalizedName;
 			this.multiplier = multiplier;
 			this.colour = colour;
@@ -112,7 +112,7 @@ public class EnergyUnits {
 			return initials.toUpperCase();
 		}
 
-		public int getMultiplier() {
+		public double getMultiplier() {
 			return multiplier;
 		}
 
@@ -171,7 +171,7 @@ public class EnergyUnits {
 	 *            The colour of the {@link EnergyBar}
 	 * @return The registered energy unit
 	 */
-	public static EnergyUnit createEnergyUnit(String unlocalizedName, int multiplier, int colour) {
+	public static EnergyUnit createEnergyUnit(String unlocalizedName, double multiplier, int colour) {
 		EnergyUnit unit = new EnergyUnit(unlocalizedName, multiplier, colour);
 		for (EnergyUnit u : energyUnits) {
 			if (u.unlocalizedName.equalsIgnoreCase(unit.unlocalizedName)) {
@@ -201,7 +201,7 @@ public class EnergyUnits {
 	 *            The colour of the {@link EnergyBar}
 	 * @return The registered energy unit
 	 */
-	public static EnergyUnit createEnergyUnit(String unlocalizedName, int multiplier, ReadableColor colour) {
+	public static EnergyUnit createEnergyUnit(String unlocalizedName, double multiplier, ReadableColor colour) {
 		EnergyUnit unit = new EnergyUnit(unlocalizedName, multiplier,
 				new float[] { colour.getRed() / 255.0F, colour.getGreen() / 255.0F, colour.getBlue() / 255.0F });
 		for (EnergyUnit u : energyUnits) {
@@ -254,7 +254,7 @@ public class EnergyUnits {
 		FORGE_ENERGY = createEnergyUnit("forge_energy", 10, Color.ORANGE);
 		JOULES = createEnergyUnit("joules", 4, Color.GREEN);
 		MINECRAFT_JOULES = createEnergyUnit("minecraft_joules", 1, Color.YELLOW);
-		ENERGY_UNIT = createEnergyUnit("energy_unit", 6, Color.BLUE);
+		ENERGY_UNIT = createEnergyUnit("energy_unit", 2.5D, Color.BLUE);
 	}
 
 }

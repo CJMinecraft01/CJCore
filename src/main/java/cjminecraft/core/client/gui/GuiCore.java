@@ -123,7 +123,7 @@ public abstract class GuiCore extends GuiContainer {
 		if (stack != null)
 			font = stack.getItem().getFontRenderer(stack);
 		if (font == null)
-			font = fontRendererObj;
+			font = this.fontRenderer;
 
 		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
 		RenderHelper.disableStandardItemLighting();
@@ -550,7 +550,7 @@ public abstract class GuiCore extends GuiContainer {
 	 * @return The font renderer
 	 */
 	public FontRenderer getFontRenderer() {
-		return this.fontRendererObj;
+		return this.fontRenderer;
 	}
 
 	/**
@@ -574,7 +574,7 @@ public abstract class GuiCore extends GuiContainer {
 	 * @return The x position of the string so that it is centered on the gui
 	 */
 	protected int getCenteredOffset(String string, int xWidth) {
-		return (xWidth - this.fontRendererObj.getStringWidth(string)) / 2;
+		return (xWidth - this.fontRenderer.getStringWidth(string)) / 2;
 	}
 
 }

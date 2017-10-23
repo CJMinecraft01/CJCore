@@ -100,28 +100,28 @@ public class EnergyBar extends GuiButton {
 	 */
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-		this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width
-				&& mouseY < this.yPosition + this.height;
+		this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width
+				&& mouseY < this.y + this.height;
 
 		// Outer rim of bar
-		this.drawVerticalLine(xPosition, yPosition - 1, yPosition + height, 0xFF373737);
-		this.drawHorizontalLine(xPosition + 1, xPosition + width - 2, yPosition, 0xFF373737);
-		this.drawHorizontalLine(xPosition + width - 1, xPosition + width - 1, yPosition, 0xFF8B8B8B);
-		this.drawHorizontalLine(xPosition, xPosition, yPosition + height, 0xFF8B8B8B);
-		this.drawVerticalLine(xPosition + width - 1, yPosition, yPosition + height, 0xFFFFFFFF);
-		this.drawHorizontalLine(xPosition + 1, xPosition + width - 1, yPosition + height, 0xFFE2E2E2);
+		this.drawVerticalLine(x, y - 1, y + height, 0xFF373737);
+		this.drawHorizontalLine(x + 1, x + width - 2, y, 0xFF373737);
+		this.drawHorizontalLine(x + width - 1, x + width - 1, y, 0xFF8B8B8B);
+		this.drawHorizontalLine(x, x, y + height, 0xFF8B8B8B);
+		this.drawVerticalLine(x + width - 1, y, y + height, 0xFFFFFFFF);
+		this.drawHorizontalLine(x + 1, x + width - 1, y + height, 0xFFE2E2E2);
 
 		// Actual background energy bar
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
 		float[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
 		GlStateManager.color(colour[0], colour[1], colour[2]);
-		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
+		this.drawTexturedModalRect(x + 1, y + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
 				textureY + 1, width - 2, height - 1);
 
 		// The overlay to show the amount of energy in the {@link TileEntity}
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
 		RenderUtils.resetColour();
-		this.drawTexturedModalRect(xPosition + 1, yPosition + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
+		this.drawTexturedModalRect(x + 1, y + 1, textureX + 1 + (Math.abs(DEFAULT_WIDTH - width) / 2),
 				textureY + 1, width - 2, height - getEnergyBarHeight() - 1);
 
 		updateEnergyBar(EnergyUtils.getCachedEnergyData(CJCore.MODID));

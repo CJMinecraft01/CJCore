@@ -44,8 +44,6 @@ public class PacketHandler {
 		INSTANCE.registerMessage(PacketGetEnergy.Handler.class, PacketGetEnergy.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetCapacity.Handler.class, PacketGetCapacity.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetEnergyData.Handler.class, PacketGetEnergyData.class, nextID(), Side.SERVER);
-		INSTANCE.registerMessage(PacketTakeEnergy.Handler.class, PacketTakeEnergy.class, nextID(), Side.SERVER);
-		INSTANCE.registerMessage(PacketGiveEnergy.Handler.class, PacketGiveEnergy.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetInventory.Handler.class, PacketGetInventory.class, nextID(), Side.SERVER);
 
 		// Client Messages

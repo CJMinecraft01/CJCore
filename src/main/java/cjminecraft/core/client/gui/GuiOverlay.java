@@ -61,7 +61,7 @@ public class GuiOverlay extends GuiCore {
 		});
 		this.mc = Minecraft.getMinecraft();
 		this.itemRender = this.mc.getRenderItem();
-		this.fontRendererObj = this.mc.fontRendererObj;
+		this.fontRenderer = this.mc.fontRenderer;
 	}
 
 	@Override

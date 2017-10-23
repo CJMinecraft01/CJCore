@@ -1,4 +1,4 @@
-package cjminecraft.core.energy;
+package cjminecraft.core.energy.compat.forge;
 
 import cjminecraft.core.CJCore;
 import net.minecraft.nbt.NBTTagCompound;

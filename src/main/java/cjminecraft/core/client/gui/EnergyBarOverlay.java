@@ -82,25 +82,25 @@ public class EnergyBarOverlay extends EnergyBar {
 		super.drawButton(mc, mouseX, mouseY); // Draws the actual bar
 		// Outer rim
 		// Top
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 4, 0xFF000000);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 3, 0xFFFFFFFF);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 2, 0xFFFFFFFF);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition - 1, 0xFFC6C6C6);
+		this.drawHorizontalLine(x, x + width - 1, y - 4, 0xFF000000);
+		this.drawHorizontalLine(x, x + width - 1, y - 3, 0xFFFFFFFF);
+		this.drawHorizontalLine(x, x + width - 1, y - 2, 0xFFFFFFFF);
+		this.drawHorizontalLine(x, x + width - 1, y - 1, 0xFFC6C6C6);
 		// Right
-		this.drawVerticalLine(xPosition + width, yPosition - 1, yPosition + height + 1, 0xFFC6C6C6);
-		this.drawVerticalLine(xPosition + width + 1, yPosition - 1, yPosition + height + 1, 0xFF555555);
-		this.drawVerticalLine(xPosition + width + 2, yPosition - 1, yPosition + height + 1, 0xFF555555);
-		this.drawVerticalLine(xPosition + width + 3, yPosition - 1, yPosition + height + 1, 0xFF000000);
+		this.drawVerticalLine(x + width, y - 1, y + height + 1, 0xFFC6C6C6);
+		this.drawVerticalLine(x + width + 1, y - 1, y + height + 1, 0xFF555555);
+		this.drawVerticalLine(x + width + 2, y - 1, y + height + 1, 0xFF555555);
+		this.drawVerticalLine(x + width + 3, y - 1, y + height + 1, 0xFF000000);
 		// Bottom
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 1, 0xFFC6C6C6);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 2, 0xFF555555);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 3, 0xFF555555);
-		this.drawHorizontalLine(xPosition, xPosition + width - 1, yPosition + height + 4, 0xFF000000);
+		this.drawHorizontalLine(x, x + width - 1, y + height + 1, 0xFFC6C6C6);
+		this.drawHorizontalLine(x, x + width - 1, y + height + 2, 0xFF555555);
+		this.drawHorizontalLine(x, x + width - 1, y + height + 3, 0xFF555555);
+		this.drawHorizontalLine(x, x + width - 1, y + height + 4, 0xFF000000);
 		// Left
-		this.drawVerticalLine(xPosition - 1, yPosition - 1, yPosition + height + 1, 0xFFC6C6C6);
-		this.drawVerticalLine(xPosition - 2, yPosition - 1, yPosition + height + 1, 0xFFFFFFFF);
-		this.drawVerticalLine(xPosition - 3, yPosition - 1, yPosition + height + 1, 0xFFFFFFFF);
-		this.drawVerticalLine(xPosition - 4, yPosition - 1, yPosition + height + 1, 0xFF000000);
+		this.drawVerticalLine(x - 1, y - 1, y + height + 1, 0xFFC6C6C6);
+		this.drawVerticalLine(x - 2, y - 1, y + height + 1, 0xFFFFFFFF);
+		this.drawVerticalLine(x - 3, y - 1, y + height + 1, 0xFFFFFFFF);
+		this.drawVerticalLine(x - 4, y - 1, y + height + 1, 0xFF000000);
 
 		// Allows alpha not to be drawn as black but transparent
 		RenderUtils.resetColour();
@@ -110,31 +110,31 @@ public class EnergyBarOverlay extends EnergyBar {
 				GlStateManager.DestFactor.ZERO);
 		// Top left
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition - 4, yPosition - 4, 0, 85, 4, 4);
+		this.drawTexturedModalRect(x - 4, y - 4, 0, 85, 4, 4);
 		// Top right
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition + width, yPosition - 4, 4, 85, 4, 4);
+		this.drawTexturedModalRect(x + width, y - 4, 4, 85, 4, 4);
 		// Bottom Left
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition - 4, yPosition + height + 1, 0, 89, 4, 4);
+		this.drawTexturedModalRect(x - 4, y + height + 1, 0, 89, 4, 4);
 		// Bottom Right
 		mc.getTextureManager().bindTexture(DEFAULT_TEXTURE);
-		this.drawTexturedModalRect(xPosition + width, yPosition + height + 1, 4, 89, 4, 4);
+		this.drawTexturedModalRect(x + width, y + height + 1, 4, 89, 4, 4);
 		GlStateManager.disableBlend();
 
 		// Shows the energy inside of the {@link TileEntity}
 		if (!CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
-			mc.fontRendererObj.drawStringWithShadow(NumberFormat.getNumberInstance().format(energy) + " "
+			mc.fontRenderer.drawStringWithShadow(NumberFormat.getNumberInstance().format(energy) + " "
 					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
 					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getNumberInstance().format(capacity)
 							+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""),
-					xPosition + width + 6, yPosition + height - 7, 0xFFFFFF);
+					x + width + 6, y + height - 7, 0xFFFFFF);
 		} else {
-			mc.fontRendererObj.drawStringWithShadow(EnergyUtils.getEnergyAsString(energy,
+			mc.fontRenderer.drawStringWithShadow(EnergyUtils.getEnergyAsString(energy,
 					CJCoreConfig.DEFAULT_ENERGY_UNIT)
 					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
 							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig.DEFAULT_ENERGY_UNIT) : ""),
-					xPosition + width + 6, yPosition + height - 7, 0xFFFFFF);
+					x + width + 6, y + height - 7, 0xFFFFFF);
 		}
 	}
 
