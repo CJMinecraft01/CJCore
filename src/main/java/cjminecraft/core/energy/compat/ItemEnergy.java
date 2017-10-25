@@ -62,6 +62,21 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
 		EnergyUtils.addEnergyInformation(stack, tooltip);
 	}
+	
+	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return EnergyUtils.hasSupport(stack, null);
+	}
+	
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack) {
+		return EnergyUtils.getEnergyDurabilityForDisplay(stack);
+	}
+	
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack) {
+		return EnergyUtils.getEnergyRGBDurabilityForDisplay(stack);
+	}
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {

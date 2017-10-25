@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.Optional;
  *
  */
 @Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "ic2") })
-class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
+public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 
 	protected CustomForgeEnergyStorage storage;
 
