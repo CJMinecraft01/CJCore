@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.2.3",
+	"version": "0.0.2.4",
 	"changelog": [
-		"=Fixed energy transfer using the ForgeEnergyCapabilityProvider"
+		"+Added more compatability with other tech mods", "+Added ability to easily create energy items", "+Added ability to easily create energy tile entities", "=Improved energy utils further"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
