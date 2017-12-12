@@ -9,7 +9,6 @@ import org.lwjgl.util.Color;
 import org.lwjgl.util.ReadableColor;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.client.gui.EnergyBar;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;

@@ -1,7 +1,6 @@
 package cjminecraft.core.client.gui.element;
 
 import cjminecraft.core.client.gui.GuiCore;
-import cjminecraft.core.client.gui.ProgressBar;
 import cjminecraft.core.util.RenderUtils;
 import net.minecraft.tileentity.TileEntity;
 

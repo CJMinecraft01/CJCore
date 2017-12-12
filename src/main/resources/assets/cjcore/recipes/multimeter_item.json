@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" G ",
+		"GCG",
+		" G "
+	],
+	"key": {
+		"G": {
+			"item": "minecraft:gold_ingot"
+		},
+		"C": {
+			"item": "minecraft:chest"
+		}
+	},
+	"result": {
+		"item": "cjcore:multimeter",
+		"data": 1
+	}
+}

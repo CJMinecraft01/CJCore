@@ -13,10 +13,10 @@ import cjminecraft.core.util.SoundUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
@@ -271,7 +271,7 @@ public abstract class GuiCore extends GuiContainer {
 		GlStateManager.color(red, green, blue, alpha);
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		buffer.pos(x1, y2, this.zLevel).endVertex();
 		buffer.pos(x2, y2, this.zLevel).endVertex();
@@ -441,7 +441,7 @@ public abstract class GuiCore extends GuiContainer {
 		double minV = icon.getMinV();
 		double maxV = icon.getMaxV();
 
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buffer.pos(x, y + height, this.zLevel).tex(minU, minV + (maxV - minV) * height / 16F).endVertex();
 		buffer.pos(x + width, y + height, this.zLevel)

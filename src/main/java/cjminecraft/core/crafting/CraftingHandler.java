@@ -5,9 +5,11 @@ import cjminecraft.core.init.CJCoreItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IRecipeFactory;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
@@ -17,18 +19,21 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
  *
  */
 public class CraftingHandler {
-
+	
 	/**
 	 * Registers the crafting recipes. Used only by {@link CJCore}
 	 */
 	public static void registerCraftingRecipes() {
-		RecipeSorter.register("clearColour", RecipeClearColour.class, Category.SHAPELESS, "after:minecraft:shapeless");
-		RecipeSorter.register("itemColour", RecipeItemColour.class, Category.SHAPELESS, "after:minecraft:shapeless");
+//		ForgeRegistries.RECIPES.register(new RecipeClearColour().setRegistryName(CJCore.MODID, "clearColor"));
+//		ForgeRegistries.RECIPES.register(new RecipeItemColour().setRegistryName(CJCore.MODID, "itemColor"));
 
-		GameRegistry.addRecipe(new ItemStack(CJCoreItems.multimeter),
-				new Object[] { " G ", "GRG", " G ", 'G', Items.GOLD_INGOT, 'R', Blocks.REDSTONE_BLOCK });
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CJCoreItems.multimeter, 1, 1),
-				new Object[] { " G ", "GCG", " G ", 'G', Items.GOLD_INGOT, 'C', "chestWood" }));
+		registerCraftingRecipe("multimeter_energy");
+		registerCraftingRecipe("multimeter_item");
+	}
+	
+	private static void registerCraftingRecipe(String recipePath) {
+		CraftingHelper.register(new ResourceLocation(CJCore.MODID, "recipes/" + recipePath),
+				(IRecipeFactory) (context, json) -> CraftingHelper.getRecipe(json, context));
 	}
 
 }

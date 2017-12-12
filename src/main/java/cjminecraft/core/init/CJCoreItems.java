@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -49,7 +50,7 @@ public class CJCoreItems {
 	 *            The item to register
 	 */
 	public static void registerItem(Item item) {
-		GameRegistry.register(item);
+		ForgeRegistries.ITEMS.register(item);
 	}
 
 	/**

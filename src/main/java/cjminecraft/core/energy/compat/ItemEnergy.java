@@ -5,18 +5,19 @@ import java.util.List;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.ItemEnergyContainer;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
 
-@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2"), })
+@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2"),
+		@Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux") })
 public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerItem {
 
 	protected int capacity;
@@ -59,20 +60,20 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		EnergyUtils.addEnergyInformation(stack, tooltip);
 	}
-	
+
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
 		return EnergyUtils.hasSupport(stack, null);
 	}
-	
+
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		return EnergyUtils.getEnergyDurabilityForDisplay(stack);
 	}
-	
+
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack) {
 		return EnergyUtils.getEnergyRGBDurabilityForDisplay(stack);
@@ -153,6 +154,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		return 0;
 	}
 
+	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 		if (!container.hasTagCompound())
@@ -167,6 +169,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		return energyReceived;
 	}
 
+	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
@@ -181,6 +184,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		return energyExtracted;
 	}
 
+	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getEnergyStored(ItemStack container) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
@@ -188,6 +192,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		return container.getTagCompound().getInteger("Energy");
 	}
 
+	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getMaxEnergyStored(ItemStack container) {
 		return this.capacity;

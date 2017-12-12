@@ -25,7 +25,6 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 
 	private CustomForgeEnergyStorage storage;
 	private Object teslaWrapper;
-	private Object buildCraftWrapper;
 
 	/**
 	 * Create a new {@link CustomForgeEnergyStorage} for an {@link ItemStack}
@@ -206,13 +205,6 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 			if (this.teslaWrapper == null)
 				this.teslaWrapper = new TeslaWrapper(this.storage);
 			return (T) this.teslaWrapper;
-		}
-		if (EnergyUtils.BUILDCRAFT_LOADED
-				&& (capability == EnergyUtils.BUILDCRAFT_READABLE || capability == EnergyUtils.BUILDCRAFT_RECEIVER
-						|| capability == EnergyUtils.BUILDCRAFT_PASSIVE_PROVIDER)) {
-			if (this.buildCraftWrapper == null)
-				this.buildCraftWrapper = new BuildCraftWrapper(this.storage);
-			return (T) this.buildCraftWrapper;
 		}
 		return null;
 	}

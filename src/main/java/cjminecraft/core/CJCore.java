@@ -47,7 +47,7 @@ public class CJCore {
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
 	public static final String VERSION = "0.0.2.4";
-	public static final String ACCEPTED_MC_VERSIONS = "[1.11,1.11.2]";
+	public static final String ACCEPTED_MC_VERSIONS = "[1.12,1.12.2]";
 	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
 	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";
 	public static final String SERVER_PROXY_CLASS = "cjminecraft.core.proxy.ServerProxy";

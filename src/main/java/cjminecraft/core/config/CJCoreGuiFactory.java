@@ -36,27 +36,22 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 	}
 
 	/**
-	 * Says what our {@link GuiConfig} class is
-	 */
-	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return CJCoreConfigGui.class;
-	}
-
-	/**
 	 * No runtime gui categories
 	 */
 	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
 		return null;
 	}
+	
 
-	/**
-	 * Deprecated
-	 */
 	@Override
-	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-		return null;
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new CJCoreConfigGui(parentScreen);
 	}
 
 	/**
@@ -177,16 +172,6 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 		}
 
-	}
-
-	@Override
-	public boolean hasConfigGui() {
-		return true;
-	}
-
-	@Override
-	public GuiScreen createConfigGui(GuiScreen parentScreen) {
-		return new CJCoreConfigGui(parentScreen);
 	}
 
 }

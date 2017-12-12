@@ -11,13 +11,9 @@ import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import buildcraft.api.mj.IMjPassiveProvider;
-import buildcraft.api.mj.IMjReadable;
-import buildcraft.api.mj.IMjReceiver;
 import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
 import cjminecraft.core.energy.support.IEnergySupport;
@@ -52,9 +48,9 @@ public class EnergyUtils {
 	private static HashMap<String, HashMap<String, EnergyData>> cachedEnergyData = new HashMap<String, HashMap<String, EnergyData>>();
 
 	public static final boolean TESLA_LOADED = Loader.isModLoaded("tesla");
-	public static final boolean BUILDCRAFT_LOADED = Loader.isModLoaded("buildcraftcore");
 	public static final boolean INDUSTRAIL_CRAFT_LOADED = Loader.isModLoaded("ic2");
-	
+	public static final boolean REDSTONE_FLUX_API_LOADED = Loader.isModLoaded("redstoneflux");
+
 	@CapabilityInject(ITeslaConsumer.class)
 	public static Capability<ITeslaConsumer> TESLA_CONSUMER;
 
@@ -63,15 +59,6 @@ public class EnergyUtils {
 
 	@CapabilityInject(ITeslaHolder.class)
 	public static Capability<ITeslaHolder> TESLA_HOLDER;
-
-	@CapabilityInject(IMjReceiver.class)
-	public static Capability<IMjReceiver> BUILDCRAFT_RECEIVER;
-
-	@CapabilityInject(IMjPassiveProvider.class)
-	public static Capability<IMjPassiveProvider> BUILDCRAFT_PASSIVE_PROVIDER;
-
-	@CapabilityInject(IMjReadable.class)
-	public static Capability<IMjReadable> BUILDCRAFT_READABLE;
 
 	/**
 	 * Lists of registered support
@@ -89,6 +76,12 @@ public class EnergyUtils {
 		addEnergyConsumerSupport(new ForgeEnergySupport.ForgeEnergyConsumer());
 		addEnergyProducerSupport(new ForgeEnergySupport.ForgeEnergyProducer());
 
+		if (REDSTONE_FLUX_API_LOADED) {
+			CJCore.logger.info("Adding CoFH Support!");
+			addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
+			addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
+			addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
+		}
 		CJCore.logger.info("Adding CoFH Support!");
 		addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
 		addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
@@ -99,12 +92,6 @@ public class EnergyUtils {
 			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());
 			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
 			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
-		}
-		if (BUILDCRAFT_LOADED) {
-			CJCore.logger.info("Adding Buildcraft Support!");
-			addEnergyHolderSupport(new BuildCraftSupport.BuildCraftHolderSupport());
-			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
-			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
 		}
 		if (Loader.isModLoaded("ic2")) {
 			CJCore.logger.info("Adding Industrial Craft 2 Support!");

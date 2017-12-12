@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.client.gui.EnergyBarOverlay;
 import cjminecraft.core.client.gui.GuiOverlay;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import cjminecraft.core.client.gui.element.ElementItemSlot;
@@ -18,11 +17,13 @@ import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -66,9 +67,11 @@ public class ItemMultimeter extends Item {
 	 * Add the different variants
 	 */
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		subItems.add(new ItemStack(item, 1, 0));
-		subItems.add(new ItemStack(item, 1, 1));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+		if(isInCreativeTab(tab)) {
+			items.add(new ItemStack(this, 1, 0));
+			items.add(new ItemStack(this, 1, 1));
+		}
 	}
 
 	@Override
@@ -97,7 +100,7 @@ public class ItemMultimeter extends Item {
 				|| (InventoryUtils.hasSupport(world.getTileEntity(pos), side)
 						&& player.getHeldItem(hand).getItemDamage() == 1))) {
 			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setIntArray("BlockPos", new int[] { pos.getX(), pos.getY(), pos.getZ() });
+			nbt.setTag("BlockPos", NBTUtil.createPosTag(pos));
 			nbt.setString("Side", player.getAdjustedHorizontalFacing().getName2());
 			player.getHeldItem(hand).setTagCompound(nbt);
 			String blockName = world.getBlockState(pos)
@@ -114,17 +117,13 @@ public class ItemMultimeter extends Item {
 	/**
 	 * Add the tooltip
 	 */
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn) {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockPos")) {
-			BlockPos pos = new BlockPos(stack.getTagCompound().getIntArray("BlockPos")[0],
-					stack.getTagCompound().getIntArray("BlockPos")[1],
-					stack.getTagCompound().getIntArray("BlockPos")[2]);
-			String blockName = player.getEntityWorld().getBlockState(pos).getBlock()
-					.getPickBlock(player.getEntityWorld().getBlockState(pos),
-							new RayTraceResult(Type.BLOCK, new Vec3d(pos), null, pos), player.getEntityWorld(), pos,
-							player)
+			BlockPos pos = NBTUtil.getPosFromTag(stack.getTagCompound().getCompoundTag("BlockPos"));
+			String blockName = world.getBlockState(pos).getBlock()
+					.getPickBlock(world.getBlockState(pos),
+							new RayTraceResult(Type.BLOCK, new Vec3d(pos), null, pos), world, pos, world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 8, false))
 					.getDisplayName();
 			tooltip.add(TextFormatting.GREEN
 					+ I18n.format("item.multimeter.tooltip.blockpos", blockName, pos.getX(), pos.getY(), pos.getZ()));
