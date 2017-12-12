@@ -82,11 +82,6 @@ public class EnergyUtils {
 			addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
 			addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
 		}
-		CJCore.logger.info("Adding CoFH Support!");
-		addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
-		addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
-		addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
-
 		if (TESLA_LOADED) {
 			CJCore.logger.info("Adding Tesla Support!");
 			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());

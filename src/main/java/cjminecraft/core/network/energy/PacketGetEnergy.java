@@ -95,6 +95,8 @@ public class PacketGetEnergy implements IMessage {
 		}
 		
 		void processMessage(PacketGetEnergy message, MessageContext ctx) {
+			if(!ctx.getServerHandler().player.getServerWorld().isBlockLoaded(message.pos))
+				return;
 			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
