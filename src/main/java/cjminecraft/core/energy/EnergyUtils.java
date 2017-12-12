@@ -1,19 +1,19 @@
 package cjminecraft.core.energy;
 
 import java.lang.reflect.Field;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.client.gui.EnergyBarOverlay;
+import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
 import cjminecraft.core.energy.support.IEnergySupport;
@@ -23,13 +23,17 @@ import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.energy.PacketGetCapacity;
 import cjminecraft.core.network.energy.PacketGetEnergy;
 import cjminecraft.core.network.energy.PacketGetEnergyData;
-import net.minecraft.client.resources.I18n;
+import net.darkhax.tesla.api.ITeslaConsumer;
+import net.darkhax.tesla.api.ITeslaHolder;
+import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Loader;
 import scala.annotation.meta.field;
 
@@ -42,6 +46,19 @@ import scala.annotation.meta.field;
 public class EnergyUtils {
 
 	private static HashMap<String, HashMap<String, EnergyData>> cachedEnergyData = new HashMap<String, HashMap<String, EnergyData>>();
+
+	public static final boolean TESLA_LOADED = Loader.isModLoaded("tesla");
+	public static final boolean INDUSTRAIL_CRAFT_LOADED = Loader.isModLoaded("ic2");
+	public static final boolean REDSTONE_FLUX_API_LOADED = Loader.isModLoaded("redstoneflux");
+
+	@CapabilityInject(ITeslaConsumer.class)
+	public static Capability<ITeslaConsumer> TESLA_CONSUMER;
+
+	@CapabilityInject(ITeslaProducer.class)
+	public static Capability<ITeslaProducer> TESLA_PRODUCER;
+
+	@CapabilityInject(ITeslaHolder.class)
+	public static Capability<ITeslaHolder> TESLA_HOLDER;
 
 	/**
 	 * Lists of registered support
@@ -59,22 +76,17 @@ public class EnergyUtils {
 		addEnergyConsumerSupport(new ForgeEnergySupport.ForgeEnergyConsumer());
 		addEnergyProducerSupport(new ForgeEnergySupport.ForgeEnergyProducer());
 
-		CJCore.logger.info("Adding CoFH Support!");
-		addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
-		addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
-		addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
-
-		if (Loader.isModLoaded("tesla")) {
+		if (REDSTONE_FLUX_API_LOADED) {
+			CJCore.logger.info("Adding CoFH Support!");
+			addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
+			addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
+			addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
+		}
+		if (TESLA_LOADED) {
 			CJCore.logger.info("Adding Tesla Support!");
 			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());
 			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
 			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
-		}
-		if (Loader.isModLoaded("buildcraftcore")) {
-			CJCore.logger.info("Adding Buildcraft Support!");
-			addEnergyHolderSupport(new BuildCraftSupport.BuildCraftHolderSupport());
-			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
-			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
 		}
 		if (Loader.isModLoaded("ic2")) {
 			CJCore.logger.info("Adding Industrial Craft 2 Support!");
@@ -90,7 +102,7 @@ public class EnergyUtils {
 	 * @param support
 	 *            The support you are registering
 	 */
-	public static void addEnergyHolderSupport(IEnergySupport support) {
+	public static void addEnergyHolderSupport(@Nonnull IEnergySupport support) {
 		if (energyHolderSupport.contains(support))
 			CJCore.logger.info(String.format("A energy support of type %s has already been registered - SKIPPING",
 					support.getClass().getSimpleName()));
@@ -107,7 +119,7 @@ public class EnergyUtils {
 	 * @param support
 	 *            The support you are registering
 	 */
-	public static void addEnergyConsumerSupport(IEnergySupport support) {
+	public static void addEnergyConsumerSupport(@Nonnull IEnergySupport support) {
 		if (energyConsumerSupport.contains(support))
 			CJCore.logger.info(String.format("A energy support of type %s has already been registered - SKIPPING",
 					support.getClass().getSimpleName()));
@@ -124,7 +136,7 @@ public class EnergyUtils {
 	 * @param support
 	 *            The support you are registering
 	 */
-	public static void addEnergyProducerSupport(IEnergySupport support) {
+	public static void addEnergyProducerSupport(@Nonnull IEnergySupport support) {
 		if (energyProducerSupport.contains(support))
 			CJCore.logger.info(String.format("A energy support of type %s has already been registered - SKIPPING",
 					support.getClass().getSimpleName()));
@@ -149,7 +161,7 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergyHolderSupport(TileEntity te, EnumFacing from) {
+	public static <I> IEnergySupport<I> getEnergyHolderSupport(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		if (te == null)
 			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
@@ -172,7 +184,7 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergyConsumerSupport(TileEntity te, EnumFacing from) {
+	public static <I> IEnergySupport<I> getEnergyConsumerSupport(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		if (te == null)
 			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
@@ -196,7 +208,7 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergyProducerSupport(TileEntity te, EnumFacing from) {
+	public static <I> IEnergySupport<I> getEnergyProducerSupport(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		if (te == null)
 			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
@@ -219,8 +231,8 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergyHolderSupport(ItemStack stack, EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
+	public static <I> IEnergySupport<I> getEnergyHolderSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
+		if (stack == null || stack.isEmpty())
 			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(stack, from))
@@ -242,8 +254,8 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergyConsumerSupport(ItemStack stack, EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
+	public static <I> IEnergySupport<I> getEnergyConsumerSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
+		if (stack == null || stack.isEmpty())
 			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(stack, from))
@@ -265,8 +277,8 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergyProducerSupport(ItemStack stack, EnumFacing from) {
-		if (stack == null || stack.getItem() == null)
+	public static <I> IEnergySupport<I> getEnergyProducerSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
+		if (stack == null || stack.isEmpty())
 			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(stack, from))
@@ -288,7 +300,7 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergySupport(TileEntity te, EnumFacing from) {
+	public static <I> IEnergySupport<I> getEnergySupport(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		IEnergySupport<I> support = getEnergyHolderSupport(te, from);
 		if (support == null)
 			support = getEnergyConsumerSupport(te, from);
@@ -311,7 +323,7 @@ public class EnergyUtils {
 	 *         support. Can be <code>null</code>
 	 */
 	@Nullable
-	public static <I> IEnergySupport<I> getEnergySupport(ItemStack stack, EnumFacing from) {
+	public static <I> IEnergySupport<I> getEnergySupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		IEnergySupport<I> support = getEnergyHolderSupport(stack, from);
 		if (support == null)
 			support = getEnergyConsumerSupport(stack, from);
@@ -330,7 +342,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return Whether the {@link TileEntity} has a compatible energy support
 	 */
-	public static boolean hasSupport(TileEntity te, EnumFacing from) {
+	public static boolean hasSupport(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		return getEnergySupport(te, from) != null;
 	}
 
@@ -344,7 +356,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return Whether the {@link ItemStack} has a compatible energy support
 	 */
-	public static boolean hasSupport(ItemStack stack, EnumFacing from) {
+	public static boolean hasSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		return getEnergySupport(stack, from) != null;
 	}
 
@@ -364,6 +376,22 @@ public class EnergyUtils {
 	}
 
 	/**
+	 * Convert one energy unit to another energy unit leaving the conversion in
+	 * a double and not a long
+	 * 
+	 * @param from
+	 *            The unit the energy is in
+	 * @param to
+	 *            The unit the energy wants to be in
+	 * @param energy
+	 *            The actual energy
+	 * @return The converted energy
+	 */
+	public static double convertEnergy(EnergyUnit from, EnergyUnit to, double energy) {
+		return (energy / (double) from.getMultiplier() * (double) to.getMultiplier());
+	}
+
+	/**
 	 * Displays any energy in a short and simplified {@link String}
 	 * 
 	 * @param energy
@@ -372,7 +400,7 @@ public class EnergyUtils {
 	 *            The {@link EnergyUnit} for the energy
 	 * @return The simple {@link String} representation of the energy
 	 */
-	public static String getEnergyAsString(long energy, EnergyUnit unit) {
+	public static String getEnergyAsString(long energy, @Nonnull EnergyUnit unit) {
 		if (energy < 1000)
 			return energy + " " + unit.getSuffix();
 		int exp = (int) (Math.log(energy) / Math.log(1000));
@@ -392,7 +420,7 @@ public class EnergyUtils {
 	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
-	public static long getEnergyStored(TileEntity te, EnumFacing from) {
+	public static long getEnergyStored(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		return getEnergyStored(te, from, EnergyUnits.MINECRAFT_JOULES);
 	}
 
@@ -408,7 +436,7 @@ public class EnergyUtils {
 	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
-	public static long getEnergyStored(ItemStack stack, EnumFacing from) {
+	public static long getEnergyStored(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		return getEnergyStored(stack, from, EnergyUnits.MINECRAFT_JOULES);
 	}
 
@@ -425,7 +453,7 @@ public class EnergyUtils {
 	 * @return The amount of energy stored in the {@link TileEntity} in the
 	 *         {@link EnergyUnit} provided
 	 */
-	public static long getEnergyStored(TileEntity te, EnumFacing from, EnergyUnit unit) {
+	public static long getEnergyStored(@Nullable TileEntity te, @Nullable EnumFacing from, @Nonnull EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(te, from);
 		if (support != null)
 			return convertEnergy(support.defaultEnergyUnit(), unit,
@@ -446,7 +474,7 @@ public class EnergyUtils {
 	 * @return The amount of energy stored in the {@link ItemStack} in the
 	 *         {@link EnergyUnit} provided
 	 */
-	public static long getEnergyStored(ItemStack stack, EnumFacing from, EnergyUnit unit) {
+	public static long getEnergyStored(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(stack, from);
 		if (support != null)
 			return convertEnergy(support.defaultEnergyUnit(), unit,
@@ -466,7 +494,7 @@ public class EnergyUtils {
 	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
-	public static long getCapacity(TileEntity te, EnumFacing from) {
+	public static long getCapacity(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		return getCapacity(te, from, EnergyUnits.MINECRAFT_JOULES);
 	}
 
@@ -482,7 +510,7 @@ public class EnergyUtils {
 	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
-	public static long getCapacity(ItemStack stack, EnumFacing from) {
+	public static long getCapacity(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		return getCapacity(stack, from, EnergyUnits.MINECRAFT_JOULES);
 	}
 
@@ -499,7 +527,7 @@ public class EnergyUtils {
 	 * @return The maximum amount of energy in the {@link TileEntity} in the
 	 *         {@link EnergyUnit} provided
 	 */
-	public static long getCapacity(TileEntity te, EnumFacing from, EnergyUnit unit) {
+	public static long getCapacity(@Nullable TileEntity te, @Nullable EnumFacing from, @Nonnull EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(te, from);
 		if (support != null)
 			return convertEnergy(support.defaultEnergyUnit(), unit,
@@ -520,7 +548,7 @@ public class EnergyUtils {
 	 * @return The maximum amount of energy in the {@link ItemStack} in the
 	 *         {@link EnergyUnit} provided
 	 */
-	public static long getCapacity(ItemStack stack, EnumFacing from, EnergyUnit unit) {
+	public static long getCapacity(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull EnergyUnit unit) {
 		IEnergySupport support = getEnergySupport(stack, from);
 		if (support != null)
 			return convertEnergy(support.defaultEnergyUnit(), unit,
@@ -593,9 +621,10 @@ public class EnergyUtils {
 	 * @return The amount of energy which was given (or would have been given if
 	 *         it is simulated) in the {@link EnergyUnit} provided
 	 */
-	public static long giveEnergy(TileEntity te, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
+	public static long giveEnergy(TileEntity te, long energy, @Nonnull EnergyUnit unit, boolean simulate,
+			EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(te, from);
-		if (support != null)
+		if (support != null && support.canReceive(support.getContainer(te, from), from))
 			return convertEnergy(support.defaultEnergyUnit(), unit, support.giveEnergy(support.getContainer(te, from),
 					convertEnergy(unit, support.defaultEnergyUnit(), energy), simulate, from));
 		return 0;
@@ -620,13 +649,13 @@ public class EnergyUtils {
 	 * @return The amount of energy which was given (or would have been given if
 	 *         it is simulated) in the {@link EnergyUnit} provided
 	 */
-	public static long giveEnergy(ItemStack stack, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
+	public static long giveEnergy(ItemStack stack, long energy, @Nonnull EnergyUnit unit, boolean simulate,
+			EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(stack, from);
-		if (support != null)
-			if (support.canReceive(support.getContainer(stack, from), from))
-				return convertEnergy(support.defaultEnergyUnit(), unit,
-						support.giveEnergy(support.getContainer(stack, from),
-								convertEnergy(unit, support.defaultEnergyUnit(), energy), simulate, from));
+		if (support != null && support.canReceive(support.getContainer(stack, from), from))
+			return convertEnergy(support.defaultEnergyUnit(), unit,
+					support.giveEnergy(support.getContainer(stack, from),
+							convertEnergy(unit, support.defaultEnergyUnit(), energy), simulate, from));
 		return 0;
 	}
 
@@ -694,13 +723,12 @@ public class EnergyUtils {
 	 * @return The amount of energy which was taken (or would have been taken if
 	 *         it is simulated) in the {@link EnergyUnit} provided
 	 */
-	public static long takeEnergy(TileEntity te, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
+	public static long takeEnergy(TileEntity te, long energy, @Nonnull EnergyUnit unit, boolean simulate,
+			EnumFacing from) {
 		IEnergySupport support = getEnergyProducerSupport(te, from);
-		if (support != null)
-			if (support.canExtract(support.getContainer(te, from), from))
-				return convertEnergy(support.defaultEnergyUnit(), unit,
-						support.takeEnergy(support.getContainer(te, from),
-								convertEnergy(unit, support.defaultEnergyUnit(), energy), simulate, from));
+		if (support != null && support.canExtract(support.getContainer(te, from), from))
+			return convertEnergy(support.defaultEnergyUnit(), unit, support.takeEnergy(support.getContainer(te, from),
+					convertEnergy(unit, support.defaultEnergyUnit(), energy), simulate, from));
 		return 0;
 	}
 
@@ -722,13 +750,13 @@ public class EnergyUtils {
 	 * @return The amount of energy which was taken (or would have been taken if
 	 *         it is simulated) in the {@link EnergyUnit} provided
 	 */
-	public static long takeEnergy(ItemStack stack, long energy, EnergyUnit unit, boolean simulate, EnumFacing from) {
+	public static long takeEnergy(ItemStack stack, long energy, @Nonnull EnergyUnit unit, boolean simulate,
+			EnumFacing from) {
 		IEnergySupport support = getEnergyProducerSupport(stack, from);
-		if (support != null)
-			if (support.canExtract(support.getContainer(stack, from), from))
-				return convertEnergy(support.defaultEnergyUnit(), unit,
-						support.takeEnergy(support.getContainer(stack, from),
-								convertEnergy(unit, support.defaultEnergyUnit(), energy), simulate, from));
+		if (support != null && support.canExtract(support.getContainer(stack, from), from))
+			return convertEnergy(support.defaultEnergyUnit(), unit,
+					support.takeEnergy(support.getContainer(stack, from),
+							convertEnergy(unit, support.defaultEnergyUnit(), energy), simulate, from));
 		return 0;
 	}
 
@@ -784,7 +812,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return The energy which was set
 	 */
-	public static long setEnergy(TileEntity te, long energy, EnergyUnit unit, EnumFacing from) {
+	public static long setEnergy(TileEntity te, long energy, @Nonnull EnergyUnit unit, EnumFacing from) {
 		if (hasSupport(te, from)) {
 			long energyStored = getEnergyStored(te, from, unit);
 			if (energyStored < energy)
@@ -809,7 +837,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return The energy which was set
 	 */
-	public static long setEnergy(ItemStack stack, long energy, EnergyUnit unit, EnumFacing from) {
+	public static long setEnergy(ItemStack stack, long energy, @Nonnull EnergyUnit unit, EnumFacing from) {
 		if (hasSupport(stack, from)) {
 			long energyStored = getEnergyStored(stack, from, unit);
 			if (energyStored < energy)
@@ -830,7 +858,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return Whether the {@link TileEntity} can receive energy
 	 */
-	public static boolean canReceive(TileEntity te, EnumFacing from) {
+	public static boolean canReceive(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(te, from);
 		if (support != null)
 			return support.canReceive(support.getContainer(te, from), from);
@@ -847,7 +875,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return Whether the {@link ItemStack} can receive energy
 	 */
-	public static boolean canReceive(ItemStack stack, EnumFacing from) {
+	public static boolean canReceive(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		IEnergySupport support = getEnergyConsumerSupport(stack, from);
 		if (support != null)
 			return support.canReceive(support.getContainer(stack, from), from);
@@ -864,7 +892,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return Whether the {@link TileEntity} can have energy extracted
 	 */
-	public static boolean canExtract(TileEntity te, EnumFacing from) {
+	public static boolean canExtract(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		IEnergySupport support = getEnergyProducerSupport(te, from);
 		if (support != null)
 			return support.canExtract(support.getContainer(te, from), from);
@@ -881,7 +909,7 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return Whether the {@link ItemStack} can have energy extracted
 	 */
-	public static boolean canExtract(ItemStack stack, EnumFacing from) {
+	public static boolean canExtract(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		IEnergySupport support = getEnergyProducerSupport(stack, from);
 		if (support != null)
 			return support.canExtract(support.getContainer(stack, from), from);
@@ -907,7 +935,7 @@ public class EnergyUtils {
 	 *         {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
-	public static long takeEnergyAllFaces(World world, BlockPos pos, long energy, boolean simulate) {
+	public static long takeEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, boolean simulate) {
 		return takeEnergyAllFaces(world, pos, energy, EnergyUnits.MINECRAFT_JOULES, simulate);
 	}
 
@@ -930,7 +958,7 @@ public class EnergyUtils {
 	 *         {@link EnergyUnits#MINECRAFT_JOULES}
 	 */
 	@Deprecated
-	public static long giveEnergyAllFaces(World world, BlockPos pos, long energy, boolean simulate) {
+	public static long giveEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, boolean simulate) {
 		return giveEnergyAllFaces(world, pos, energy, EnergyUnits.MINECRAFT_JOULES, simulate);
 	}
 
@@ -953,7 +981,8 @@ public class EnergyUtils {
 	 *            actually be taken
 	 * @return The amount of energy taken in the {@link EnergyUnit} provided
 	 */
-	public static long takeEnergyAllFaces(World world, BlockPos pos, long energy, EnergyUnit unit, boolean simulate) {
+	public static long takeEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, @Nonnull EnergyUnit unit,
+			boolean simulate) {
 		HashMap<EnumFacing, TileEntity> tiles = new HashMap<EnumFacing, TileEntity>();
 		for (EnumFacing side : EnumFacing.VALUES) {
 			TileEntity te = world.getTileEntity(pos.offset(side));
@@ -962,7 +991,7 @@ public class EnergyUtils {
 			if (hasSupport(te, side))
 				tiles.put(side, te);
 		}
-		if(tiles.size() <= 0)
+		if (tiles.size() <= 0)
 			return 0;
 		long energyPerSide = energy / tiles.size();
 		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
@@ -1001,7 +1030,8 @@ public class EnergyUtils {
 	 *            actually be given
 	 * @return The amount of energy given in the {@link EnergyUnit} provided
 	 */
-	public static long giveEnergyAllFaces(World world, BlockPos pos, long energy, EnergyUnit unit, boolean simulate) {
+	public static long giveEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, @Nonnull EnergyUnit unit,
+			boolean simulate) {
 		HashMap<EnumFacing, TileEntity> tiles = new HashMap<EnumFacing, TileEntity>();
 		for (EnumFacing side : EnumFacing.VALUES) {
 			TileEntity te = world.getTileEntity(pos.offset(side));
@@ -1010,7 +1040,7 @@ public class EnergyUtils {
 			if (hasSupport(te, side))
 				tiles.put(side, te);
 		}
-		if(tiles.size() <= 0)
+		if (tiles.size() <= 0)
 			return 0;
 		long energyPerSide = energy / tiles.size();
 		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
@@ -1093,7 +1123,7 @@ public class EnergyUtils {
 	 *            The modid for mod specific data
 	 */
 	@Deprecated
-	public static void syncEnergy(BlockPos pos, EnumFacing side, String modid) {
+	public static void syncEnergy(BlockPos pos, @Nullable EnumFacing side, String modid) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
 				new Exception().getStackTrace()[1].getClassName()));
 	}
@@ -1116,7 +1146,7 @@ public class EnergyUtils {
 	 *            The name of the class for the cache
 	 */
 	@Deprecated
-	public static void syncEnergy(BlockPos pos, EnumFacing side, String modid, String className) {
+	public static void syncEnergy(BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
 		PacketHandler.INSTANCE
 				.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
@@ -1137,7 +1167,7 @@ public class EnergyUtils {
 	 *            The modid for mod specific data
 	 */
 	@Deprecated
-	public static void syncCapacity(BlockPos pos, EnumFacing side, String modid) {
+	public static void syncCapacity(BlockPos pos, @Nullable EnumFacing side, String modid) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
 				new Exception().getStackTrace()[1].getClassName()));
 	}
@@ -1160,7 +1190,7 @@ public class EnergyUtils {
 	 *            The name of the class for the cache
 	 */
 	@Deprecated
-	public static void syncCapacity(BlockPos pos, EnumFacing side, String modid, String className) {
+	public static void syncCapacity(BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
 		PacketHandler.INSTANCE
 				.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
@@ -1180,7 +1210,7 @@ public class EnergyUtils {
 	 *            The modid for mod specific data
 	 */
 	@Deprecated
-	public static void syncEnergyData(BlockPos pos, EnumFacing side, String modid) {
+	public static void syncEnergyData(BlockPos pos, @Nullable EnumFacing side, String modid) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false,
 				modid, new Exception().getStackTrace()[1].getClassName()));
 	}
@@ -1203,7 +1233,7 @@ public class EnergyUtils {
 	 *            The name of the class for the cache
 	 */
 	@Deprecated
-	public static void syncEnergyData(BlockPos pos, EnumFacing side, String modid, String className) {
+	public static void syncEnergyData(BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
@@ -1223,7 +1253,7 @@ public class EnergyUtils {
 	 *            <code>long</code>
 	 */
 	@Deprecated
-	public static void syncEnergyField(BlockPos pos, EnumFacing side, String energyFieldName) {
+	public static void syncEnergyField(BlockPos pos, @Nullable EnumFacing side, String energyFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), energyFieldName));
 	}
@@ -1245,7 +1275,8 @@ public class EnergyUtils {
 	 *            <code>long</code>
 	 */
 	@Deprecated
-	public static void syncEnergyField(BlockPos pos, EnumFacing side, String className, String energyFieldName) {
+	public static void syncEnergyField(BlockPos pos, @Nullable EnumFacing side, String className,
+			String energyFieldName) {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, energyFieldName));
 	}
@@ -1265,7 +1296,7 @@ public class EnergyUtils {
 	 *            <code>long</code>
 	 */
 	@Deprecated
-	public static void syncCapacityField(BlockPos pos, EnumFacing side, String capacityFieldName) {
+	public static void syncCapacityField(BlockPos pos, @Nullable EnumFacing side, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), capacityFieldName));
 	}
@@ -1287,7 +1318,8 @@ public class EnergyUtils {
 	 *            <code>long</code>
 	 */
 	@Deprecated
-	public static void syncCapacityField(BlockPos pos, EnumFacing side, String className, String capacityFieldName) {
+	public static void syncCapacityField(BlockPos pos, @Nullable EnumFacing side, String className,
+			String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, capacityFieldName));
 	}
@@ -1310,7 +1342,7 @@ public class EnergyUtils {
 	 *            <code>long</code>
 	 */
 	@Deprecated
-	public static void syncEnergyDataFields(BlockPos pos, EnumFacing side, String energyFieldName,
+	public static void syncEnergyDataFields(BlockPos pos, @Nullable EnumFacing side, String energyFieldName,
 			String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), energyFieldName, capacityFieldName));
@@ -1336,8 +1368,8 @@ public class EnergyUtils {
 	 *            <code>long</code>
 	 */
 	@Deprecated
-	public static void syncEnergyDataFields(BlockPos pos, EnumFacing side, String className, String energyFieldName,
-			String capacityFieldName) {
+	public static void syncEnergyDataFields(BlockPos pos, @Nullable EnumFacing side, String className,
+			String energyFieldName, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
 				className, energyFieldName, capacityFieldName));
 	}
@@ -1359,7 +1391,7 @@ public class EnergyUtils {
 	 * @param modid
 	 *            The modid for mod specific data
 	 */
-	public static void syncEnergy(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid) {
+	public static void syncEnergy(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side, String modid) {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetEnergy(unit, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
 	}
@@ -1383,7 +1415,8 @@ public class EnergyUtils {
 	 * @param className
 	 *            The name of the class for the cache
 	 */
-	public static void syncEnergy(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid, String className) {
+	public static void syncEnergy(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side, String modid,
+			String className) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(unit, pos, side, false, modid, className));
 	}
 
@@ -1405,7 +1438,7 @@ public class EnergyUtils {
 	 * @param modid
 	 *            The modid for mod specific data
 	 */
-	public static void syncCapacity(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid) {
+	public static void syncCapacity(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side, String modid) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(unit, pos, side, false, modid,
 				new Exception().getStackTrace()[1].getClassName()));
 	}
@@ -1430,7 +1463,8 @@ public class EnergyUtils {
 	 * @param className
 	 *            The name of the class for the cache
 	 */
-	public static void syncCapacity(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid, String className) {
+	public static void syncCapacity(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side, String modid,
+			String className) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(unit, pos, side, false, modid, className));
 	}
 
@@ -1451,7 +1485,7 @@ public class EnergyUtils {
 	 * @param modid
 	 *            The modid for mod specific data
 	 */
-	public static void syncEnergyData(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid) {
+	public static void syncEnergyData(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side, String modid) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(unit, pos, side, false, modid,
 				new Exception().getStackTrace()[1].getClassName()));
 	}
@@ -1476,7 +1510,8 @@ public class EnergyUtils {
 	 * @param className
 	 *            The name of the class for the cache
 	 */
-	public static void syncEnergyData(EnergyUnit unit, BlockPos pos, EnumFacing side, String modid, String className) {
+	public static void syncEnergyData(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side, String modid,
+			String className) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(unit, pos, side, false, modid, className));
 	}
 
@@ -1496,7 +1531,8 @@ public class EnergyUtils {
 	 *            The name of the field which will hold the energy. Must be a
 	 *            <code>long</code>
 	 */
-	public static void syncEnergyField(EnergyUnit unit, BlockPos pos, EnumFacing side, String energyFieldName) {
+	public static void syncEnergyField(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side,
+			String energyFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(unit, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), energyFieldName));
 	}
@@ -1519,8 +1555,8 @@ public class EnergyUtils {
 	 *            The name of the field which will hold the energy. Must be a
 	 *            <code>long</code>
 	 */
-	public static void syncEnergyField(EnergyUnit unit, BlockPos pos, EnumFacing side, String className,
-			String energyFieldName) {
+	public static void syncEnergyField(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side,
+			String className, String energyFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(unit, pos, side, true, className, energyFieldName));
 	}
 
@@ -1541,7 +1577,8 @@ public class EnergyUtils {
 	 *            The name of the field which will hold the capacity. Must be a
 	 *            <code>long</code>
 	 */
-	public static void syncCapacityField(EnergyUnit unit, BlockPos pos, EnumFacing side, String capacityFieldName) {
+	public static void syncCapacityField(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side,
+			String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(unit, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), capacityFieldName));
 	}
@@ -1565,8 +1602,8 @@ public class EnergyUtils {
 	 *            The name of the field which will hold the capacity. Must be a
 	 *            <code>long</code>
 	 */
-	public static void syncCapacityField(EnergyUnit unit, BlockPos pos, EnumFacing side, String className,
-			String capacityFieldName) {
+	public static void syncCapacityField(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side,
+			String className, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(unit, pos, side, true, className, capacityFieldName));
 	}
 
@@ -1590,8 +1627,8 @@ public class EnergyUtils {
 	 *            The name of the field which will hold the capacity. Must be a
 	 *            <code>long</code>
 	 */
-	public static void syncEnergyDataFields(EnergyUnit unit, BlockPos pos, EnumFacing side, String energyFieldName,
-			String capacityFieldName) {
+	public static void syncEnergyDataFields(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side,
+			String energyFieldName, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(unit, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), energyFieldName, capacityFieldName));
 	}
@@ -1618,10 +1655,71 @@ public class EnergyUtils {
 	 *            The name of the field which will hold the capacity. Must be a
 	 *            <code>long</code>
 	 */
-	public static void syncEnergyDataFields(EnergyUnit unit, BlockPos pos, EnumFacing side, String className,
-			String energyFieldName, String capacityFieldName) {
+	public static void syncEnergyDataFields(@Nonnull EnergyUnit unit, BlockPos pos, @Nullable EnumFacing side,
+			String className, String energyFieldName, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetEnergyData(unit, pos, side, true, className, energyFieldName, capacityFieldName));
+	}
+
+	/**
+	 * Gets the durability for use with a durability bar for the given
+	 * {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The stack which holds energy
+	 * @return The durability
+	 */
+	public static double getEnergyDurabilityForDisplay(ItemStack stack) {
+		if (hasSupport(stack, null)) {
+			double capacity = getCapacity(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT);
+			double energyDiff = capacity - getEnergyStored(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT);
+			return energyDiff / capacity;
+		}
+		return 0;
+	}
+
+	/**
+	 * Get the RGB colour of the durability bar that the given {@link ItemStack}
+	 * will use
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds energy
+	 * @return The RGB colour of the durability bar
+	 */
+	public static int getEnergyRGBDurabilityForDisplay(ItemStack stack) {
+		float[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
+		return MathHelper.rgb(colour[0], colour[1], colour[2]);
+	}
+
+	/**
+	 * Add the energy information to the items tooltip
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} holding the energy
+	 * @param tooltip
+	 *            The current tooltip. The list to add the information to
+	 */
+	public static void addEnergyInformation(ItemStack stack, List<String> tooltip) {
+		if (hasSupport(stack, null)) {
+			if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
+				tooltip.add(getEnergyAsString(getEnergyStored(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT),
+						CJCoreConfig.DEFAULT_ENERGY_UNIT)
+						+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
+								? " / " + getEnergyAsString(getCapacity(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT),
+										CJCoreConfig.DEFAULT_ENERGY_UNIT)
+								: ""));
+			} else {
+				tooltip.add(
+						NumberFormat.getInstance()
+								.format(getEnergyStored(stack, null,
+										CJCoreConfig.DEFAULT_ENERGY_UNIT))
+								+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
+								+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / "
+										+ NumberFormat.getInstance()
+												.format(getCapacity(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT))
+										+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
+			}
+		}
 	}
 
 }

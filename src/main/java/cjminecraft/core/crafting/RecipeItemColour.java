@@ -2,7 +2,8 @@ package cjminecraft.core.crafting;
 
 import java.util.Arrays;
 import java.util.List;
-import cjminecraft.core.util.InventoryUtils;
+
+import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
@@ -13,13 +14,14 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
  * The recipe for items which can be coloured
  * @author CJMinecraft
  *
  */
-public class RecipeItemColour implements IRecipe {
+public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	/**
 	 * Use if you want to see if the item stack is a dye {@link #getCraftingResult(InventoryCrafting)}
@@ -39,7 +41,7 @@ public class RecipeItemColour implements IRecipe {
 	 * Default constructor for registering the recipe {@link CraftingHandler#registerCraftingRecipes()}
 	 */
 	public RecipeItemColour() {
-		this.targetItemStack = ItemStack.EMPTY;
+		this(ItemStack.EMPTY);
 	}
 	
 	/**
@@ -157,14 +159,6 @@ public class RecipeItemColour implements IRecipe {
 	}
 	
 	/**
-	 * How many slots required (10 because 9 in the table and 1 for output)
-	 */
-	@Override
-	public int getRecipeSize() {
-		return 10;
-	}
-	
-	/**
 	 * The default output for us is nothing unless stated above
 	 */
 	@Override
@@ -184,6 +178,11 @@ public class RecipeItemColour implements IRecipe {
 			remaining.set(slot, ForgeHooks.getContainerItem(stackInSlot));
 		}
 		return remaining;
+	}
+
+	@Override
+	public boolean canFit(int width, int height) {
+		return width * height >= 2;
 	}
 
 }

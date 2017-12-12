@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.client.gui.EnergyBar;
+import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.proxy.ClientProxy;
@@ -39,6 +39,11 @@ public class CJCoreConfig {
 	 * The name of the category for the update checkers
 	 */
 	public static final String CATEGORY_NAME_VERSION_CHECKER = "version_checker";
+	
+	/**
+	 * The name of the category for the multimeter
+	 */
+	public static final String CATEGORY_NAME_MULTIMETER = "multimeter";
 
 	/*
 	 * Energy Config
@@ -49,34 +54,15 @@ public class CJCoreConfig {
 	public static EnergyUnit DEFAULT_ENERGY_UNIT;
 
 	/**
-	 * The position of the multimeter on the X axis from the left hand side
+	 * Whether or not the energy bar should show capacity
 	 */
-	public static int MULTIMETER_OFFSET_X;
+	public static boolean ENERGY_BAR_SHOW_CAPACITY;
 
 	/**
-	 * The position of the multimeter on the Y axis from the bottom
+	 * Whether the energy bar should simplify the energy displayed
 	 */
-	public static int MULTIMETER_OFFSET_Y;
+	public static boolean ENERGY_BAR_SIMPLIFY_ENERGY;
 
-	/**
-	 * The width of the multimeter
-	 */
-	public static int MULTIMETER_WIDTH;
-
-	/**
-	 * The height of the multimeter
-	 */
-	public static int MULTIMETER_HEIGHT;
-
-	/**
-	 * Whether or not the multimeter should show capacity
-	 */
-	public static boolean MULTIMETER_SHOW_CAPACITY;
-
-	/**
-	 * Whether the multimeter should simplify the energy displayed
-	 */
-	public static boolean MULTIMETER_SIMPLIFY_ENERGY;
 
 	/*
 	 * Update Checkers Config
@@ -92,6 +78,34 @@ public class CJCoreConfig {
 	 */
 	public static List<Pair<String, Property>> UPDATE_CHECKER_MOD_PROPERTIES = new ArrayList<Pair<String, Property>>();
 
+	/*
+	 * Multimeter Config
+	 */
+	/**
+	 * The position of the multimeter on the X axis from the left hand side
+	 */
+	public static int MULTIMETER_OFFSET_X;
+
+	/**
+	 * The position of the multimeter on the Y axis from the bottom
+	 */
+	public static int MULTIMETER_OFFSET_Y;
+
+	/**
+	 * The width of the energy multimeter
+	 */
+	public static int MULTIMETER_ENERGY_WIDTH;
+
+	/**
+	 * The height of the energy multimeter
+	 */
+	public static int MULTIMETER_ENERGY_HEIGHT;
+	
+	/**
+	 * The maximum number of columns for the item multimeter
+	 */
+	public static int MULTIMETER_ITEM_MAX_COLUMNS;
+	
 	private static Configuration config = null;
 
 	/**
@@ -165,46 +179,19 @@ public class CJCoreConfig {
 		propertyDefaultEnergyUnit.setComment("The energy unit that you will normally see");
 		propertyDefaultEnergyUnit.setLanguageKey("gui.config.energy.default_energy_unit.name");
 
-		Property propertyMultimeterOffsetX = config.get(CATEGORY_NAME_ENERGY, "MultimeterOffsetX", 6);
-		propertyMultimeterOffsetX.setMinValue(0);
-		propertyMultimeterOffsetX.setComment("The offset from the left hand side when using the Multimeter");
-		propertyMultimeterOffsetX.setLanguageKey("gui.config.energy.multimeter_offset_x.name");
+		Property propertyEnergyBarShowCapacity = config.get(CATEGORY_NAME_ENERGY, "EnergyBarShowCapacity", false);
+		propertyEnergyBarShowCapacity.setComment("Whether or not the energy bar should show the capacity");
+		propertyEnergyBarShowCapacity.setLanguageKey("gui.config.energy.energy_bar_show_capacity.name");
 
-		Property propertyMultimeterOffsetY = config.get(CATEGORY_NAME_ENERGY, "MultimeterOffsetY", 7);
-		propertyMultimeterOffsetY.setMinValue(0);
-		propertyMultimeterOffsetY.setComment("The offset from the bottom when using the Multimeter");
-		propertyMultimeterOffsetY.setLanguageKey("gui.config.energy.multimeter_offset_y.name");
-
-		Property propertyMultimeterWidth = config.get(CATEGORY_NAME_ENERGY, "MultimeterWidth", EnergyBar.DEFAULT_WIDTH);
-		propertyMultimeterWidth.setMinValue(1);
-		propertyMultimeterWidth.setMaxValue(EnergyBar.DEFAULT_WIDTH);
-		propertyMultimeterWidth.setComment("The width of the multimeter gui");
-		propertyMultimeterWidth.setLanguageKey("gui.config.energy.multimeter_width.name");
-
-		Property propertyMultimeterHeight = config.get(CATEGORY_NAME_ENERGY, "MultimeterHeight",
-				EnergyBar.DEFAULT_HEIGHT);
-		propertyMultimeterHeight.setMinValue(1);
-		propertyMultimeterHeight.setMaxValue(EnergyBar.DEFAULT_HEIGHT);
-		propertyMultimeterHeight.setComment("The height of the multimeter gui");
-		propertyMultimeterHeight.setLanguageKey("gui.config.energy.multimeter_height.name");
-
-		Property propertyMultimeterShowCapacity = config.get(CATEGORY_NAME_ENERGY, "MultimeterShowCapacity", false);
-		propertyMultimeterShowCapacity.setComment("Whether or not to show the capacity when using the multimeter");
-		propertyMultimeterShowCapacity.setLanguageKey("gui.config.energy.multimeter_show_capacity.name");
-
-		Property propertyMultimeterSimplifyEnergy = config.get(CATEGORY_NAME_ENERGY, "MultimeterSimplifyEnergy", false);
-		propertyMultimeterSimplifyEnergy
-				.setComment("Whether or not to simplify the way the energy is displayed when using the multimeter");
-		propertyMultimeterSimplifyEnergy.setLanguageKey("gui.config.energy.multimeter_simplify_energy.name");
+		Property propertyEnergyBarSimplifyEnergy = config.get(CATEGORY_NAME_ENERGY, "EnergyBarSimplifyEnergy", false);
+		propertyEnergyBarSimplifyEnergy
+				.setComment("Whether or not to simplify the way the energy is displayed when using an energy bar");
+		propertyEnergyBarSimplifyEnergy.setLanguageKey("gui.config.energy.energy_bar_simplify_energy.name");
 
 		List<String> propertyOrderEnergy = new ArrayList<String>();
 		propertyOrderEnergy.add(propertyDefaultEnergyUnit.getName());
-		propertyOrderEnergy.add(propertyMultimeterOffsetX.getName());
-		propertyOrderEnergy.add(propertyMultimeterOffsetY.getName());
-		propertyOrderEnergy.add(propertyMultimeterWidth.getName());
-		propertyOrderEnergy.add(propertyMultimeterHeight.getName());
-		propertyOrderEnergy.add(propertyMultimeterShowCapacity.getName());
-		propertyOrderEnergy.add(propertyMultimeterSimplifyEnergy.getName());
+		propertyOrderEnergy.add(propertyEnergyBarShowCapacity.getName());
+		propertyOrderEnergy.add(propertyEnergyBarSimplifyEnergy.getName());
 		config.setCategoryPropertyOrder(CATEGORY_NAME_ENERGY, propertyOrderEnergy);
 
 		/*
@@ -222,17 +209,52 @@ public class CJCoreConfig {
 		}
 		config.setCategoryPropertyOrder(CATEGORY_NAME_VERSION_CHECKER, propertyOrderUpdateChecker);
 
+		/*
+		 * Multimeter Config
+		 */
+		Property propertyMultimeterOffsetX = config.get(CATEGORY_NAME_MULTIMETER, "MultimeterOffsetX", 6);
+		propertyMultimeterOffsetX.setMinValue(0);
+		propertyMultimeterOffsetX.setComment("The offset from the left hand side when using the Multimeter");
+		propertyMultimeterOffsetX.setLanguageKey("gui.config.multimeter.offset_x.name");
+
+		Property propertyMultimeterOffsetY = config.get(CATEGORY_NAME_MULTIMETER, "MultimeterOffsetY", 7);
+		propertyMultimeterOffsetY.setMinValue(0);
+		propertyMultimeterOffsetY.setComment("The offset from the bottom when using the Multimeter");
+		propertyMultimeterOffsetY.setLanguageKey("gui.config.multimeter.offset_y.name");
+
+		Property propertyMultimeterEnergyWidth = config.get(CATEGORY_NAME_MULTIMETER, "MultimeterEnergyWidth", ElementEnergyBar.DEFAULT_WIDTH);
+		propertyMultimeterEnergyWidth.setMinValue(1);
+		propertyMultimeterEnergyWidth.setMaxValue(ElementEnergyBar.DEFAULT_WIDTH);
+		propertyMultimeterEnergyWidth.setComment("The width of the multimeter energy gui");
+		propertyMultimeterEnergyWidth.setLanguageKey("gui.config.multimeter.energy_width.name");
+
+		Property propertyMultimeterEnergyHeight = config.get(CATEGORY_NAME_MULTIMETER, "MultimeterEnergyHeight",
+				ElementEnergyBar.DEFAULT_HEIGHT);
+		propertyMultimeterEnergyHeight.setMinValue(1);
+		propertyMultimeterEnergyHeight.setMaxValue(ElementEnergyBar.DEFAULT_HEIGHT);
+		propertyMultimeterEnergyHeight.setComment("The height of the multimeter energy gui");
+		propertyMultimeterEnergyHeight.setLanguageKey("gui.config.multimeter.energy_height.name");
+		
+		Property propertyMultimeterItemMaxColumns = config.get(CATEGORY_NAME_MULTIMETER, "MultimeterItemMaxColumnst",
+				9);
+		propertyMultimeterItemMaxColumns.setMinValue(1);
+		propertyMultimeterItemMaxColumns.setComment("The maximum amount of columns for the item multimeter");
+		propertyMultimeterItemMaxColumns.setLanguageKey("gui.config.multimeter.item_max_columns.name");
+		
+		List<String> propertyOrderMultimeter = new ArrayList<String>();
+		propertyOrderMultimeter.add(propertyMultimeterOffsetX.getName());
+		propertyOrderMultimeter.add(propertyMultimeterOffsetY.getName());
+		propertyOrderMultimeter.add(propertyMultimeterEnergyWidth.getName());
+		propertyOrderMultimeter.add(propertyMultimeterEnergyHeight.getName());
+		propertyOrderMultimeter.add(propertyMultimeterItemMaxColumns.getName());
+		
 		if (readFieldsFromConfig) {
 			/*
 			 * Energy Config
 			 */
 			DEFAULT_ENERGY_UNIT = EnergyUnits.byUnlocalizedName(propertyDefaultEnergyUnit.getString());
-			MULTIMETER_OFFSET_X = propertyMultimeterOffsetX.getInt();
-			MULTIMETER_OFFSET_Y = propertyMultimeterOffsetY.getInt();
-			MULTIMETER_WIDTH = propertyMultimeterWidth.getInt();
-			MULTIMETER_HEIGHT = propertyMultimeterHeight.getInt();
-			MULTIMETER_SHOW_CAPACITY = propertyMultimeterShowCapacity.getBoolean();
-			MULTIMETER_SIMPLIFY_ENERGY = propertyMultimeterSimplifyEnergy.getBoolean();
+			ENERGY_BAR_SHOW_CAPACITY = propertyEnergyBarShowCapacity.getBoolean();
+			ENERGY_BAR_SIMPLIFY_ENERGY = propertyEnergyBarSimplifyEnergy.getBoolean();
 
 			/*
 			 * Update Checkers Config
@@ -241,18 +263,23 @@ public class CJCoreConfig {
 				UPDATE_CHECKER_MODS.remove(mod.getLeft());
 				UPDATE_CHECKER_MODS.put(mod.getLeft(), mod.getRight().getBoolean());
 			}
+			
+			/*
+			 * Multimeter Config
+			 */
+			MULTIMETER_OFFSET_X = propertyMultimeterOffsetX.getInt();
+			MULTIMETER_OFFSET_Y = propertyMultimeterOffsetY.getInt();
+			MULTIMETER_ENERGY_WIDTH = propertyMultimeterEnergyWidth.getInt();
+			MULTIMETER_ENERGY_HEIGHT = propertyMultimeterEnergyHeight.getInt();
+			MULTIMETER_ITEM_MAX_COLUMNS = propertyMultimeterItemMaxColumns.getInt();
 		}
 
 		/*
 		 * Energy Config
 		 */
 		propertyDefaultEnergyUnit.set(DEFAULT_ENERGY_UNIT.getUnlocalizedName());
-		propertyMultimeterOffsetX.set(MULTIMETER_OFFSET_X);
-		propertyMultimeterOffsetY.set(MULTIMETER_OFFSET_Y);
-		propertyMultimeterWidth.set(MULTIMETER_WIDTH);
-		propertyMultimeterHeight.set(MULTIMETER_HEIGHT);
-		propertyMultimeterShowCapacity.set(MULTIMETER_SHOW_CAPACITY);
-		propertyMultimeterSimplifyEnergy.set(MULTIMETER_SIMPLIFY_ENERGY);
+		propertyEnergyBarShowCapacity.set(ENERGY_BAR_SHOW_CAPACITY);
+		propertyEnergyBarSimplifyEnergy.set(ENERGY_BAR_SIMPLIFY_ENERGY);
 
 		/*
 		 * Update Checkers Config
@@ -260,7 +287,16 @@ public class CJCoreConfig {
 		for (Pair<String, Property> mod : UPDATE_CHECKER_MOD_PROPERTIES) {
 			mod.getRight().set(UPDATE_CHECKER_MODS.get(mod.getLeft()));
 		}
-
+		
+		/*
+		 * Multimeter Config
+		 */
+		propertyMultimeterOffsetX.set(MULTIMETER_OFFSET_X);
+		propertyMultimeterOffsetY.set(MULTIMETER_OFFSET_Y);
+		propertyMultimeterEnergyWidth.set(MULTIMETER_ENERGY_WIDTH);
+		propertyMultimeterEnergyHeight.set(MULTIMETER_ENERGY_HEIGHT);
+		propertyMultimeterItemMaxColumns.set(MULTIMETER_ITEM_MAX_COLUMNS);
+		
 		if (config.hasChanged())
 			config.save();
 	}

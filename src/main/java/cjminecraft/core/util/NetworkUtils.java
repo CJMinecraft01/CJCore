@@ -1,5 +1,8 @@
 package cjminecraft.core.util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import io.netty.buffer.ByteBuf;
@@ -48,8 +51,8 @@ public class NetworkUtils {
 	 * @param facing
 	 *            The {@link EnumFacing} to write
 	 */
-	public static void writeEnumFacing(ByteBuf buf, EnumFacing facing) {
-		ByteBufUtils.writeUTF8String(buf, facing.getName2());
+	public static void writeEnumFacing(ByteBuf buf, @Nullable EnumFacing facing) {
+		ByteBufUtils.writeUTF8String(buf, facing == null ? "null" : facing.getName2());
 	}
 
 	/**
@@ -59,8 +62,10 @@ public class NetworkUtils {
 	 *            The {@link ByteBuf} to read from
 	 * @return The {@link EnumFacing} read from the {@link ByteBuf}
 	 */
+	@Nullable
 	public static EnumFacing readEnumFacing(ByteBuf buf) {
-		return EnumFacing.byName(ByteBufUtils.readUTF8String(buf));
+		String face = ByteBufUtils.readUTF8String(buf);
+		return face == "null" ? null : EnumFacing.byName(face);
 	}
 
 	/**
@@ -71,7 +76,7 @@ public class NetworkUtils {
 	 * @param unit
 	 *            The {@link EnergyUnit} to write
 	 */
-	public static void writeEnergyUnit(ByteBuf buf, EnergyUnit unit) {
+	public static void writeEnergyUnit(ByteBuf buf, @Nonnull EnergyUnit unit) {
 		ByteBufUtils.writeUTF8String(buf, unit.getUnlocalizedName());
 	}
 
@@ -82,6 +87,7 @@ public class NetworkUtils {
 	 *            The {@link ByteBuf} to read from
 	 * @return The {@link EnergyUnit} from the {@link ByteBuf}
 	 */
+	@Nonnull
 	public static EnergyUnit readEnergyUnit(ByteBuf buf) {
 		return EnergyUnits.byUnlocalizedName(ByteBufUtils.readUTF8String(buf));
 	}

@@ -46,8 +46,8 @@ public class CJCore {
 
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
-	public static final String VERSION = "0.0.1.10";
-	public static final String ACCEPTED_MC_VERSIONS = "[1.11,1.11.2]";
+	public static final String VERSION = "0.0.2.4";
+	public static final String ACCEPTED_MC_VERSIONS = "[1.12,1.12.2]";
 	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
 	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";
 	public static final String SERVER_PROXY_CLASS = "cjminecraft.core.proxy.ServerProxy";
@@ -71,8 +71,8 @@ public class CJCore {
 								}
 							}
 						} else {
-							logger.error("Mod " + mod.getModId() + " does not say whether it uses an version checker! Please fix this!");
-							FMLCommonHandler.instance().exitJava(0, false);
+							logger.error("Mod " + mod.getModId()
+									+ " does not say whether it uses an version checker! Please fix this!");
 						}
 					}
 				}
@@ -88,8 +88,8 @@ public class CJCore {
 								}
 							}
 						} else {
-							logger.error("Mod " + mod.getModId() + " does not say whether it uses an version checker! Please fix this!");
-							FMLCommonHandler.instance().exitJava(0, false);
+							logger.error("Mod " + mod.getModId()
+									+ " does not say whether it uses an version checker! Please fix this!");
 						}
 					}
 				}
@@ -99,8 +99,7 @@ public class CJCore {
 			CJCore.logger.info("Found dependant: " + mod);
 		});
 		CJCoreConfig.UPDATE_CHECKER_MODS.forEach((key, value) -> {
-			CJCore.logger
-					.info("Mod " + key + " says it has a version checker!");
+			CJCore.logger.info("Mod " + key + " says it has a version checker!");
 		});
 	}
 
@@ -149,9 +148,10 @@ public class CJCore {
 	public void imcEvent(IMCEvent event) {
 		for (IMCMessage message : event.getMessages()) {
 			if (message.isResourceLocationMessage() && message.key == "multimeterBlacklist") {
-				ItemMultimeter.MultimeterOverlay.blacklistBlocks.add(message.getResourceLocationValue());
-				logger.info("Blacklisting block: " + message.getResourceLocationValue().getResourceDomain() + ":"
-						+ message.getResourceLocationValue().getResourcePath());
+				ItemMultimeter.MultimeterOverlay.blacklistBlocksEnergy.add(message.getResourceLocationValue());
+				logger.info(String.format("Blacklisting block: %s:%s",
+						message.getResourceLocationValue().getResourceDomain(),
+						message.getResourceLocationValue().getResourcePath()));
 			}
 		}
 	}

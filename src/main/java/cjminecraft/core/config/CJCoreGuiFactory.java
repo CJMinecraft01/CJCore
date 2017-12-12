@@ -36,27 +36,22 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 	}
 
 	/**
-	 * Says what our {@link GuiConfig} class is
-	 */
-	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return CJCoreConfigGui.class;
-	}
-
-	/**
 	 * No runtime gui categories
 	 */
 	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
 		return null;
 	}
+	
 
-	/**
-	 * Deprecated
-	 */
 	@Override
-	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-		return null;
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new CJCoreConfigGui(parentScreen);
 	}
 
 	/**
@@ -88,6 +83,8 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 					CategoryEntryEnergy.class));
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.update_checker"),
 					"gui.config.category.update_checker", CategoryEntryVersionChecker.class));
+			list.add(new DummyCategoryElement(I18n.format("gui.config.category.multimeter"),
+					"gui.config.cateogry.multimeter", CategoryEntryMultimeter.class));
 			return list;
 		}
 
@@ -119,6 +116,12 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 		}
 
+		/**
+		 * All of the version checker configurations
+		 * 
+		 * @author CJMinecraft
+		 *
+		 */
 		public static class CategoryEntryVersionChecker extends CategoryEntry {
 
 			public CategoryEntryVersionChecker(GuiConfig owningScreen, GuiConfigEntries owningEntryList,
@@ -141,16 +144,34 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 		}
 
-	}
+		/**
+		 * All of the energy configurations
+		 * 
+		 * @author CJMinecraft
+		 *
+		 */
+		public static class CategoryEntryMultimeter extends CategoryEntry {
 
-	@Override
-	public boolean hasConfigGui() {
-		return true;
-	}
+			public CategoryEntryMultimeter(GuiConfig owningScreen, GuiConfigEntries owningEntryList,
+					IConfigElement configElement) {
+				super(owningScreen, owningEntryList, configElement);
+			}
 
-	@Override
-	public GuiScreen createConfigGui(GuiScreen parentScreen) {
-		return new CJCoreConfigGui(parentScreen);
+			@Override
+			protected GuiScreen buildChildScreen() {
+				Configuration config = CJCoreConfig.getConfig();
+				ConfigElement category_multimeter = new ConfigElement(
+						config.getCategory(CJCoreConfig.CATEGORY_NAME_MULTIMETER));
+				List<IConfigElement> propertiesOnThisScreen = category_multimeter.getChildElements();
+				String windowTitle = I18n.format("gui.config.category.multimeter");
+				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
+						CJCoreConfig.CATEGORY_NAME_MULTIMETER,
+						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
+						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
+			}
+
+		}
+
 	}
 
 }
