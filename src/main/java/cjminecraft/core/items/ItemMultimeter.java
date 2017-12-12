@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.client.gui.EnergyBarOverlay;
 import cjminecraft.core.client.gui.GuiOverlay;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import cjminecraft.core.client.gui.element.ElementItemSlot;

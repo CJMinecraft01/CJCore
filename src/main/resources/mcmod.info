@@ -12,6 +12,6 @@
   "logoFile": "",
   "screenshots": [],
   "useDependencyInformation": true,
-  "dependencies": ["tesla"]
+  "dependencies": []
 }
 ]

@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.client.gui.EnergyBar;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;

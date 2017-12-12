@@ -96,6 +96,8 @@ public class PacketGetCapacity implements IMessage {
 		}
 
 		void processMessage(PacketGetCapacity message, MessageContext ctx) {
+			if(!ctx.getServerHandler().player.getServerWorld().isBlockLoaded(message.pos))
+				return;
 			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
