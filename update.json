@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.1.10",
+	"version": "0.0.2.4",
 	"changelog": [
-		"=Improved Energy Utils", "+Added Custom Forge Energy Storage"
+		"+Added more compatability with other tech mods", "+Added ability to easily create energy items", "+Added ability to easily create energy tile entities", "=Improved energy utils further"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
