@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.2.4",
+	"version": "0.0.2.5",
 	"changelog": [
-		"+Added more compatability with other tech mods", "+Added ability to easily create energy items", "+Added ability to easily create energy tile entities", "=Improved energy utils further"
+		"=Optimised Packets"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
