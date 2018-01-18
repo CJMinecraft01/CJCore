@@ -183,11 +183,6 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	}
 	
 	@Override
-	public void drawSpecialLayer() {
-		
-	}
-	
-	@Override
 	public void addOverlayText(List<String> text) {
 		if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
 			text.add(EnergyUtils.getEnergyAsString(this.energy, CJCoreConfig.DEFAULT_ENERGY_UNIT)

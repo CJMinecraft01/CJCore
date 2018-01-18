@@ -158,6 +158,29 @@ public abstract class GuiCore extends GuiContainer {
 		RenderUtils.setGLColourFromInt(colour);
 		drawTiledTexture(x, y, RenderUtils.getFluidTexture(fluid), width, height);
 	}
+	
+	/**
+	 * Draw the given {@link Fluid} as a tiled rectangle with a border
+	 * 
+	 * @param x
+	 *            The x position of the rectangle
+	 * @param y
+	 *            The y position of the rectangle
+	 * @param fluid
+	 *            The {@link Fluid} to draw
+	 * @param width
+	 *            The width of the rectangle
+	 * @param height
+	 *            The height of the rectangle
+	 */
+	public void drawFluidWithBorder(int x, int y, FluidStack fluid, int width, int height) {
+		if (fluid == null)
+			return;
+		RenderUtils.setBlockTextureSheet();
+		int colour = fluid.getFluid().getColor(fluid);
+		RenderUtils.setGLColourFromInt(colour);
+		drawTiledTextureWithBorder(x, y, RenderUtils.getFluidTexture(fluid), width, height);
+	}
 
 	/**
 	 * Draw a texture tiled
@@ -181,6 +204,25 @@ public abstract class GuiCore extends GuiContainer {
 			}
 		}
 		RenderUtils.resetColour();
+	}
+	
+	/**
+	 * Draw a texture tiled with a border
+	 * 
+	 * @param x
+	 *            The x position of the rectangle
+	 * @param y
+	 *            The y position of the rectangle
+	 * @param icon
+	 *            The icon to draw
+	 * @param width
+	 *            The width of the rectangle
+	 * @param height
+	 *            The height of the rectangle
+	 */
+	public void drawTiledTextureWithBorder(int x, int y, TextureAtlasSprite icon, int width, int height) {
+		this.drawTiledTexture(x + 1, y + 1, icon, width - 1, height - 1);
+		this.drawBorder(x, y, width, height);
 	}
 
 	/**
@@ -332,12 +374,7 @@ public abstract class GuiCore extends GuiContainer {
 	public void drawSizedTexturedModalRectWithBorder(int x, int y, int u, int v, int width, int height,
 			float textureWidth, float textureHeight) {
 		this.drawSizedTexturedModalRect(x + 1, y + 1, u, v, width - 2, height - 2, textureHeight, textureHeight);
-		this.drawVerticalLine(x, y - 1, y + height - 1, 0xFF373737);
-		this.drawHorizontalLine(x + 1, x + width - 2, y, 0xFF373737);
-		this.drawHorizontalLine(x + width - 1, x + width - 1, y, 0xFF8B8B8B);
-		this.drawHorizontalLine(x, x, y + height - 1, 0xFF8B8B8B);
-		this.drawVerticalLine(x + width - 1, y, y + height, 0xFFFFFFFF);
-		this.drawHorizontalLine(x + 1, x + width - 1, y + height - 1, 0xFFE2E2E2);
+		this.drawBorder(x, y, width, height);
 	}
 
 	/**
@@ -359,12 +396,7 @@ public abstract class GuiCore extends GuiContainer {
 	 */
 	public void drawTexturedModalRectWithBorder(int x, int y, int u, int v, int width, int height) {
 		this.drawTexturedModalRect(x + 1, y + 1, u, v, width - 1, height - 1);
-		this.drawVerticalLine(x, y - 1, y + height - 1, 0xFF373737);
-		this.drawHorizontalLine(x + 1, x + width - 2, y, 0xFF373737);
-		this.drawHorizontalLine(x + width - 1, x + width - 1, y, 0xFF8B8B8B);
-		this.drawHorizontalLine(x, x, y + height - 1, 0xFF8B8B8B);
-		this.drawVerticalLine(x + width - 1, y, y + height, 0xFFFFFFFF);
-		this.drawHorizontalLine(x + 1, x + width - 1, y + height - 1, 0xFFE2E2E2);
+		this.drawBorder(x, y, width, height);
 	}
 
 	/**
@@ -384,12 +416,7 @@ public abstract class GuiCore extends GuiContainer {
 	 *            Green, B = Blue
 	 */
 	public void drawSizedModalRectWithBorder(int x1, int y1, int x2, int y2, int colour) {
-		this.drawVerticalLine(x1, y1 - 1, y2 - 1, 0xFF373737);
-		this.drawHorizontalLine(x1 + 1, x2 - 2, y1, 0xFF373737);
-		this.drawHorizontalLine(x1 + x2 - 1, x2 - 1, y1, 0xFF8B8B8B);
-		this.drawHorizontalLine(x1, x1, y2 - 1, 0xFF8B8B8B);
-		this.drawVerticalLine(x1 + x2 - 1, y1, y2, 0xFFFFFFFF);
-		this.drawHorizontalLine(x1 + 1, x1 + x2 - 1, y2 - 1, 0xFFE2E2E2);
+		this.drawBorder(x1, y1, y2 - y1, x2 - x1);
 		this.drawSizedModalRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, colour);
 	}
 
@@ -410,12 +437,7 @@ public abstract class GuiCore extends GuiContainer {
 	 *            Green, B = Blue
 	 */
 	public void drawSizedRectWithBorder(int x1, int y1, int x2, int y2, int colour) {
-		this.drawVerticalLine(x1, y1 - 1, y2 - 1, 0xFF373737);
-		this.drawHorizontalLine(x1 + 1, x2 - 2, y1, 0xFF373737);
-		this.drawHorizontalLine(x2 - 1, x2 - 1, y1, 0xFF8B8B8B);
-		this.drawHorizontalLine(x1, x1, y2 - 1, 0xFF8B8B8B);
-		this.drawVerticalLine(x2 - 1, y1, y2, 0xFFFFFFFF);
-		this.drawHorizontalLine(x1 + 1, x2 - 1, y2 - 1, 0xFFE2E2E2);
+		this.drawBorder(x1, y1, y2 - y1, x2 - x1);
 		this.drawSizedRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, colour);
 	}
 
@@ -530,6 +552,15 @@ public abstract class GuiCore extends GuiContainer {
 
 	public void drawVerticalLine(int x, int startY, int endY, int colour) {
 		super.drawVerticalLine(x, startY, endY, colour);
+	}
+	
+	public void drawBorder(int x, int y, int width, int height) {
+		this.drawVerticalLine(x, y - 1, y + height - 1, 0xFF373737);
+		this.drawHorizontalLine(x + 1, x + width - 2, y, 0xFF373737);
+		this.drawHorizontalLine(x + width - 1, x + width - 1, y, 0xFF8B8B8B);
+		this.drawHorizontalLine(x, x, y + height - 1, 0xFF8B8B8B);
+		this.drawVerticalLine(x + width - 1, y, y + height, 0xFFFFFFFF);
+		this.drawHorizontalLine(x + 1, x + width - 1, y + height - 1, 0xFFE2E2E2);
 	}
 
 	/**

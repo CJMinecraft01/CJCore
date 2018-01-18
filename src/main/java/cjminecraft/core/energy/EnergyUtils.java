@@ -1097,6 +1097,7 @@ public class EnergyUtils {
 	 *            The name of the class which the data was requested from
 	 * @return The latest data from the given class
 	 */
+	@Nullable
 	public static EnergyData getCachedEnergyData(String modid, String className) {
 		if (!cachedEnergyData.containsKey(modid))
 			return null;

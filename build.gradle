@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+
+version = "0.0.2.5"
+group = "cjminecraft.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "cjcore-1.12"
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    from javadoc.destinationDir
+    classifier "javadoc"
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+task srcJar(type: Jar, dependsOn: "sourceMainJava") {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+	archives srcJar
+	archives deobfJar
+	archives javadocJar
+}
+
+minecraft {
+    version = "1.12.2-14.23.1.2583"
+    runDir = "run"
+	replace '${version}', project.version
+    mappings = "snapshot_20180103"
+}
+
+repositories {
+	maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
+
+    maven {
+		name "Tesla"
+        url 'http://maven.mcmoddev.com'
+    }
+    
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
+}
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+dependencies {
+    compile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
+	compile 'net.industrial-craft:industrialcraft-2:2.8.16-ex112:api'
+	deobfCompile "cofh:RedstoneFlux:1.12-2.0.1.2:universal"
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
