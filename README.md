@@ -1,4 +1,4 @@
-# CJCore 1.12.2
+# CJCore 1.12.2 [![](http://cf.way2muchnoise.eu/full_cjcore_downloads.svg)](http://minecraft.curseforge.com/projects/cjcore) [![](http://cf.way2muchnoise.eu/versions/Minecraft_cjcore_all.svg)](http://minecraft.curseforge.com/projects/cjcore)
 ## About the mod
 CJCore is a mod aimed at simplifying more complicated tasks. It works as an inbetween mod for APIs. It allows the users to easily use utility methods to allow energy integration etc. a whole lot easier.
 
