@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.*;
 
@@ -27,15 +28,46 @@ public class FluidUtils {
 
 	private static HashMap<String, HashMap<String, FluidTankInfo>> cachedFluidData = new HashMap<String, HashMap<String, FluidTankInfo>>();
 
-	public static boolean hasSupport(@Nullable TileEntity te, @Nullable EnumFacing side) {
-		return te == null ? false : te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+	/**
+	 * States whether the {@link TileEntity} has fluid support
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} to test
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @return Whether the {@link TileEntity} has fluid support
+	 */
+	public static boolean hasSupport(@Nullable TileEntity te, @Nullable EnumFacing from) {
+		return te == null ? false : te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 	}
 
-	public static boolean hasSupport(@Nullable ItemStack stack, @Nullable EnumFacing side) {
+	/**
+	 * States whether the {@link ItemStack} has fluid support
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} to test
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @return Whether the {@link ItemStack} has fluid support
+	 */
+	public static boolean hasSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		return stack == null || stack.isEmpty() ? false
-				: stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+				: stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 	}
 
+	/**
+	 * Shortens and simplifies the amount of any fluid and its name into a
+	 * string
+	 * 
+	 * @param amount
+	 *            The amount of the fluid (got from {@link FluidStack#amount}
+	 * @param name
+	 *            The name of the fluid (got from
+	 *            {@link FluidStack#getLocalizedName()}
+	 * @return The simplified version of the fluid
+	 */
 	public static String getFluidAsString(int amount, String name) {
 		if (amount < 1000)
 			return amount + " mb " + name;
@@ -44,6 +76,15 @@ public class FluidUtils {
 		return String.format("%.1f %s" + " b " + name, amount / Math.pow(1000, exp), prefix);
 	}
 
+	/**
+	 * Gets the information inside of the {@link FluidTankInfo} and puts it into
+	 * a nice string using the config file for formatting
+	 * 
+	 * @param fluidTankInfo
+	 *            The holder of the information on the fluids
+	 * @return The information inside of the {@link FluidTankInfo} inside a nice
+	 *         string
+	 */
 	public static String getFluidTankInfoToString(@Nullable FluidTankInfo fluidTankInfo) {
 		if (fluidTankInfo == null || fluidTankInfo.fluid == null)
 			return I18n.format("fluid.empty");
@@ -61,217 +102,563 @@ public class FluidUtils {
 							: fluidTankInfo.fluid.getLocalizedName());
 	}
 
-	public static int getNumberOfTanks(@Nullable TileEntity te, @Nullable EnumFacing side) {
+	/**
+	 * Gets the number of tanks inside of a {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tanks
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @return the number of tanks inside of the {@link TileEntity}
+	 */
+	public static int getNumberOfTanks(@Nullable TileEntity te, @Nullable EnumFacing from) {
 		if (te == null)
 			return 0;
-		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).getTankProperties().length;
+		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).getTankProperties().length;
 	}
 
-	public static int getNumberOfTanks(@Nullable ItemStack stack, @Nullable EnumFacing side) {
+	/**
+	 * Gets the number of tanks inside of an {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tanks
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @return the number of tanks inside of the {@link ItemStack}
+	 */
+	public static int getNumberOfTanks(@Nullable ItemStack stack, @Nullable EnumFacing from) {
 		if (stack == null || stack.isEmpty())
 			return 0;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side)
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from)
 				.getTankProperties().length;
 	}
 
-	public static int getFluidAmount(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * Gets the amount of fluid inside fluid tank of the given index inside of
+	 * the given {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the amount of fluid inside of the fluid tank specified
+	 */
+	public static int getFluidAmount(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex) {
 		if (te == null)
 			return 0;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return 0;
 		return handler.getTankProperties()[tankIndex].getContents() != null
 				? handler.getTankProperties()[tankIndex].getContents().amount : 0;
 	}
 
-	public static int getFluidAmount(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * Gets the amount of fluid inside fluid tank of the given index inside of
+	 * the given {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the amount of fluid inside of the fluid tank specified
+	 */
+	public static int getFluidAmount(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return 0;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return 0;
 		return handler.getTankProperties()[tankIndex].getContents() != null
 				? handler.getTankProperties()[tankIndex].getContents().amount : 0;
 	}
 
+	/**
+	 * Gets the {@link FluidStack} containing the fluid and amount from the
+	 * given {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the {@link FluidStack} containing the fluid and amount
+	 */
 	@Nullable
-	public static FluidStack getFluidStack(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
+	public static FluidStack getFluidStack(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex) {
 		if (te == null)
 			return null;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return null;
 		return handler.getTankProperties()[tankIndex].getContents();
 	}
 
+	/**
+	 * Gets the {@link FluidStack} containing the fluid and amount from the
+	 * given {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the {@link FluidStack} containing the fluid and amount
+	 */
 	@Nullable
-	public static FluidStack getFluidStack(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
+	public static FluidStack getFluidStack(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return null;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return null;
 		return handler.getTankProperties()[tankIndex].getContents();
 	}
 
-	public static int getCapacity(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * Gets the capacity of the fluid tank specified in the given
+	 * {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the capacity of the fluid tank specified
+	 */
+	public static int getCapacity(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex) {
 		if (te == null)
 			return 0;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return 0;
 		return handler.getTankProperties()[tankIndex].getCapacity();
 	}
 
-	public static int getCapacity(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * Gets the capacity of the fluid tank specified in the given
+	 * {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the capacity of the fluid tank specified
+	 */
+	public static int getCapacity(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return 0;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return 0;
 		return handler.getTankProperties()[tankIndex].getCapacity();
 	}
 
-	public static Fluid getFluidInTank(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * Gets the fluid inside of the tank specified in the given
+	 * {@link TileEntity}. If there is no fluid inside the tank or the specified
+	 * tank is invalid, {@link FluidRegistry#WATER} will be returned
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the fluid inside of the tank
+	 */
+	public static Fluid getFluidInTank(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex) {
 		if (te == null)
 			return FluidRegistry.WATER;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return FluidRegistry.WATER;
 		return handler.getTankProperties()[tankIndex].getContents().getFluid();
 	}
 
-	public static Fluid getFluidInTank(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * Gets the fluid inside of the tank specified in the given
+	 * {@link ItemStack}. If there is no fluid inside the tank or the specified
+	 * tank is invalid, {@link FluidRegistry#WATER} will be returned
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return the fluid inside of the tank
+	 */
+	public static Fluid getFluidInTank(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return FluidRegistry.WATER;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return FluidRegistry.WATER;
 		return handler.getTankProperties()[tankIndex].getContents().getFluid();
 	}
 
-	public static boolean canFill(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * States whether you can fill up the tank specified in the given
+	 * {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return whether you can fill up the tank
+	 */
+	public static boolean canFill(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex) {
 		if (te == null)
 			return false;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canFill();
 	}
 
-	public static boolean canFill(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * States whether you can fill up the tank specified in the given
+	 * {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return whether you can fill up the tank
+	 */
+	public static boolean canFill(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canFill();
 	}
 
-	public static boolean canDrain(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * States whether you can drain the tank specified in the given
+	 * {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return whether you can drain the tank
+	 */
+	public static boolean canDrain(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex) {
 		if (te == null)
 			return false;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrain();
 	}
 
-	public static boolean canDrain(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
+	/**
+	 * States whether you can drain the tank specified in the given
+	 * {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @return whether you can drain the tank
+	 */
+	public static boolean canDrain(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrain();
 	}
 
-	public static boolean canFillFluidType(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex,
+	/**
+	 * States whether you can fill up the specified tank in the given
+	 * {@link TileEntity} with the given {@link FluidStack}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @param fluidStack
+	 *            The {@link FluidStack} to test
+	 * @return whether you can fill up the tank with the given
+	 *         {@link FluidStack}
+	 */
+	public static boolean canFillFluidType(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex,
 			FluidStack fluidStack) {
 		if (te == null)
 			return false;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canFillFluidType(fluidStack);
 	}
 
-	public static boolean canFillFluidType(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex,
+	/**
+	 * States whether you can fill up the specified tank in the given
+	 * {@link ItemStack} with the given {@link FluidStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they hold more than one tank)
+	 * @param fluidStack
+	 *            The {@link FluidStack} to test
+	 * @return whether you can fill up the tank with the given
+	 *         {@link FluidStack}
+	 */
+	public static boolean canFillFluidType(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex,
 			FluidStack fluidStack) {
 		if (stack == null || stack.isEmpty())
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canFillFluidType(fluidStack);
 	}
 
-	public static boolean canDrainFluidType(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex,
+	/**
+	 * States whether you can drain a specific {@link FluidStack} from the
+	 * specified tank in the given {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tank
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they have more than one tank)
+	 * @param fluidStack
+	 *            The {@link FluidStack} to test
+	 * @return whether you can drain the given {@link FluidStack} from the tank
+	 */
+	public static boolean canDrainFluidType(@Nullable TileEntity te, @Nullable EnumFacing from, int tankIndex,
 			FluidStack fluidStack) {
 		if (te == null)
 			return false;
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrainFluidType(fluidStack);
 	}
 
-	public static boolean canDrainFluidType(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex,
+	/**
+	 * States whether you can drain a specific {@link FluidStack} from the
+	 * specified tank in the given {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tank
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param tankIndex
+	 *            The index of the tank (if they have more than one tank)
+	 * @param fluidStack
+	 *            The {@link FluidStack} to test
+	 * @return whether you can drain the given {@link FluidStack} from the tank
+	 */
+	public static boolean canDrainFluidType(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex,
 			FluidStack fluidStack) {
 		if (stack == null || stack.isEmpty())
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrainFluidType(fluidStack);
 	}
 
-	public static int fill(@Nullable TileEntity te, @Nullable EnumFacing side, @Nonnull FluidStack resource,
+	/**
+	 * Fill the tanks in the given {@link TileEntity} with the given
+	 * {@link FluidStack}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tanks
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param resource
+	 *            The {@link FluidStack} to fill the tank with
+	 * @param simulate
+	 *            Whether it is a simulation (if so, no fluid will actually be
+	 *            given)
+	 * @return the left over (or would have been left over) fluid amount
+	 */
+	public static int fill(@Nullable TileEntity te, @Nullable EnumFacing from, @Nonnull FluidStack resource,
 			boolean simulate) {
 		if (te == null)
 			return 0;
-		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).fill(resource, simulate);
+		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).fill(resource, simulate);
 	}
 
-	public static int fill(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull FluidStack resource,
+	/**
+	 * Fill the tanks in the given {@link ItemStack} with the given
+	 * {@link FluidStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tanks
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param resource
+	 *            The {@link FluidStack} to fill the tank with
+	 * @param simulate
+	 *            Whether it is a simulation (if so, no fluid will actually be
+	 *            given)
+	 * @return the left over (or would have been left over) fluid amount
+	 */
+	public static int fill(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull FluidStack resource,
 			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return 0;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).fill(resource, simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).fill(resource, simulate);
 	}
 
+	/**
+	 * Drain the tanks in the given {@link TileEntity} of the given
+	 * {@link FluidStack}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tanks
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param resource
+	 *            The {@link FluidStack} to drain
+	 * @param simulate
+	 *            Whether this is a simulation (if so, no fluid will actually be
+	 *            drained)
+	 * @return The {@link FluidStack} which was (or would have been) drained
+	 */
 	@Nullable
-	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing side, @Nonnull FluidStack resource,
+	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing from, @Nonnull FluidStack resource,
 			boolean simulate) {
 		if (te == null)
 			return null;
-		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(resource, simulate);
+		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(resource, simulate);
 	}
 
+	/**
+	 * Drain the tanks in the given {@link ItemStack} of the given
+	 * {@link FluidStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tanks
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param resource
+	 *            The {@link FluidStack} to drain
+	 * @param simulate
+	 *            Whether this is a simulation (if so, no fluid will actually be
+	 *            drained)
+	 * @return The {@link FluidStack} which was (or would have been) drained
+	 */
 	@Nullable
-	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull FluidStack resource,
+	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull FluidStack resource,
 			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(resource, simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(resource, simulate);
 	}
 
+	/**
+	 * Drain a certain amount of fluid from the tanks inside of the given
+	 * {@link TileEntity}
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} which holds the tanks
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param maxDrain
+	 *            The amount to drain
+	 * @param simulate
+	 *            Whether this is a simulation (if so, no fluid will actually be
+	 *            drained)
+	 * @return the {@link FluidStack} which was (or would have been) drained
+	 */
 	@Nullable
-	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing side, @Nonnull int maxDrain,
+	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing from, @Nonnull int maxDrain,
 			boolean simulate) {
 		if (te == null)
 			return null;
-		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(maxDrain, simulate);
+		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(maxDrain, simulate);
 	}
 
+	/**
+	 * Drain a certain amount of fluid from the tanks inside of the given
+	 * {@link ItemStack}
+	 * 
+	 * @param stack
+	 *            The {@link ItemStack} which holds the tanks
+	 * @param from
+	 *            The side of the {@link ItemStack} for use with
+	 *            {@link Capability}
+	 * @param maxDrain
+	 *            The amount to drain
+	 * @param simulate
+	 *            Whether this is a simulation (if so, no fluid will actually be
+	 *            drained)
+	 * @return the {@link FluidStack} which was (or would have been) drained
+	 */
 	@Nullable
-	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull int maxDrain,
+	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull int maxDrain,
 			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(maxDrain, simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(maxDrain, simulate);
 	}
 
+	/**
+	 * Saves data when syncing with the server
+	 * 
+	 * @param modid
+	 *            The modid so each mod has its own cache of data
+	 * @param className
+	 *            The name of the class so each class can only sync one data
+	 * @param data
+	 *            The data to sync
+	 */
 	public static void addCachedFluidData(String modid, String className, FluidTankInfo data) {
 		if (!cachedFluidData.containsKey(modid))
 			cachedFluidData.put(modid, new HashMap<String, FluidTankInfo>());
@@ -279,10 +666,26 @@ public class FluidUtils {
 			cachedFluidData.get(modid).put(className, data);
 	}
 
+	/**
+	 * Retrieves the latest data from the calling class
+	 * 
+	 * @param modid
+	 *            The modid to get mod specific data
+	 * @return The latest data from the calling class
+	 */
 	public static FluidTankInfo getCachedFluidData(String modid) {
 		return getCachedFluidData(modid, new Exception().getStackTrace()[1].getClassName());
 	}
 
+	/**
+	 * Retrieves the latest data from the given class
+	 * 
+	 * @param modid
+	 *            The modid to get mod specific data
+	 * @param className
+	 *            The name of the class which the data was requested from
+	 * @return The latest data from the given class
+	 */
 	public static FluidTankInfo getCachedFluidData(String modid, String className) {
 		if (!cachedFluidData.containsKey(modid))
 			return null;
@@ -293,24 +696,31 @@ public class FluidUtils {
 		return data;
 	}
 
-	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, side, false, modid,
+	/**
+	 * Sync fluid data with the server. To get the data, use
+	 * {@link #getCachedFluidData(String)} or
+	 * {@link #getCachedFluidData(String, String)}. This will store the data in
+	 * the calling class in the cache
+	 * 
+	 * @param tankIndex
+	 *            The index of the tank to get the information from (for blocks
+	 *            which have more than one tank)
+	 * @param pos
+	 *            The position of the {@link TileEntity}
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param modid
+	 *            The modid for mod specific data
+	 */
+	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing from, String modid) {
+		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, from, false, modid,
 				new Exception().getStackTrace()[1].getClassName()));
 	}
 
-	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid,
+	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing from, String modid,
 			String className) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, side, false, modid, className));
-	}
-
-	public static void syncFluidStack(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidStack(tankIndex, pos, side, false, modid,
-				new Exception().getStackTrace()[1].getClassName()));
-	}
-
-	public static void syncFluidStack(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid,
-			String className) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidStack(tankIndex, pos, side, false, modid, className));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, from, false, modid, className));
 	}
 
 }
