@@ -47,7 +47,6 @@ public class PacketHandler {
 		INSTANCE.registerMessage(PacketGetEnergyData.Handler.class, PacketGetEnergyData.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetInventory.Handler.class, PacketGetInventory.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetFluidData.Handler.class, PacketGetFluidData.class, nextID(), Side.SERVER);
-		INSTANCE.registerMessage(PacketGetFluidStack.Handler.class, PacketGetFluidStack.class, nextID(), Side.SERVER);
 
 		// Client Messages
 		INSTANCE.registerMessage(PacketReturnEnergy.Handler.class, PacketReturnEnergy.class, nextID(), Side.CLIENT);
@@ -57,8 +56,6 @@ public class PacketHandler {
 		INSTANCE.registerMessage(PacketReturnInventory.Handler.class, PacketReturnInventory.class, nextID(),
 				Side.CLIENT);
 		INSTANCE.registerMessage(PacketReturnFluidData.Handler.class, PacketReturnFluidData.class, nextID(),
-				Side.CLIENT);
-		INSTANCE.registerMessage(PacketReturnFluidStack.Handler.class, PacketReturnFluidStack.class, nextID(),
 				Side.CLIENT);
 	}
 
