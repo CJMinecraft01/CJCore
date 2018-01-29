@@ -26,6 +26,8 @@ energy.container.capacity=Capacity
 energy.container.max_input=Max Input
 energy.container.max_output=Max Output
 
+fluid.empty=Empty
+
 gui.config.main_title=CJCore Configuration
 
 gui.config.category.energy=Energy Configuration
@@ -36,6 +38,13 @@ gui.config.energy.energy_bar_show_capacity.name=Energy Bar Show Capacity
 gui.config.energy.energy_bar_show_capacity.comment=Whether or not the energy bar should show the capacity
 gui.config.energy.energy_bar_simplify_energy.name=Energy Bar Simplify Energy 
 gui.config.energy.energy_bar_simplify_energy.comment=Whether or not to simplify the way the energy is displayed when using an energy bar
+
+gui.config.category.fluid=Fluid Configuration
+gui.config.category.fluid.tooltip=Everything to do with fluids
+gui.config.fluid.fluid_bar_show_capacity.name=Fluid Bar Show Capacity
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Whether or not the fluid bar should show the capacity
+gui.config.fluid.fluid_bar_simplify_fluids.name=Fluid Bar Simplify Fluids
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Whether or not to simplify the way the fluids are displayed when using a fluid bar
 
 gui.config.category.update_checker=Update Checkers
 gui.config.category.update_checker.tooltip=Disable any of the update checkers which use CJCore

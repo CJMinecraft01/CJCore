@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 public class ElementFluidBar extends ElementBase implements ISpecialOverlayElement {
 	
 	public static final int DEFAULT_WIDTH = 18;
-	public static final int DEFAULT_HEIGHT = 78;
+	public static final int DEFAULT_HEIGHT = 80;
 	
 	protected int tankIndex;
 	protected FluidTankInfo fluidTank;
@@ -56,18 +56,18 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	}
 	
 	public int getFluidBarHeight() {
-		if(this.fluidTank == null)
+		if(this.fluidTank == null || this.fluidTank.fluid == null)
 			return 0;
-		return (int) ((this.fluidTank.capacity != 0 && this.fluidTank.fluid.amount != 0) ? (this.fluidTank.fluid.amount * (this.height - 2)) / this.fluidTank.capacity : 0);
+		return (int) ((this.fluidTank.capacity != 0 && this.fluidTank.fluid.amount != 0) ? (this.fluidTank.fluid.amount * (this.height - 1)) / this.fluidTank.capacity : 0);
 	}
 
 	@Override
 	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
-		if(this.fluidTank != null) {
+		if(this.fluidTank != null && this.fluidTank.fluid != null) {
 			this.gui.drawFluidWithBorder(this.posX, this.posY, this.fluidTank.fluid, this.width, this.height);
-			this.gui.drawSizedRect(this.posX + 1, this.posY + 1, this.posX + this.width - 1, this.posY + this.height - getFluidBarHeight() - 1, 0xFF8B8B8B);
+			this.gui.drawSizedRect(this.posX + 1, this.posY + 1, this.posX + this.width - 1, this.posY + this.height - getFluidBarHeight(), 0xFF8B8B8B);
 		} else {
-			this.gui.drawSizedRectWithBorder(this.posX, this.posY, this.posX + this.width, this.posY + this.height - getFluidBarHeight() + 1, 0xFF8B8B8B);
+			this.gui.drawSizedRectWithBorder(this.posX, this.posY, this.posX + this.width, this.posY + this.height - getFluidBarHeight() - 1, 0xFF8B8B8B);
 		}
 		
 		// Draw Scale

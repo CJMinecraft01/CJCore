@@ -55,7 +55,8 @@ public class PacketReturnFluidData implements IMessage {
 	public void fromBytes(ByteBuf buf) {
 		try {
 			this.capacity = buf.readInt();
-			this.fluidStack = FluidStack.loadFluidStackFromNBT(ByteBufUtils.readTag(buf));
+			if(buf.readBoolean())
+				this.fluidStack = FluidStack.loadFluidStackFromNBT(ByteBufUtils.readTag(buf));
 			this.className = ByteBufUtils.readUTF8String(buf);
 			this.updateFields = buf.readBoolean();
 			if(this.updateFields) {
@@ -75,7 +76,9 @@ public class PacketReturnFluidData implements IMessage {
 		if(!this.messageValid)
 			return;
 		buf.writeInt(this.capacity);
-		ByteBufUtils.writeTag(buf, this.fluidStack.writeToNBT(new NBTTagCompound()));
+		buf.writeBoolean(this.fluidStack != null);
+		if(this.fluidStack != null)
+			ByteBufUtils.writeTag(buf, this.fluidStack.writeToNBT(new NBTTagCompound()));
 		ByteBufUtils.writeUTF8String(buf, this.className);
 		buf.writeBoolean(this.updateFields);
 		if(this.updateFields) {

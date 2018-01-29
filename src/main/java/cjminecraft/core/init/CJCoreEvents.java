@@ -3,6 +3,7 @@ package cjminecraft.core.init;
 import cjminecraft.core.CJCore;
 import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUtils;
+import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.inventory.InventoryUtils;
 import cjminecraft.core.util.VersionChecker;
 import net.minecraft.tileentity.TileEntity;
@@ -28,6 +29,8 @@ public class CJCoreEvents {
 			event.player.unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_energy") });
 		if (InventoryUtils.hasSupport(event.crafting, null))
 			event.player.unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_item") });
+		if (FluidUtils.hasSupport(event.crafting, null))
+			event.player.unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_fluid") });
 	}
 	
 	@SubscribeEvent
@@ -40,6 +43,8 @@ public class CJCoreEvents {
 			event.getPlayer().unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_energy") });
 		if(InventoryUtils.hasSupport(te, null))
 			event.getPlayer().unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_item") });
+		if(FluidUtils.hasSupport(te, null))
+			event.getPlayer().unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_fluid") });
 	}
 
 }

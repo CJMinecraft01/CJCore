@@ -6,8 +6,10 @@ import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.fluid.*;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -15,8 +17,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.*;
 
+/**
+ * Utility class for fluids
+ * 
+ * @author CJMinecraft
+ *
+ */
 public class FluidUtils {
-	
+
 	private static HashMap<String, HashMap<String, FluidTankInfo>> cachedFluidData = new HashMap<String, HashMap<String, FluidTankInfo>>();
 
 	public static boolean hasSupport(@Nullable TileEntity te, @Nullable EnumFacing side) {
@@ -27,21 +35,43 @@ public class FluidUtils {
 		return stack == null || stack.isEmpty() ? false
 				: stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side);
 	}
-	
-	public static String getFluidTankInfoToString(FluidTankInfo fluidTankInfo) {
-		return fluidTankInfo.fluid.getLocalizedName() + " " + NumberFormat.getInstance().format(fluidTankInfo.fluid.amount) + "mb";
+
+	public static String getFluidAsString(int amount, String name) {
+		if (amount < 1000)
+			return amount + " mb " + name;
+		int exp = (int) (Math.log(amount) / Math.log(1000));
+		char prefix = "KMGTPE".charAt(exp - 1);
+		return String.format("%.1f %s" + " b " + name, amount / Math.pow(1000, exp), prefix);
+	}
+
+	public static String getFluidTankInfoToString(@Nullable FluidTankInfo fluidTankInfo) {
+		if (fluidTankInfo == null || fluidTankInfo.fluid == null)
+			return I18n.format("fluid.empty");
+		if (CJCoreConfig.FLUID_BAR_SIMPLIFY_FLUIDS)
+			return getFluidAsString(fluidTankInfo.fluid.amount, (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? ""
+					: fluidTankInfo.fluid.getLocalizedName())
+					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
+							? " / " + getFluidAsString(fluidTankInfo.capacity, fluidTankInfo.fluid.getLocalizedName())
+							: ""));
+		else
+			return NumberFormat.getInstance().format(fluidTankInfo.fluid.amount) + " mb "
+					+ (CJCoreConfig.FLUID_BAR_SHOW_CAPACITY
+							? " / " + NumberFormat.getInstance().format(fluidTankInfo.capacity) + " mb "
+									+ fluidTankInfo.fluid.getLocalizedName()
+							: fluidTankInfo.fluid.getLocalizedName());
 	}
 
 	public static int getNumberOfTanks(@Nullable TileEntity te, @Nullable EnumFacing side) {
-		if(te == null)
+		if (te == null)
 			return 0;
 		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).getTankProperties().length;
 	}
-	
+
 	public static int getNumberOfTanks(@Nullable ItemStack stack, @Nullable EnumFacing side) {
-		if(stack == null || stack.isEmpty())
+		if (stack == null || stack.isEmpty())
 			return 0;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side).getTankProperties().length;
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, side)
+				.getTankProperties().length;
 	}
 
 	public static int getFluidAmount(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
@@ -53,7 +83,7 @@ public class FluidUtils {
 		return handler.getTankProperties()[tankIndex].getContents() != null
 				? handler.getTankProperties()[tankIndex].getContents().amount : 0;
 	}
-	
+
 	public static int getFluidAmount(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return 0;
@@ -63,7 +93,7 @@ public class FluidUtils {
 		return handler.getTankProperties()[tankIndex].getContents() != null
 				? handler.getTankProperties()[tankIndex].getContents().amount : 0;
 	}
-	
+
 	@Nullable
 	public static FluidStack getFluidStack(@Nullable TileEntity te, @Nullable EnumFacing side, int tankIndex) {
 		if (te == null)
@@ -73,7 +103,7 @@ public class FluidUtils {
 			return null;
 		return handler.getTankProperties()[tankIndex].getContents();
 	}
-	
+
 	@Nullable
 	public static FluidStack getFluidStack(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
 		if (stack == null || stack.isEmpty())
@@ -92,7 +122,7 @@ public class FluidUtils {
 			return 0;
 		return handler.getTankProperties()[tankIndex].getCapacity();
 	}
-	
+
 	public static int getCapacity(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return 0;
@@ -110,7 +140,7 @@ public class FluidUtils {
 			return FluidRegistry.WATER;
 		return handler.getTankProperties()[tankIndex].getContents().getFluid();
 	}
-	
+
 	public static Fluid getFluidInTank(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return FluidRegistry.WATER;
@@ -128,7 +158,7 @@ public class FluidUtils {
 			return false;
 		return handler.getTankProperties()[tankIndex].canFill();
 	}
-	
+
 	public static boolean canFill(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return false;
@@ -146,7 +176,7 @@ public class FluidUtils {
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrain();
 	}
-	
+
 	public static boolean canDrain(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex) {
 		if (stack == null || stack.isEmpty())
 			return false;
@@ -165,7 +195,7 @@ public class FluidUtils {
 			return false;
 		return handler.getTankProperties()[tankIndex].canFillFluidType(fluidStack);
 	}
-	
+
 	public static boolean canFillFluidType(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex,
 			FluidStack fluidStack) {
 		if (stack == null || stack.isEmpty())
@@ -185,7 +215,7 @@ public class FluidUtils {
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrainFluidType(fluidStack);
 	}
-	
+
 	public static boolean canDrainFluidType(@Nullable ItemStack stack, @Nullable EnumFacing side, int tankIndex,
 			FluidStack fluidStack) {
 		if (stack == null || stack.isEmpty())
@@ -202,76 +232,84 @@ public class FluidUtils {
 			return 0;
 		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).fill(resource, simulate);
 	}
-	
+
 	public static int fill(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull FluidStack resource,
 			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return 0;
 		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).fill(resource, simulate);
 	}
-	
+
 	@Nullable
-	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing side, @Nonnull FluidStack resource, boolean simulate) {
+	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing side, @Nonnull FluidStack resource,
+			boolean simulate) {
 		if (te == null)
 			return null;
 		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(resource, simulate);
 	}
-	
+
 	@Nullable
-	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull FluidStack resource, boolean simulate) {
+	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull FluidStack resource,
+			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return null;
 		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(resource, simulate);
 	}
-	
+
 	@Nullable
-	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing side, @Nonnull int maxDrain, boolean simulate) {
+	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing side, @Nonnull int maxDrain,
+			boolean simulate) {
 		if (te == null)
 			return null;
 		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(maxDrain, simulate);
 	}
-	
+
 	@Nullable
-	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull int maxDrain, boolean simulate) {
+	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing side, @Nonnull int maxDrain,
+			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return null;
 		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).drain(maxDrain, simulate);
 	}
-	
+
 	public static void addCachedFluidData(String modid, String className, FluidTankInfo data) {
-		if(!cachedFluidData.containsKey(modid))
+		if (!cachedFluidData.containsKey(modid))
 			cachedFluidData.put(modid, new HashMap<String, FluidTankInfo>());
-		if(!cachedFluidData.get(modid).containsKey(className))
+		if (!cachedFluidData.get(modid).containsKey(className))
 			cachedFluidData.get(modid).put(className, data);
 	}
-	
+
 	public static FluidTankInfo getCachedFluidData(String modid) {
 		return getCachedFluidData(modid, new Exception().getStackTrace()[1].getClassName());
 	}
-	
+
 	public static FluidTankInfo getCachedFluidData(String modid, String className) {
-		if(!cachedFluidData.containsKey(modid))
+		if (!cachedFluidData.containsKey(modid))
 			return null;
-		if(!cachedFluidData.get(modid).containsKey(className))
+		if (!cachedFluidData.get(modid).containsKey(className))
 			return null;
 		FluidTankInfo data = cachedFluidData.get(modid).get(className);
 		cachedFluidData.get(modid).remove(className);
 		return data;
 	}
-	
+
 	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, side, false, modid,
+				new Exception().getStackTrace()[1].getClassName()));
 	}
-	
-	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
+
+	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid,
+			String className) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, side, false, modid, className));
 	}
-	
+
 	public static void syncFluidStack(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidStack(tankIndex, pos, side, false, modid, new Exception().getStackTrace()[1].getClassName()));
+		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidStack(tankIndex, pos, side, false, modid,
+				new Exception().getStackTrace()[1].getClassName()));
 	}
-	
-	public static void syncFluidStack(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
+
+	public static void syncFluidStack(int tankIndex, BlockPos pos, @Nullable EnumFacing side, String modid,
+			String className) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidStack(tankIndex, pos, side, false, modid, className));
 	}
 

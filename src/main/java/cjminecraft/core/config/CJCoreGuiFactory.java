@@ -42,7 +42,6 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
 		return null;
 	}
-	
 
 	@Override
 	public boolean hasConfigGui() {
@@ -81,6 +80,8 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 			List<IConfigElement> list = new ArrayList<IConfigElement>();
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.energy"), "gui.config.category.energy",
 					CategoryEntryEnergy.class));
+			list.add(new DummyCategoryElement(I18n.format("gui.config.category.fluid"), "gui.config.category.fluid",
+					CategoryEntryFluid.class));
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.update_checker"),
 					"gui.config.category.update_checker", CategoryEntryVersionChecker.class));
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.multimeter"),
@@ -110,6 +111,36 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 				String windowTitle = I18n.format("gui.config.category.energy");
 				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
 						CJCoreConfig.CATEGORY_NAME_ENERGY,
+						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
+						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
+			}
+
+		}
+
+		/**
+		 * All of the fluid configurations
+		 * 
+		 * @author CJMinecraft
+		 *
+		 */
+		public static class CategoryEntryFluid extends CategoryEntry {
+
+			public CategoryEntryFluid(GuiConfig owningScreen, GuiConfigEntries owningEntryList,
+					IConfigElement configElement) {
+				super(owningScreen, owningEntryList, configElement);
+			}
+
+			@Override
+			protected GuiScreen buildChildScreen() {
+				Configuration config = CJCoreConfig.getConfig();
+				ConfigElement category_fluid = new ConfigElement(
+						config.getCategory(CJCoreConfig.CATEGORY_NAME_FLUID));
+				List<IConfigElement> propertiesOnThisScreen = category_fluid.getChildElements();
+				for(IConfigElement element : propertiesOnThisScreen)
+					CJCore.logger.info(element.getLanguageKey());
+				String windowTitle = I18n.format("gui.config.category.fluid");
+				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
+						CJCoreConfig.CATEGORY_NAME_FLUID,
 						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
 						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
 			}

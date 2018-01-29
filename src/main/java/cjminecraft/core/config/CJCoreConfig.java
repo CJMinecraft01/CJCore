@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
+import cjminecraft.core.client.gui.element.ElementFluidBar;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.proxy.ClientProxy;
@@ -34,6 +35,11 @@ public class CJCoreConfig {
 	 * The name of the category for energy
 	 */
 	public static final String CATEGORY_NAME_ENERGY = "energy";
+	
+	/**
+	 * The name of the category for energy
+	 */
+	public static final String CATEGORY_NAME_FLUID = "fluid";
 
 	/**
 	 * The name of the category for the update checkers
@@ -62,6 +68,20 @@ public class CJCoreConfig {
 	 * Whether the energy bar should simplify the energy displayed
 	 */
 	public static boolean ENERGY_BAR_SIMPLIFY_ENERGY;
+	
+	/*
+	 * Fluid Config
+	 */
+
+	/**
+	 * Whether or not the fluid bar should show capacity
+	 */
+	public static boolean FLUID_BAR_SHOW_CAPACITY;
+
+	/**
+	 * Whether the fluid bar should simplify the fluid displayed
+	 */
+	public static boolean FLUID_BAR_SIMPLIFY_FLUIDS;
 
 
 	/*
@@ -100,6 +120,16 @@ public class CJCoreConfig {
 	 * The height of the energy multimeter
 	 */
 	public static int MULTIMETER_ENERGY_HEIGHT;
+	
+	/**
+	 * The width of the fluid multimeter
+	 */
+	public static int MULTIMETER_FLUID_WIDTH;
+	
+	/**
+	 * The height of the fluid multimeter
+	 */
+	public static int MULTIMETER_FLUID_HEIGHT;
 	
 	/**
 	 * The maximum number of columns for the item multimeter
@@ -188,16 +218,21 @@ public class CJCoreConfig {
 				.setComment("Whether or not to simplify the way the energy is displayed when using an energy bar");
 		propertyEnergyBarSimplifyEnergy.setLanguageKey("gui.config.energy.energy_bar_simplify_energy.name");
 
-		List<String> propertyOrderEnergy = new ArrayList<String>();
-		propertyOrderEnergy.add(propertyDefaultEnergyUnit.getName());
-		propertyOrderEnergy.add(propertyEnergyBarShowCapacity.getName());
-		propertyOrderEnergy.add(propertyEnergyBarSimplifyEnergy.getName());
-		config.setCategoryPropertyOrder(CATEGORY_NAME_ENERGY, propertyOrderEnergy);
+		/*
+		 * Fluid Config
+		 */
+		Property propertyFluidBarShowCapacity = config.get(CATEGORY_NAME_FLUID, "FluidBarShowCapacity", false);
+		propertyFluidBarShowCapacity.setComment("Whether or not the fluid bar should show the capacity");
+		propertyFluidBarShowCapacity.setLanguageKey("gui.config.fluid.fluid_bar_show_capacity.name");
 
+		Property propertyFluidBarSimplifyFluids = config.get(CATEGORY_NAME_FLUID, "FluidBarSimplifyFluids", false);
+		propertyFluidBarSimplifyFluids
+				.setComment("Whether or not to simplify the way the fluids are displayed when using a fluid bar");
+		propertyFluidBarSimplifyFluids.setLanguageKey("gui.config.fluid.fluid_bar_simplify_fluids.name");
+		
 		/*
 		 * Update Checkers Config
 		 */
-		List<String> propertyOrderUpdateChecker = new ArrayList<String>();
 		Iterator<String> mods = UPDATE_CHECKER_MODS.keySet().iterator();
 		while (mods.hasNext()) {
 			String modid = mods.next();
@@ -205,9 +240,7 @@ public class CJCoreConfig {
 			propertyUpdateCheckerEnabled.setComment("Whether the update checker for " + modid + " is enabled");
 			propertyUpdateCheckerEnabled.setLanguageKey("gui.config.update_checker.enabled.name");
 			UPDATE_CHECKER_MOD_PROPERTIES.add(Pair.of(modid, propertyUpdateCheckerEnabled));
-			propertyOrderUpdateChecker.add(propertyUpdateCheckerEnabled.getName());
 		}
-		config.setCategoryPropertyOrder(CATEGORY_NAME_VERSION_CHECKER, propertyOrderUpdateChecker);
 
 		/*
 		 * Multimeter Config
@@ -235,18 +268,25 @@ public class CJCoreConfig {
 		propertyMultimeterEnergyHeight.setComment("The height of the multimeter energy gui");
 		propertyMultimeterEnergyHeight.setLanguageKey("gui.config.multimeter.energy_height.name");
 		
+		Property propertyMultimeterFluidWidth= config.get(CATEGORY_NAME_MULTIMETER, "MultimeterFluidWidth",
+				ElementFluidBar.DEFAULT_WIDTH);
+		propertyMultimeterFluidWidth.setMinValue(1);
+		propertyMultimeterFluidWidth.setMaxValue(ElementFluidBar.DEFAULT_WIDTH);
+		propertyMultimeterFluidWidth.setComment("The width of the multimeter fluid gui");
+		propertyMultimeterFluidWidth.setLanguageKey("gui.config.multimeter.fluid_width.name");
+		
+		Property propertyMultimeterFluidHeight = config.get(CATEGORY_NAME_MULTIMETER, "MultimeterFluidHeight",
+				ElementFluidBar.DEFAULT_HEIGHT);
+		propertyMultimeterFluidHeight.setMinValue(1);
+		propertyMultimeterFluidHeight.setMaxValue(ElementFluidBar.DEFAULT_HEIGHT);
+		propertyMultimeterFluidHeight.setComment("The height of the multimeter fluid gui");
+		propertyMultimeterFluidHeight.setLanguageKey("gui.config.multimeter.fluid_height.name");
+		
 		Property propertyMultimeterItemMaxColumns = config.get(CATEGORY_NAME_MULTIMETER, "MultimeterItemMaxColumnst",
 				9);
 		propertyMultimeterItemMaxColumns.setMinValue(1);
 		propertyMultimeterItemMaxColumns.setComment("The maximum amount of columns for the item multimeter");
 		propertyMultimeterItemMaxColumns.setLanguageKey("gui.config.multimeter.item_max_columns.name");
-		
-		List<String> propertyOrderMultimeter = new ArrayList<String>();
-		propertyOrderMultimeter.add(propertyMultimeterOffsetX.getName());
-		propertyOrderMultimeter.add(propertyMultimeterOffsetY.getName());
-		propertyOrderMultimeter.add(propertyMultimeterEnergyWidth.getName());
-		propertyOrderMultimeter.add(propertyMultimeterEnergyHeight.getName());
-		propertyOrderMultimeter.add(propertyMultimeterItemMaxColumns.getName());
 		
 		if (readFieldsFromConfig) {
 			/*
@@ -255,6 +295,12 @@ public class CJCoreConfig {
 			DEFAULT_ENERGY_UNIT = EnergyUnits.byUnlocalizedName(propertyDefaultEnergyUnit.getString());
 			ENERGY_BAR_SHOW_CAPACITY = propertyEnergyBarShowCapacity.getBoolean();
 			ENERGY_BAR_SIMPLIFY_ENERGY = propertyEnergyBarSimplifyEnergy.getBoolean();
+			
+			/*
+			 * Fluid Config
+			 */
+			FLUID_BAR_SHOW_CAPACITY = propertyFluidBarShowCapacity.getBoolean();
+			FLUID_BAR_SIMPLIFY_FLUIDS = propertyFluidBarSimplifyFluids.getBoolean();
 
 			/*
 			 * Update Checkers Config
@@ -271,6 +317,8 @@ public class CJCoreConfig {
 			MULTIMETER_OFFSET_Y = propertyMultimeterOffsetY.getInt();
 			MULTIMETER_ENERGY_WIDTH = propertyMultimeterEnergyWidth.getInt();
 			MULTIMETER_ENERGY_HEIGHT = propertyMultimeterEnergyHeight.getInt();
+			MULTIMETER_FLUID_WIDTH = propertyMultimeterFluidWidth.getInt();
+			MULTIMETER_FLUID_HEIGHT = propertyMultimeterFluidHeight.getInt();
 			MULTIMETER_ITEM_MAX_COLUMNS = propertyMultimeterItemMaxColumns.getInt();
 		}
 
@@ -281,6 +329,12 @@ public class CJCoreConfig {
 		propertyEnergyBarShowCapacity.set(ENERGY_BAR_SHOW_CAPACITY);
 		propertyEnergyBarSimplifyEnergy.set(ENERGY_BAR_SIMPLIFY_ENERGY);
 
+		/*
+		 * Fluid Config
+		 */
+		propertyFluidBarShowCapacity.set(FLUID_BAR_SHOW_CAPACITY);
+		propertyFluidBarSimplifyFluids.set(FLUID_BAR_SIMPLIFY_FLUIDS);
+		
 		/*
 		 * Update Checkers Config
 		 */
@@ -295,6 +349,8 @@ public class CJCoreConfig {
 		propertyMultimeterOffsetY.set(MULTIMETER_OFFSET_Y);
 		propertyMultimeterEnergyWidth.set(MULTIMETER_ENERGY_WIDTH);
 		propertyMultimeterEnergyHeight.set(MULTIMETER_ENERGY_HEIGHT);
+		propertyMultimeterFluidWidth.set(MULTIMETER_FLUID_WIDTH);
+		propertyMultimeterFluidHeight.set(MULTIMETER_FLUID_HEIGHT);
 		propertyMultimeterItemMaxColumns.set(MULTIMETER_ITEM_MAX_COLUMNS);
 		
 		if (config.hasChanged())
