@@ -60,7 +60,8 @@ public class ElementItemSlot extends ElementBase implements ISpecialOverlayEleme
 	
 	@Override
 	public void addOverlayText(List<String> text) {
-		text.add(this.stack.getDisplayName());
+		if(this.stack != ItemStack.EMPTY && !text.contains(this.stack.getDisplayName()))
+			text.add(this.stack.getDisplayName());
 	}
 
 	/**

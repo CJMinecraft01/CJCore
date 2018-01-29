@@ -1,5 +1,6 @@
 package cjminecraft.core.fluid;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
@@ -28,7 +29,7 @@ public class FluidUtils {
 	}
 	
 	public static String getFluidTankInfoToString(FluidTankInfo fluidTankInfo) {
-		return fluidTankInfo.fluid.getLocalizedName() + " " + fluidTankInfo.fluid.amount + "mb";
+		return fluidTankInfo.fluid.getLocalizedName() + " " + NumberFormat.getInstance().format(fluidTankInfo.fluid.amount) + "mb";
 	}
 
 	public static int getNumberOfTanks(@Nullable TileEntity te, @Nullable EnumFacing side) {

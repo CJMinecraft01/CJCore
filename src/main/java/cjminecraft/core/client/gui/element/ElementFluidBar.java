@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 public class ElementFluidBar extends ElementBase implements ISpecialOverlayElement {
 	
 	public static final int DEFAULT_WIDTH = 18;
-	public static final int DEFAULT_HEIGHT = 84;
+	public static final int DEFAULT_HEIGHT = 78;
 	
 	protected int tankIndex;
 	protected FluidTankInfo fluidTank;
@@ -56,21 +56,26 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	}
 	
 	public int getFluidBarHeight() {
-		return (int) ((this.fluidTank.capacity != 0 && this.fluidTank.fluid.amount != 0) ? (this.fluidTank.fluid.amount * this.height) / this.fluidTank.capacity : 0);
+		if(this.fluidTank == null)
+			return 0;
+		return (int) ((this.fluidTank.capacity != 0 && this.fluidTank.fluid.amount != 0) ? (this.fluidTank.fluid.amount * (this.height - 2)) / this.fluidTank.capacity : 0);
 	}
 
 	@Override
 	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
-		this.gui.drawFluidWithBorder(this.posX, this.posY, this.fluidTank.fluid, this.width, this.height);
-		
-		this.gui.drawSizedRect(this.posX + 1, this.posY + 1, this.posX + this.width - 2, this.posY + this.height - getFluidBarHeight() - 2, 0x8B8B8BFF);
+		if(this.fluidTank != null) {
+			this.gui.drawFluidWithBorder(this.posX, this.posY, this.fluidTank.fluid, this.width, this.height);
+			this.gui.drawSizedRect(this.posX + 1, this.posY + 1, this.posX + this.width - 1, this.posY + this.height - getFluidBarHeight() - 1, 0xFF8B8B8B);
+		} else {
+			this.gui.drawSizedRectWithBorder(this.posX, this.posY, this.posX + this.width, this.posY + this.height - getFluidBarHeight() + 1, 0xFF8B8B8B);
+		}
 		
 		// Draw Scale
-		for(int row = 0; row < (this.height - 2) / 3 - 1; row++) {
+		for(int row = 1; row < (this.height - 2) / 3; row++) {
 			if (row % 5 == 0)
-				this.gui.drawHorizontalLine(this.posX + 1, this.posX + this.width - 2, this.posY + this.height - 2 - (row * 3), 0x7F0000FF);
+				this.gui.drawHorizontalLine(this.posX + 1, this.posX + this.width - 2, this.posY + this.height - 1 - (row * 3), 0x7F0000FF);
 			else
-				this.gui.drawHorizontalLine(this.posX + 1, this.posX + 7, this.posY + this.height - 2 - (row * 3), 0x7F0000FF);
+				this.gui.drawHorizontalLine(this.posX + 1, this.posX + 7, this.posY + this.height - 1 - (row * 3), 0x7F0000FF);
 		}
 	}
 
@@ -80,6 +85,7 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	
 	@Override
 	public void update() {
+		this.height = 78;
 		if(this.shouldSync) {
 			setFluidTankInfo(FluidUtils.getCachedFluidData(CJCore.MODID));
 			this.sync++;
@@ -91,12 +97,34 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	
 	@Override
 	public void addTooltip(List<String> tooltip) {
-		tooltip.add(FluidUtils.getFluidTankInfoToString(this.fluidTank));
+		if(this.fluidTank != null)
+			tooltip.add(FluidUtils.getFluidTankInfoToString(this.fluidTank));
 	}
 	
 	@Override
 	public void addOverlayText(List<String> text) {
-		text.add(FluidUtils.getFluidTankInfoToString(this.fluidTank));
+		if(this.fluidTank != null)
+			text.add(FluidUtils.getFluidTankInfoToString(this.fluidTank));
+	}
+	
+	public BlockPos getPos() {
+		return pos;
+	}
+	
+	public EnumFacing getSide() {
+		return side;
+	}
+	
+	public boolean shouldSync() {
+		return this.shouldSync;
+	}
+	
+	public FluidTankInfo getFluidTank() {
+		return fluidTank;
+	}
+	
+	public int getTankIndex() {
+		return tankIndex;
 	}
 
 }

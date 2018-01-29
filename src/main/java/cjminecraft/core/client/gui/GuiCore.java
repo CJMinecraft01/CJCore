@@ -437,7 +437,7 @@ public abstract class GuiCore extends GuiContainer {
 	 *            Green, B = Blue
 	 */
 	public void drawSizedRectWithBorder(int x1, int y1, int x2, int y2, int colour) {
-		this.drawBorder(x1, y1, y2 - y1, x2 - x1);
+		this.drawBorder(x1, y1, x2 - x1, y2 - y1);
 		this.drawSizedRect(x1 + 1, y1 + 1, x2 - 1, y2 - 1, colour);
 	}
 

@@ -184,6 +184,7 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	
 	@Override
 	public void addOverlayText(List<String> text) {
+		
 		if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
 			text.add(EnergyUtils.getEnergyAsString(this.energy, CJCoreConfig.DEFAULT_ENERGY_UNIT)
 					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
@@ -255,6 +256,10 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	@Nullable
 	public EnumFacing getSide() {
 		return this.side;
+	}
+	
+	public boolean shouldSync() {
+		return this.shouldSync;
 	}
 
 }

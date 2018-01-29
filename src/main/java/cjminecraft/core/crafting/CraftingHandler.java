@@ -29,6 +29,7 @@ public class CraftingHandler {
 
 		registerCraftingRecipe("multimeter_energy");
 		registerCraftingRecipe("multimeter_item");
+		registerCraftingRecipe("multimeter_fluid");
 	}
 	
 	private static void registerCraftingRecipe(String recipePath) {

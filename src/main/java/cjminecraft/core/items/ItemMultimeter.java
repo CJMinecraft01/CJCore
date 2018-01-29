@@ -1,18 +1,27 @@
 package cjminecraft.core.items;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.GuiOverlay;
+import cjminecraft.core.client.gui.ISpecialOverlayElement;
+import cjminecraft.core.client.gui.element.ElementBase;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
+import cjminecraft.core.client.gui.element.ElementFluidBar;
 import cjminecraft.core.client.gui.element.ElementItemSlot;
 import cjminecraft.core.client.gui.overlay.OverlayBase;
 import cjminecraft.core.client.gui.overlay.OverlayInventory;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUtils;
+import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.block.Block;
@@ -38,6 +47,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -68,15 +78,17 @@ public class ItemMultimeter extends Item {
 	 */
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if(isInCreativeTab(tab)) {
+		if (isInCreativeTab(tab)) {
 			items.add(new ItemStack(this, 1, 0));
 			items.add(new ItemStack(this, 1, 1));
+			items.add(new ItemStack(this, 1, 2));
 		}
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return this.getUnlocalizedName() + (stack.getItemDamage() == 0 ? ".energy" : ".item");
+		return this.getUnlocalizedName()
+				+ (stack.getItemDamage() == 0 ? ".energy" : stack.getItemDamage() == 1 ? ".item" : ".fluid");
 	}
 
 	/**
@@ -95,10 +107,13 @@ public class ItemMultimeter extends Item {
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX,
 			float hitY, float hitZ, EnumHand hand) {
-		if (player.isSneaking() && ((EnergyUtils.hasSupport(world.getTileEntity(pos), side)
-				&& player.getHeldItem(hand).getItemDamage() == 0)
-				|| (InventoryUtils.hasSupport(world.getTileEntity(pos), side)
-						&& player.getHeldItem(hand).getItemDamage() == 1))) {
+		if (player.isSneaking()
+				&& ((EnergyUtils.hasSupport(world.getTileEntity(pos), side)
+						&& player.getHeldItem(hand).getItemDamage() == 0)
+						|| (InventoryUtils.hasSupport(world.getTileEntity(pos), side)
+								&& player.getHeldItem(hand).getItemDamage() == 1))
+				|| (FluidUtils.hasSupport(world.getTileEntity(pos), side)
+						&& player.getHeldItem(hand).getItemDamage() == 2)) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setTag("BlockPos", NBTUtil.createPosTag(pos));
 			nbt.setString("Side", player.getAdjustedHorizontalFacing().getName2());
@@ -122,8 +137,8 @@ public class ItemMultimeter extends Item {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockPos")) {
 			BlockPos pos = NBTUtil.getPosFromTag(stack.getTagCompound().getCompoundTag("BlockPos"));
 			String blockName = world.getBlockState(pos).getBlock()
-					.getPickBlock(world.getBlockState(pos),
-							new RayTraceResult(Type.BLOCK, new Vec3d(pos), null, pos), world, pos, world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 8, false))
+					.getPickBlock(world.getBlockState(pos), new RayTraceResult(Type.BLOCK, new Vec3d(pos), null, pos),
+							world, pos, world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 8, false))
 					.getDisplayName();
 			tooltip.add(TextFormatting.GREEN
 					+ I18n.format("item.multimeter.tooltip.blockpos", blockName, pos.getX(), pos.getY(), pos.getZ()));
@@ -160,12 +175,20 @@ public class ItemMultimeter extends Item {
 			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_player_interface"));
 
 			OverlayBase itemOverlay = new OverlayInventory(this, CJCoreConfig.MULTIMETER_OFFSET_X,
-					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_ENERGY_HEIGHT - 20)
-							.setShowOverlayText(false);
+					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y).showOverlayText(false);
 			itemOverlay.addElement(new ElementItemSlot(this, 0, 0));
 			addOverlay(itemOverlay);
+
+			OverlayBase fluidOverlay = new OverlayBase(this, CJCoreConfig.MULTIMETER_OFFSET_X,
+					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - ElementFluidBar.DEFAULT_HEIGHT - 20)
+							.showOverlayText(false);
+			fluidOverlay.addElement(new ElementItemSlot(this, 0, ElementEnergyBar.DEFAULT_HEIGHT + 1));
+			fluidOverlay.setVisible(false);
+			addOverlay(fluidOverlay);
+			// TODO use config on the height
 			OverlayBase energyOverlay = new OverlayBase(this, CJCoreConfig.MULTIMETER_OFFSET_X,
-					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_ENERGY_HEIGHT - 20);
+					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_ENERGY_HEIGHT - 20)
+							.showOverlayText(false);
 			energyOverlay.addElement(new ElementEnergyBar(this, 0, 0, CJCoreConfig.MULTIMETER_ENERGY_WIDTH,
 					CJCoreConfig.MULTIMETER_ENERGY_HEIGHT));
 			energyOverlay.addElement(new ElementItemSlot(this, 0, CJCoreConfig.MULTIMETER_ENERGY_HEIGHT + 1));
@@ -177,14 +200,31 @@ public class ItemMultimeter extends Item {
 		protected void updateElementInformation() {
 			this.overlays.get(0).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
 					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - this.overlays.get(0).getHeight());
-			if (this.overlays.get(0).isVisible())
-				this.overlays.get(1).setPosition(this.overlays.get(0).getPosX() + this.overlays.get(0).getWidth() + 6,
-						this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - this.overlays.get(1).getHeight());
-			else
-				this.overlays.get(1).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
+			if (this.overlays.get(0).isVisible()) {
+				this.overlays.get(2).setPosition(this.overlays.get(0).getPosX() + this.overlays.get(0).getWidth() + 6,
 						this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_ENERGY_HEIGHT - 26);
+				if (this.overlays.get(2).isVisible())
+					this.overlays.get(1).setPosition(
+							this.overlays.get(2).getPosX() + this.overlays.get(2).getWidth() + 6,
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - ElementFluidBar.DEFAULT_HEIGHT - 26);
+				else
+					this.overlays.get(1).setPosition(
+							this.overlays.get(0).getPosX() + this.overlays.get(0).getWidth() + 6,
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - ElementFluidBar.DEFAULT_HEIGHT);
+			} else {
+				this.overlays.get(2).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
+						this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_ENERGY_HEIGHT - 26);
+				if (this.overlays.get(2).isVisible())
+					this.overlays.get(1).setPosition(
+							this.overlays.get(2).getPosX() + this.overlays.get(2).getWidth() + 6,
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - ElementFluidBar.DEFAULT_HEIGHT - 26);
+				else
+					this.overlays.get(1).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - ElementFluidBar.DEFAULT_HEIGHT - 26);
+			}
 			addInventoryOverlay();
 			addEnergyOverlay();
+			addFluidOverlay();
 		}
 
 		/**
@@ -194,27 +234,26 @@ public class ItemMultimeter extends Item {
 			ItemStack energyMultimeter = InventoryUtils.findInHotbar(new ItemStack(CJCoreItems.multimeter, 1, 0),
 					this.player, true, false);
 			if (energyMultimeter.isEmpty()) {
-				this.overlays.get(1).setEnabled(false);
+				this.overlays.get(2).setEnabled(false);
 				return;
 			}
 			if (blacklistBlocksEnergy.contains(
 					this.mc.world.getBlockState(this.mc.objectMouseOver.getBlockPos()).getBlock().getRegistryName())) {
-				this.overlays.get(1).setEnabled(false);
+				this.overlays.get(2).setEnabled(false);
 				return;
 			}
-			this.overlays.get(1).setEnabled(false);
-			ElementEnergyBar energyBar = (ElementEnergyBar) this.overlays.get(1).getElements().get(0);
-			ElementItemSlot itemSlot = (ElementItemSlot) this.overlays.get(1).getElements().get(1);
+			this.overlays.get(2).setEnabled(false);
+			ElementEnergyBar energyBar = (ElementEnergyBar) this.overlays.get(2).getElements().get(0);
+			ElementItemSlot itemSlot = (ElementItemSlot) this.overlays.get(2).getElements().get(1);
 
 			energyBar.setSize(CJCoreConfig.MULTIMETER_ENERGY_WIDTH, CJCoreConfig.MULTIMETER_ENERGY_HEIGHT);
 			itemSlot.setPosition(itemSlot.getPosX(), CJCoreConfig.MULTIMETER_ENERGY_HEIGHT + 1);
 
 			if (energyMultimeter.hasTagCompound() && energyMultimeter.getTagCompound().hasKey("BlockPos")) {
-				this.overlays.get(1).setEnabled(true);
-				this.overlays.get(1).setVisible(true);
+				this.overlays.get(2).setEnabled(true);
+				this.overlays.get(2).setVisible(true);
 				NBTTagCompound nbt = energyMultimeter.getTagCompound();
-				BlockPos pos = new BlockPos(nbt.getIntArray("BlockPos")[0], nbt.getIntArray("BlockPos")[1],
-						nbt.getIntArray("BlockPos")[2]);
+				BlockPos pos = NBTUtil.getPosFromTag(nbt.getCompoundTag("BlockPos"));
 				EnumFacing side = nbt.hasKey("Side") ? EnumFacing.byName(nbt.getString("Side")) : null;
 				if (energyBar.getPos() != pos || energyBar.getSide() != side)
 					energyBar.shouldSync(pos, side);
@@ -224,21 +263,21 @@ public class ItemMultimeter extends Item {
 			} else {
 				RayTraceResult result = this.mc.objectMouseOver;
 				if (EnergyUtils.hasSupport(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit)) {
-					this.overlays.get(1).setEnabled(true);
-					this.overlays.get(1).setVisible(true);
+					this.overlays.get(2).setEnabled(true);
+					this.overlays.get(2).setVisible(true);
 					if (energyBar.getPos() != result.getBlockPos())
 						energyBar.shouldSync(result.getBlockPos(), result.sideHit);
 					ItemStack block = getStackFromBlock(result.getBlockPos(), result.sideHit);
 					if (!InventoryUtils.isStackEqual(block, itemSlot.getStack(), true, false))
 						itemSlot.setStack(block);
 				} else {
-					this.overlays.get(1).setEnabled(false);
-					this.overlays.get(1).setVisible(false);
+					this.overlays.get(2).setEnabled(false);
+					this.overlays.get(2).setVisible(false);
 				}
 			}
 			if (EnergyUtils.hasSupport(this.player.getHeldItemMainhand(), null)) {
-				this.overlays.get(1).setEnabled(true);
-				this.overlays.get(1).setVisible(true);
+				this.overlays.get(2).setEnabled(true);
+				this.overlays.get(2).setVisible(true);
 				energyBar.shouldntSync();
 				energyBar.setEnergy(
 						EnergyUtils.getEnergyStored(this.player.getHeldItemMainhand(), null,
@@ -248,8 +287,8 @@ public class ItemMultimeter extends Item {
 						CJCoreConfig.DEFAULT_ENERGY_UNIT);
 				itemSlot.setStack(this.player.getHeldItemMainhand());
 			} else if (EnergyUtils.hasSupport(this.player.getHeldItemOffhand(), null)) {
-				this.overlays.get(1).setEnabled(true);
-				this.overlays.get(1).setVisible(true);
+				this.overlays.get(2).setEnabled(true);
+				this.overlays.get(2).setVisible(true);
 				energyBar.shouldntSync();
 				energyBar.setEnergy(
 						EnergyUtils.getEnergyStored(this.player.getHeldItemOffhand(), null,
@@ -279,8 +318,7 @@ public class ItemMultimeter extends Item {
 
 			if (itemMultimeter.hasTagCompound() && itemMultimeter.getTagCompound().hasKey("BlockPos")) {
 				NBTTagCompound nbt = itemMultimeter.getTagCompound();
-				BlockPos pos = new BlockPos(nbt.getIntArray("BlockPos")[0], nbt.getIntArray("BlockPos")[1],
-						nbt.getIntArray("BlockPos")[2]);
+				BlockPos pos = NBTUtil.getPosFromTag(nbt.getCompoundTag("BlockPos"));
 				EnumFacing side = nbt.hasKey("Side") ? EnumFacing.byName(nbt.getString("Side")) : null;
 				if (InventoryUtils.hasSupport(this.mc.world.getTileEntity(pos), side)) {
 					if (inv.getPos() != pos || inv.getSide() != side) {
@@ -312,6 +350,149 @@ public class ItemMultimeter extends Item {
 				inv.setInventory(InventoryUtils.getInventoryStacked(this.player.getHeldItemOffhand(), null));
 				itemSlot.setStack(this.player.getHeldItemOffhand());
 			}
+		}
+
+		private void addFluidOverlay() {
+			ItemStack fluidMultimeter = InventoryUtils.findInHotbar(new ItemStack(CJCoreItems.multimeter, 1, 2), player,
+					true, false);
+			if (fluidMultimeter.isEmpty()) {
+				this.overlays.get(1).setEnabled(false);
+				return;
+			}
+			this.overlays.get(1).setEnabled(false);
+			ElementItemSlot itemSlot = (ElementItemSlot) this.overlays.get(1).getElements().get(0);
+
+			itemSlot.setPosition(itemSlot.getPosX(), ElementFluidBar.DEFAULT_HEIGHT + 1);
+
+			// TODO Fix removal of the fluid bar on blocks
+			if (fluidMultimeter.hasTagCompound() && fluidMultimeter.getTagCompound().hasKey("BlockPos")) {
+				this.overlays.get(1).setEnabled(true);
+				this.overlays.get(1).setVisible(true);
+				NBTTagCompound nbt = fluidMultimeter.getTagCompound();
+				BlockPos pos = NBTUtil.getPosFromTag(nbt.getCompoundTag("BlockPos"));
+				EnumFacing side = nbt.hasKey("Side") ? EnumFacing.byName(nbt.getString("Side")) : null;
+				if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
+						.getNumberOfTanks(this.mc.world.getTileEntity(pos), side)
+						|| this.overlays.get(1).getElements().size() == 1) {
+					this.overlays.get(1).getElements().removeIf(element -> {
+						return element instanceof ElementFluidBar;
+					});
+					for (int i = 0; i < FluidUtils.getNumberOfTanks(this.mc.world.getTileEntity(pos), side); i++)
+						this.overlays.get(1)
+								.addElement(new ElementFluidBar(this, i * ElementFluidBar.DEFAULT_WIDTH, 0, i)
+										.shouldSync(pos, side));
+				} else {
+					for (int i = 0; i < FluidUtils.getNumberOfTanks(this.player.getHeldItemMainhand(), null); i++)
+						((ElementFluidBar) this.overlays.get(1).getElements().get(i + 1)).shouldSync(pos, side);
+				}
+				ItemStack block = getStackFromBlock(pos, side);
+				if (!InventoryUtils.isStackEqual(block, itemSlot.getStack(), true, false))
+					itemSlot.setStack(block);
+			} else {
+				RayTraceResult result = this.mc.objectMouseOver;
+				if (FluidUtils.hasSupport(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit)) {
+					this.overlays.get(1).setEnabled(true);
+					this.overlays.get(1).setVisible(true);
+					if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
+							.getNumberOfTanks(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit)
+							|| this.overlays.get(1).getElements().size() == 1) {
+						this.overlays.get(1).getElements().removeIf(element -> {
+							return element instanceof ElementFluidBar;
+						});
+						for (int i = 0; i < FluidUtils.getNumberOfTanks(this.player.getHeldItemMainhand(), null); i++)
+							this.overlays.get(1)
+									.addElement(new ElementFluidBar(this, i * ElementFluidBar.DEFAULT_WIDTH, 0, i)
+											.shouldSync(result.getBlockPos(), result.sideHit));
+					} else {
+						for (int i = 0; i < FluidUtils.getNumberOfTanks(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit); i++)
+							((ElementFluidBar) this.overlays.get(1).getElements().get(i + 1))
+									.shouldSync(result.getBlockPos(), result.sideHit);
+					}
+					ItemStack block = getStackFromBlock(result.getBlockPos(), result.sideHit);
+					if (!InventoryUtils.isStackEqual(block, itemSlot.getStack(), true, false))
+						itemSlot.setStack(block);
+				} else {
+					this.overlays.get(1).setEnabled(false);
+					this.overlays.get(1).setVisible(false);
+				}
+			}
+			if (FluidUtils.hasSupport(this.player.getHeldItemMainhand(), null)) {
+				this.overlays.get(1).setEnabled(true);
+				this.overlays.get(1).setVisible(true);
+				if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
+						.getNumberOfTanks(this.player.getHeldItemMainhand(), null)
+						|| this.overlays.get(1).getElements().size() == 1) {
+					this.overlays.get(1).getElements().removeIf(element -> {
+						return element instanceof ElementFluidBar;
+					});
+					for (int i = 0; i < FluidUtils.getNumberOfTanks(this.player.getHeldItemMainhand(), null); i++)
+						this.overlays.get(1)
+								.addElement(new ElementFluidBar(this, i * ElementFluidBar.DEFAULT_WIDTH, 0, i)
+										.setFluidTankInfo(new FluidTankInfo(
+												FluidUtils.getFluidStack(this.player.getHeldItemMainhand(), null, i),
+												FluidUtils.getCapacity(this.player.getHeldItemMainhand(), null, i))));
+				} else {
+					for (int i = 0; i < FluidUtils.getNumberOfTanks(this.player.getHeldItemMainhand(), null); i++)
+						((ElementFluidBar) this.overlays.get(1).getElements().get(i + 1)).setFluidTankInfo(
+								new FluidTankInfo(FluidUtils.getFluidStack(this.player.getHeldItemMainhand(), null, i),
+										FluidUtils.getCapacity(this.player.getHeldItemMainhand(), null, i)));
+				}
+				itemSlot.setStack(this.player.getHeldItemMainhand());
+			} else if (EnergyUtils.hasSupport(this.player.getHeldItemOffhand(), null)) {
+				this.overlays.get(1).setEnabled(true);
+				this.overlays.get(1).setVisible(true);
+				if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
+						.getNumberOfTanks(this.player.getHeldItemOffhand(), null)
+						|| this.overlays.get(1).getElements().size() == 1) {
+					this.overlays.get(1).getElements().removeIf(element -> {
+						return element instanceof ElementFluidBar;
+					});
+					for (int i = 0; i < FluidUtils.getNumberOfTanks(this.player.getHeldItemOffhand(), null); i++)
+						this.overlays.get(1)
+								.addElement(new ElementFluidBar(this, i * ElementFluidBar.DEFAULT_WIDTH, 0, i)
+										.setFluidTankInfo(new FluidTankInfo(
+												FluidUtils.getFluidStack(this.player.getHeldItemOffhand(), null, i),
+												FluidUtils.getCapacity(this.player.getHeldItemOffhand(), null, i))));
+				} else {
+					for (int i = 0; i < FluidUtils.getNumberOfTanks(this.player.getHeldItemOffhand(), null); i++)
+						((ElementFluidBar) this.overlays.get(1).getElements().get(i + 1)).setFluidTankInfo(
+								new FluidTankInfo(FluidUtils.getFluidStack(this.player.getHeldItemOffhand(), null, i),
+										FluidUtils.getCapacity(this.player.getHeldItemOffhand(), null, i)));
+				}
+				itemSlot.setStack(this.player.getHeldItemOffhand());
+			}
+		}
+
+		@Override
+		protected void drawForegroundLayer() {
+			super.drawForegroundLayer();
+			List<String> overlayText = new ArrayList<String>();
+			for (OverlayBase overlay : this.overlays) {
+				if (overlay.isEnabled() && overlay.isVisible()) {
+					for (ElementBase element : overlay.getElements()) {
+						if (element instanceof ISpecialOverlayElement && element.isVisible()) {
+							((ISpecialOverlayElement) element).drawSpecialLayer();
+							((ISpecialOverlayElement) element).addOverlayText(overlayText);
+						}
+					}
+				}
+			}
+			Set<String> overlayTextSet = Sets.<String>newHashSet(overlayText.toArray(new String[0]));
+			Iterator<String> iterator = overlayTextSet.iterator();
+			int index = 0;
+			while (iterator.hasNext()) {
+				this.fontRenderer.drawStringWithShadow(iterator.next(), getOverlayTextX(),
+						this.height - 7 - ((index + 1) * 10), 0xFFFFFF);
+				index++;
+			}
+		}
+
+		public int getOverlayTextX() {
+			int width = 0;
+			for (OverlayBase overlay : this.overlays)
+				if (overlay.isEnabled() && overlay.isVisible())
+					width = Math.max(width, overlay.getPosX() + overlay.getWidth());
+			return width;
 		}
 
 		/**

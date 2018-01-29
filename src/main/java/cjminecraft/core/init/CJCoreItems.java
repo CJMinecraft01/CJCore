@@ -38,9 +38,12 @@ public class CJCoreItems {
 	 * Register the render for the items
 	 */
 	public static void registerRenders() {
-		ModelBakery.registerItemVariants(multimeter, new ResourceLocation(CJCore.MODID, "multimeter_energy"), new ResourceLocation(CJCore.MODID, "multimeter_item"));
+		ModelBakery.registerItemVariants(multimeter, new ResourceLocation(CJCore.MODID, "multimeter_energy"),
+				new ResourceLocation(CJCore.MODID, "multimeter_item"),
+				new ResourceLocation(CJCore.MODID, "multimeter_fluid"));
 		registerRender(multimeter, 0, "multimeter_energy");
 		registerRender(multimeter, 1, "multimeter_item");
+		registerRender(multimeter, 2, "multimeter_fluid");
 	}
 
 	/**
