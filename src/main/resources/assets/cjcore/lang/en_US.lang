@@ -51,6 +51,10 @@ gui.config.multimeter.energy_width.name=Multimeter Energy Width
 gui.config.multimeter.energy_width.comment=The width of the Multimeter energy gui
 gui.config.multimeter.energy_height.name=Multimeter Energy Height
 gui.config.multimeter.energy_height.comment=The height of the Multimeter energy gui
+gui.config.multimeter.fluid_width.name=Multimeter Fluid Width
+gui.config.multimeter.fluid_width.comment=The width of the Multimeter fluid gui
+gui.config.multimeter.fluid_height.name=Multimeter Fluid Height
+gui.config.multimeter.fluid_height.comment=The height of the Multimeter fluid gui
 gui.config.multimeter.item_max_columns.name=Multimeter Item Max Columns
 gui.config.multimeter.item_max_columns.comment=The maximum amount of columns for the item multimeter
 
@@ -60,6 +64,7 @@ item.multimeter.fluid.name=Multimeter (Fluid)
 item.multimeter.tooltip.blockpos=Targeting block %s at %s %s %s
 item.multimeter.tooltip.energy=The multimeter allows users to see energy inside of any block without actually opening their gui! Sneak right click on a block to set the target block so the multimeter will only show the energy inside of that block. By right clicking air, the target block will reset
 item.multimeter.tooltip.item=The multimeter allows users to see the inventory inside of any block without actually opening their gui! Sneak right click on a block to set the target block so the multimeter will only show the inventory inside of that block. By right clicking air, the target block will reset
+item.multimeter.tooltip.fluid=The multimeter allows users to see the fluids inside of any block without actually opening their gui! Sneak right click on a block to set the target block so the multimeter will only show the fluids inside of that block. By right clicking air, the target block will reset
 
 update.ready=There is an update for %s available!
 update.version=Current Version: %s, newest Version: %s
