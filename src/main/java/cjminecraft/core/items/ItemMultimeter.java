@@ -352,6 +352,9 @@ public class ItemMultimeter extends Item {
 			}
 		}
 
+		/**
+		 * Handle the fluid overlay
+		 */
 		private void addFluidOverlay() {
 			ItemStack fluidMultimeter = InventoryUtils.findInHotbar(new ItemStack(CJCoreItems.multimeter, 1, 2), player,
 					true, false);
