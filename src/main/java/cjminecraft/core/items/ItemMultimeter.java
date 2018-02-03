@@ -158,7 +158,7 @@ public class ItemMultimeter extends Item {
 
 		/**
 		 * The blacklist of blocks which should not display the
-		 * {@link EnergyBarOverlay}
+		 * {@link ElementEnergyBar}
 		 */
 		public static List<ResourceLocation> blacklistBlocksEnergy = new ArrayList<ResourceLocation>();
 

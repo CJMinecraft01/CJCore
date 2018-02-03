@@ -45,7 +45,7 @@ minecraft {
     version = "1.12.2-14.23.1.2583"
     runDir = "run"
 	replace '${version}', project.version
-    mappings = "snapshot_20180103"
+    mappings = "snapshot_20180203"
 }
 
 repositories {

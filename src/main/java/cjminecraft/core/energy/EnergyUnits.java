@@ -9,6 +9,7 @@ import org.lwjgl.util.Color;
 import org.lwjgl.util.ReadableColor;
 
 import cjminecraft.core.CJCore;
+import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -61,7 +62,7 @@ public class EnergyUnits {
 		 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ
 		 *            4J = 1MJ 6EU = 1MJ
 		 * @param colour
-		 *            The colour of the {@link EnergyBar}
+		 *            The colour of the {@link ElementEnergyBar}
 		 */
 		private EnergyUnit(String unlocalizedName, double multiplier, int colour) {
 			this.unlocalizedName = unlocalizedName;
@@ -84,7 +85,7 @@ public class EnergyUnits {
 		 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ
 		 *            4J = 1MJ 6EU = 1MJ
 		 * @param colour
-		 *            The colour of the {@link EnergyBar}
+		 *            The colour of the {@link ElementEnergyBar}
 		 */
 		private EnergyUnit(String unlocalizedName, double multiplier, float[] colour) {
 			this.unlocalizedName = unlocalizedName;
@@ -167,7 +168,7 @@ public class EnergyUnits {
 	 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ 4J
 	 *            = 1MJ 6EU = 1MJ
 	 * @param colour
-	 *            The colour of the {@link EnergyBar}
+	 *            The colour of the {@link ElementEnergyBar}
 	 * @return The registered energy unit
 	 */
 	public static EnergyUnit createEnergyUnit(String unlocalizedName, double multiplier, int colour) {
@@ -197,7 +198,7 @@ public class EnergyUnits {
 	 *            {@link EnergyUnits#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ 4J
 	 *            = 1MJ 6EU = 1MJ
 	 * @param colour
-	 *            The colour of the {@link EnergyBar}
+	 *            The colour of the {@link ElementEnergyBar}
 	 * @return The registered energy unit
 	 */
 	public static EnergyUnit createEnergyUnit(String unlocalizedName, double multiplier, ReadableColor colour) {
