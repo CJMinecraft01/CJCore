@@ -379,7 +379,7 @@ public class OverlayBase {
 	 *            Whether the overlay text should be drawn
 	 * @return The updated overlay
 	 */
-	public OverlayBase setShowOverlayText(boolean showOverlayText) {
+	public OverlayBase showOverlayText(boolean showOverlayText) {
 		this.showOverlayText = showOverlayText;
 		return this;
 	}

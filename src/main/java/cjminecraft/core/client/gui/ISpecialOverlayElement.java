@@ -18,7 +18,7 @@ public interface ISpecialOverlayElement {
 	 * Drawn on top of the foreground layer, will be the last bit rendered for
 	 * this element
 	 */
-	void drawSpecialLayer();
+	default void drawSpecialLayer() {}
 
 	/**
 	 * Add overlay text which will be drawn on the side of the

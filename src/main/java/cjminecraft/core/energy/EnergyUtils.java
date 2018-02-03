@@ -427,6 +427,26 @@ public class EnergyUtils {
 	}
 
 	/**
+	 * Displays any energy and capacity in the same way a energy bar would
+	 * 
+	 * @param energy
+	 *            The energy in the {@link CJCoreConfig#DEFAULT_ENERGY_UNIT}
+	 * @param capacity
+	 *            The capacity in the {@link CJCoreConfig#DEFAULT_ENERGY_UNIT}
+	 * @return The formatted energy string
+	 */
+	public static String getFormattedEnergy(long energy, long capacity) {
+		if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY)
+			return EnergyUtils.getEnergyAsString(energy, CJCoreConfig.DEFAULT_ENERGY_UNIT)
+					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
+							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig.DEFAULT_ENERGY_UNIT) : "");
+		else
+			return NumberFormat.getInstance().format(energy) + " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
+					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(capacity) + " "
+							+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : "");
+	}
+
+	/**
 	 * Get the energy stored from the given {@link TileEntity}
 	 * 
 	 * @param te

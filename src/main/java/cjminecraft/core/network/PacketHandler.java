@@ -2,6 +2,7 @@ package cjminecraft.core.network;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.network.energy.*;
+import cjminecraft.core.network.fluid.*;
 import cjminecraft.core.network.inventory.*;
 import cjminecraft.core.proxy.CommonProxy;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -45,6 +46,7 @@ public class PacketHandler {
 		INSTANCE.registerMessage(PacketGetCapacity.Handler.class, PacketGetCapacity.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetEnergyData.Handler.class, PacketGetEnergyData.class, nextID(), Side.SERVER);
 		INSTANCE.registerMessage(PacketGetInventory.Handler.class, PacketGetInventory.class, nextID(), Side.SERVER);
+		INSTANCE.registerMessage(PacketGetFluidData.Handler.class, PacketGetFluidData.class, nextID(), Side.SERVER);
 
 		// Client Messages
 		INSTANCE.registerMessage(PacketReturnEnergy.Handler.class, PacketReturnEnergy.class, nextID(), Side.CLIENT);
@@ -52,6 +54,8 @@ public class PacketHandler {
 		INSTANCE.registerMessage(PacketReturnEnergyData.Handler.class, PacketReturnEnergyData.class, nextID(),
 				Side.CLIENT);
 		INSTANCE.registerMessage(PacketReturnInventory.Handler.class, PacketReturnInventory.class, nextID(),
+				Side.CLIENT);
+		INSTANCE.registerMessage(PacketReturnFluidData.Handler.class, PacketReturnFluidData.class, nextID(),
 				Side.CLIENT);
 	}
 

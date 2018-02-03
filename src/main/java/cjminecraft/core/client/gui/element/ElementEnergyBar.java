@@ -183,23 +183,8 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	}
 	
 	@Override
-	public void drawSpecialLayer() {
-		
-	}
-	
-	@Override
 	public void addOverlayText(List<String> text) {
-		if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
-			text.add(EnergyUtils.getEnergyAsString(this.energy, CJCoreConfig.DEFAULT_ENERGY_UNIT)
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
-							? " / " + EnergyUtils.getEnergyAsString(this.capacity, CJCoreConfig.DEFAULT_ENERGY_UNIT)
-							: ""));
-		} else {
-			text.add(NumberFormat.getInstance().format(this.energy) + " "
-					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(this.capacity)
-							+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
-		}
+		text.add(EnergyUtils.getFormattedEnergy(this.energy, this.capacity));
 	}
 
 	@Override
@@ -229,17 +214,7 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 
 	@Override
 	public void addTooltip(List<String> tooltip) {
-		if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
-			tooltip.add(EnergyUtils.getEnergyAsString(this.energy, CJCoreConfig.DEFAULT_ENERGY_UNIT)
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
-							? " / " + EnergyUtils.getEnergyAsString(this.capacity, CJCoreConfig.DEFAULT_ENERGY_UNIT)
-							: ""));
-		} else {
-			tooltip.add(NumberFormat.getInstance().format(this.energy) + " "
-					+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(this.capacity)
-							+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
-		}
+		tooltip.add(EnergyUtils.getFormattedEnergy(this.energy, this.capacity));
 		int percentageFull = (int) ((double) this.energy / (double) this.capacity * 100.0D);
 		tooltip.add((percentageFull > 50 ? TextFormatting.GREEN
 				: percentageFull <= 50 && percentageFull >= 15 ? TextFormatting.YELLOW : TextFormatting.RED)
@@ -260,6 +235,13 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	@Nullable
 	public EnumFacing getSide() {
 		return this.side;
+	}
+	
+	/**
+	 * @return whether the energy bar should be syncing with the server
+	 */
+	public boolean shouldSync() {
+		return this.shouldSync;
 	}
 
 }

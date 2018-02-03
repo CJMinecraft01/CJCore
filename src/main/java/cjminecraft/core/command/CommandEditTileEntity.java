@@ -9,10 +9,12 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
+import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
@@ -22,12 +24,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 
 /**
  * Allows the player to easily edit the energy inside of a {@link TileEntity}
@@ -84,11 +90,13 @@ public class CommandEditTileEntity extends CommandBase {
 			BlockPos targetPos) {
 		return args.length >= 0 && args.length < 4 ? getTabCompletionCoordinate(args, 0, targetPos)
 				: args.length > 3 && args.length < 5
-						? getListOfStringsMatchingLastWord(args, new String[] { "energy", "inventory" })
+						? getListOfStringsMatchingLastWord(args, new String[] { "energy", "inventory", "fluid" })
 						: args[3].equalsIgnoreCase("energy") ? getTabCompletionsEnergy(server, sender, args, targetPos)
 								: args[3].equalsIgnoreCase("inventory")
 										? getTabCompletionsInventory(server, sender, args, targetPos)
-										: Collections.<String>emptyList();
+										: args[3].equalsIgnoreCase("fluid")
+												? getTabCompletionsFluid(server, sender, args, targetPos)
+												: Collections.<String>emptyList();
 	}
 
 	/**
@@ -148,8 +156,35 @@ public class CommandEditTileEntity extends CommandBase {
 	}
 
 	/**
-	 * Returns which type of edit it is. TODO Implement inventory and fluid
-	 * editing
+	 * Get a list of options for when the user presses the TAB key for the fluid
+	 * option
+	 * 
+	 * @param server
+	 *            The server instance
+	 * @param sender
+	 *            The ICommandSender to get tab completions for
+	 * @param args
+	 *            Any arguments that were present when TAB was pressed
+	 * @param targetPos
+	 *            The block that the player's mouse is over, <tt>null</tt> if
+	 *            the mouse is not over a block
+	 * @return The tab completions for inventory
+	 */
+	public List<String> getTabCompletionsFluid(MinecraftServer server, ICommandSender sender, String[] args,
+			BlockPos targetPos) {
+		return args.length > 4 && args.length < 6
+				? getListOfStringsMatchingLastWord(args, new String[] { "get", "fill", "drain" })
+				: args[4].equalsIgnoreCase("get") && args.length > 5 && args.length < 7
+						? getListOfStringsMatchingLastWord(args, faces)
+						: args.length > 7 && args.length < 9 ? getListOfStringsMatchingLastWord(args, faces)
+								: args.length > 5 && args.length < 7
+										? getListOfStringsMatchingLastWord(args,
+												FluidRegistry.getRegisteredFluids().keySet())
+										: Collections.<String>emptyList();
+	}
+
+	/**
+	 * Returns which type of edit it is editing
 	 * 
 	 * @param arg
 	 *            The argument to check
@@ -175,8 +210,8 @@ public class CommandEditTileEntity extends CommandBase {
 		int editType = getEditType(args[3]);
 		if (args.length > 5 && args[4].equalsIgnoreCase("get"))
 			side = EnumFacing.byName(args[5]);
-		if (args.length > 7 && !args[4].equalsIgnoreCase("get"))
-			side = EnumFacing.byName(args[7]);
+		if (!args[4].equalsIgnoreCase("get"))
+			side = EnumFacing.byName(args[args.length - 1]);
 		if (editType == 0)
 			throw new CommandException("command.tileentity.usage");
 		// Energy commands
@@ -184,7 +219,10 @@ public class CommandEditTileEntity extends CommandBase {
 			handleEnergyCommands(te, side, pos, args, sender);
 		// Inventory Commands
 		else if (editType == 2)
-			handleInventoryCommands(te, side, args, sender);
+			handleInventoryCommands(te, side, pos, args, sender);
+		// Fluid Commands
+		else if (editType == 3)
+			handleFluidCommands(te, side, pos, args, sender);
 	}
 
 	/**
@@ -257,7 +295,9 @@ public class CommandEditTileEntity extends CommandBase {
 	 *            The {@link TileEntity} at the position provided
 	 * @param side
 	 *            The side of the {@link TileEntity} for use with
-	 *            {@link Capability}
+	 *            {@link Capability} * @param pos The position of the block
+	 * @param pos
+	 *            The position of the block
 	 * @param sender
 	 *            The sender who executed the command
 	 * @param args
@@ -265,8 +305,10 @@ public class CommandEditTileEntity extends CommandBase {
 	 * @throws CommandException
 	 *             Allow commands to go wrong
 	 */
-	public void handleInventoryCommands(TileEntity te, EnumFacing side, String[] args, ICommandSender sender)
-			throws CommandException {
+	public void handleInventoryCommands(TileEntity te, EnumFacing side, BlockPos pos, String[] args,
+			ICommandSender sender) throws CommandException {
+		if (!InventoryUtils.hasSupport(te, side))
+			throw new CommandException("command.tileentity.nosupport", pos.getX(), pos.getY(), pos.getZ());
 		if (args[4].equalsIgnoreCase("get")) {
 			ImmutableList<ItemStack> inv = InventoryUtils.getInventoryStacked(te, side);
 			for (ItemStack stack : inv)
@@ -274,8 +316,8 @@ public class CommandEditTileEntity extends CommandBase {
 					sender.sendMessage(new TextComponentString(InventoryUtils.stackToString(stack)));
 			return;
 		}
-		if(args.length <= 5)
-			 throw new CommandException(I18n.format("command.tileentity.usage"));
+		if (args.length <= 5)
+			throw new CommandException(I18n.format("command.tileentity.usage"));
 		if (args[4].equalsIgnoreCase("insert")) {
 			Item item = getItemByText(sender, args[5]);
 			int amount = args.length >= 7 ? parseInt(args[6]) : 1;
@@ -305,6 +347,86 @@ public class CommandEditTileEntity extends CommandBase {
 				}
 			}
 			InventoryUtils.extractStackFromInventory(te, stack, false, side);
+		}
+	}
+
+	/**
+	 * Handle all of the fluid commands Callback for when the command is
+	 * executed
+	 * 
+	 * @param te
+	 *            The {@link TileEntity} at the position provided
+	 * @param side
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param pos
+	 *            The position of the block
+	 * @param sender
+	 *            The sender who executed the command
+	 * @param args
+	 *            The arguments that were passed
+	 * @throws CommandException
+	 *             Allow commands to go wrong
+	 */
+	public void handleFluidCommands(TileEntity te, EnumFacing side, BlockPos pos, String[] args, ICommandSender sender)
+			throws CommandException {
+		if (!FluidUtils.hasSupport(te, side))
+			throw new CommandException("command.tileentity.nosupport", pos.getX(), pos.getY(), pos.getZ());
+		if (args[4].equalsIgnoreCase("get")) {
+			for (int i = 0; i < FluidUtils.getNumberOfTanks(te, side); i++) {
+				FluidTankInfo info = new FluidTankInfo(FluidUtils.getFluidStack(te, side, i),
+						FluidUtils.getCapacity(te, side, i));
+				sender.sendMessage(new TextComponentString(FluidUtils.getFluidTankInfoToString(info)));
+			}
+			return;
+		}
+		if (args.length <= 5)
+			throw new CommandException(I18n.format("command.tileentity.usage"));
+		if (args[4].equalsIgnoreCase("fill")) {
+			if (args.length > 6) {
+				NBTTagCompound nbt = new NBTTagCompound();
+				if (FluidRegistry.getRegisteredFluids().containsKey(args[5]))
+					nbt.setString("FluidName", args[5]);
+				else
+					throw new CommandException(I18n.format("command.tileentity.invalidFluid"));
+				nbt.setInteger("Amount", parseInt(args[6]));
+				if (args.length > 7) {
+					if (args[6].startsWith("{")) {
+						try {
+							nbt.setTag("Tag", JsonToNBT.getTagFromJson(args[7]));
+						} catch (NBTException e) {
+							throw new CommandException("commands.give.tagError", new Object[] { e.getMessage() });
+						}
+					}
+				}
+				FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt);
+				FluidUtils.fill(te, side, stack, false);
+			} else
+				throw new CommandException(I18n.format("command.tileentity.usage"));
+		}
+		if (args[4].equalsIgnoreCase("drain")) {
+			if (args.length > 6) {
+				NBTTagCompound nbt = new NBTTagCompound();
+				if (FluidRegistry.getRegisteredFluids().containsKey(args[5]))
+					nbt.setString("FluidName", args[5]);
+				else
+					throw new CommandException(I18n.format("command.tileentity.invalidFluid"));
+				nbt.setInteger("Amount", parseInt(args[6]));
+				if (args.length > 8) {
+					if (args[6].startsWith("{")) {
+						try {
+							nbt.setTag("Tag", JsonToNBT.getTagFromJson(args[7]));
+						} catch (NBTException e) {
+							throw new CommandException("commands.give.tagError", new Object[] { e.getMessage() });
+						}
+					}
+				}
+				FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt);
+				FluidUtils.drain(te, side, stack, false);
+			} else if (args.length > 5) {
+				FluidUtils.drain(te, side, parseInt(args[5]), false);
+			} else
+				throw new CommandException(I18n.format("command.tileentity.usage"));
 		}
 	}
 
