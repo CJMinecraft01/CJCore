@@ -206,21 +206,21 @@ public class ItemMultimeter extends Item {
 				if (this.overlays.get(2).isVisible())
 					this.overlays.get(1).setPosition(
 							this.overlays.get(2).getPosX() + this.overlays.get(2).getWidth() + 6,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 31);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
 				else
 					this.overlays.get(1).setPosition(
 							this.overlays.get(0).getPosX() + this.overlays.get(0).getWidth() + 6,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 31);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
 			} else {
 				this.overlays.get(2).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
 						this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_ENERGY_HEIGHT - 27);
 				if (this.overlays.get(2).isVisible())
 					this.overlays.get(1).setPosition(
 							this.overlays.get(2).getPosX() + this.overlays.get(2).getWidth() + 6,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 31);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
 				else
 					this.overlays.get(1).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 31);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
 			}
 			addInventoryOverlay();
 			addEnergyOverlay();

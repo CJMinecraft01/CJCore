@@ -237,6 +237,9 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 		return this.side;
 	}
 	
+	/**
+	 * @return whether the energy bar should be syncing with the server
+	 */
 	public boolean shouldSync() {
 		return this.shouldSync;
 	}

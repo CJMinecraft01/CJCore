@@ -6,6 +6,7 @@ import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.fluid.*;
@@ -521,13 +522,14 @@ public class FluidUtils {
 	 * @param simulate
 	 *            Whether it is a simulation (if so, no fluid will actually be
 	 *            given)
-	 * @return the left over (or would have been left over) fluid amount
+	 * @return the left over (or would have been left over) fluid
 	 */
-	public static int fill(@Nullable TileEntity te, @Nullable EnumFacing from, @Nonnull FluidStack resource,
+	@Nullable
+	public static int fill(@Nullable TileEntity te, @Nullable EnumFacing from, @Nullable FluidStack resource,
 			boolean simulate) {
-		if (te == null)
+		if (te == null || resource == null)
 			return 0;
-		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).fill(resource, simulate);
+		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).fill(resource, !simulate);
 	}
 
 	/**
@@ -546,11 +548,11 @@ public class FluidUtils {
 	 *            given)
 	 * @return the left over (or would have been left over) fluid amount
 	 */
-	public static int fill(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull FluidStack resource,
+	public static int fill(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nullable FluidStack resource,
 			boolean simulate) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack.isEmpty() || resource == null)
 			return 0;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).fill(resource, simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).fill(resource, !simulate);
 	}
 
 	/**
@@ -570,11 +572,11 @@ public class FluidUtils {
 	 * @return The {@link FluidStack} which was (or would have been) drained
 	 */
 	@Nullable
-	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing from, @Nonnull FluidStack resource,
+	public static FluidStack drain(@Nullable TileEntity te, @Nullable EnumFacing from, @Nullable FluidStack resource,
 			boolean simulate) {
-		if (te == null)
+		if (te == null || resource == null)
 			return null;
-		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(resource, simulate);
+		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(resource, !simulate);
 	}
 
 	/**
@@ -594,11 +596,11 @@ public class FluidUtils {
 	 * @return The {@link FluidStack} which was (or would have been) drained
 	 */
 	@Nullable
-	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull FluidStack resource,
+	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nullable FluidStack resource,
 			boolean simulate) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack.isEmpty() || resource == null)
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(resource, simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(resource, !simulate);
 	}
 
 	/**
@@ -622,7 +624,7 @@ public class FluidUtils {
 			boolean simulate) {
 		if (te == null)
 			return null;
-		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(maxDrain, simulate);
+		return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(maxDrain, !simulate);
 	}
 
 	/**
@@ -646,7 +648,7 @@ public class FluidUtils {
 			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(maxDrain, simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(maxDrain, !simulate);
 	}
 
 	/**

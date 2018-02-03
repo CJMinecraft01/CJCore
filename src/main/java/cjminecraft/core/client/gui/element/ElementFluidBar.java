@@ -23,7 +23,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 public class ElementFluidBar extends ElementBase implements ISpecialOverlayElement {
 
 	public static final int DEFAULT_WIDTH = 18;
-	public static final int DEFAULT_HEIGHT = 80;
+	public static final int DEFAULT_HEIGHT = 83;
 
 	protected int tankIndex;
 	protected FluidTankInfo fluidTank;

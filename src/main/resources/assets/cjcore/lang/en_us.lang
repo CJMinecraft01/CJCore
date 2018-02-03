@@ -80,8 +80,9 @@ update.version=Current Version: %s, newest Version: %s
 update.download=Click To Download
 update.changelog=Hover to show change log
 
-command.tileentity.usage=/tileenitty <x> <y> <z> <energy:inventory> get [side] or /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side] or /tileenitty <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side]
+command.tileentity.usage=/tileenitty <x> <y> <z> <energy:inventory:fluid> get [side] or /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side] or /tileenitty <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] or /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] or /tileentity <x> <y> <z> fluid drain <amount> [side]
 command.tileentity.nosupport=There is no support for the tile entity at position %s %s %s
 command.tileentity.notake=This tile entity does not allow energy to be taken
 command.tileentity.nogive=This tile entity does not allow energy to be given
 command.tileentity.noset=This tile entity does not allow energy to be set
+command.tileentity.invalidFluid=This fluid does not exist!
