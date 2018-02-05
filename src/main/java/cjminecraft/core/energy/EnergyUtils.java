@@ -106,7 +106,7 @@ public class EnergyUtils {
 			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
 			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
 		}
-		if (Loader.isModLoaded("ic2")) {
+		if (INDUSTRAIL_CRAFT_LOADED) {
 			CJCore.logger.info("Adding Industrial Craft 2 Support!");
 			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
 			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());

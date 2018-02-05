@@ -372,9 +372,8 @@ public class ItemMultimeter extends Item {
 				NBTTagCompound nbt = fluidMultimeter.getTagCompound();
 				BlockPos pos = NBTUtil.getPosFromTag(nbt.getCompoundTag("BlockPos"));
 				EnumFacing side = nbt.hasKey("Side") ? EnumFacing.byName(nbt.getString("Side")) : null;
-				if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
-						.getNumberOfTanks(this.mc.world.getTileEntity(pos), side)
-						|| this.overlays.get(1).getElements().size() == 1) {
+				if (this.overlays.get(1).getElements().size() - 1 != FluidUtils
+						.getNumberOfTanks(this.mc.world.getTileEntity(pos), side)) {
 					this.overlays.get(1).getElements().removeIf(element -> {
 						return element instanceof ElementFluidBar;
 					});
@@ -396,9 +395,8 @@ public class ItemMultimeter extends Item {
 				if (FluidUtils.hasSupport(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit)) {
 					this.overlays.get(1).setEnabled(true);
 					this.overlays.get(1).setVisible(true);
-					if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
-							.getNumberOfTanks(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit)
-							|| this.overlays.get(1).getElements().size() == 1) {
+					if (this.overlays.get(1).getElements().size() - 1 != FluidUtils
+							.getNumberOfTanks(this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit)) {
 						this.overlays.get(1).getElements().removeIf(element -> {
 							return element instanceof ElementFluidBar;
 						});
@@ -428,9 +426,8 @@ public class ItemMultimeter extends Item {
 			if (FluidUtils.hasSupport(this.player.getHeldItemMainhand(), null)) {
 				this.overlays.get(1).setEnabled(true);
 				this.overlays.get(1).setVisible(true);
-				if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
-						.getNumberOfTanks(this.player.getHeldItemMainhand(), null)
-						|| this.overlays.get(1).getElements().size() == 1) {
+				if (this.overlays.get(1).getElements().size() - 1 != FluidUtils
+						.getNumberOfTanks(this.player.getHeldItemMainhand(), null)) {
 					this.overlays.get(1).getElements().removeIf(element -> {
 						return element instanceof ElementFluidBar;
 					});
@@ -451,12 +448,11 @@ public class ItemMultimeter extends Item {
 								.setSize(CJCoreConfig.MULTIMETER_ENERGY_WIDTH, CJCoreConfig.MULTIMETER_ENERGY_HEIGHT);
 				}
 				itemSlot.setStack(this.player.getHeldItemMainhand());
-			} else if (EnergyUtils.hasSupport(this.player.getHeldItemOffhand(), null)) {
+			} else if (FluidUtils.hasSupport(this.player.getHeldItemOffhand(), null)) {
 				this.overlays.get(1).setEnabled(true);
 				this.overlays.get(1).setVisible(true);
-				if (this.overlays.get(1).getElements().size() - 1 > FluidUtils
-						.getNumberOfTanks(this.player.getHeldItemOffhand(), null)
-						|| this.overlays.get(1).getElements().size() == 1) {
+				if (this.overlays.get(1).getElements().size() - 1 != FluidUtils
+						.getNumberOfTanks(this.player.getHeldItemOffhand(), null)) {
 					this.overlays.get(1).getElements().removeIf(element -> {
 						return element instanceof ElementFluidBar;
 					});
