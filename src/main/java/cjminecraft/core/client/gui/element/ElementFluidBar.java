@@ -162,11 +162,11 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	public void update() {
 		this.height = 78;
 		if (this.shouldSync) {
-			setFluidTankInfo(FluidUtils.getCachedFluidData(CJCore.MODID));
+			setFluidTankInfo(FluidUtils.getCachedFluidData(CJCore.MODID, this.getClass().getName() + this.tankIndex));
 			this.sync++;
 			this.sync %= 10;
 			if (this.sync == 0)
-				FluidUtils.syncFluidData(this.tankIndex, this.pos, this.side, CJCore.MODID);
+				FluidUtils.syncFluidData(this.tankIndex, this.pos, this.side, CJCore.MODID, this.getClass().getName() + this.tankIndex);
 		}
 	}
 

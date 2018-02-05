@@ -88,7 +88,7 @@ public class EnergyUtils {
 			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
 			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
 		}
-		if (Loader.isModLoaded("ic2")) {
+		if (INDUSTRAIL_CRAFT_LOADED) {
 			CJCore.logger.info("Adding Industrial Craft 2 Support!");
 			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
 			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());
