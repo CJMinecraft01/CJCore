@@ -1,8 +1,8 @@
 {
 	"name": "CJCore",
-	"version": "0.0.3.0",
+	"version": "0.0.3.1",
 	"changelog": [
-		"+Added fluid multimeter",  "+Added fluid support", "+Added more configuration options", "+Added fluid bar gui element"
+		"=Fixed a major bug with the fluid multimeter"
 	],
 	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
 }
