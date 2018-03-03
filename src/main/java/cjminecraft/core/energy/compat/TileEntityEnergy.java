@@ -25,7 +25,8 @@ import net.minecraftforge.fml.common.Optional;
 @Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.energy.tile.IEnergyTile", modid = "ic2") })
 public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 
-	protected CustomForgeEnergyStorage storage;
+	protected EnergyStorage storage;
+	private Object forgeWrapper;
 
 	/**
 	 * Create an energy storage
@@ -33,7 +34,7 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 	 * @param capacity
 	 *            The capacity of the energy storage
 	 */
-	public TileEntityEnergy(int capacity) {
+	public TileEntityEnergy(long capacity) {
 		this(capacity, capacity, capacity, 0);
 	}
 
@@ -45,7 +46,7 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 	 * @param maxTransfer
 	 *            The max receive and max extract of the energy storage
 	 */
-	public TileEntityEnergy(int capacity, int maxTransfer) {
+	public TileEntityEnergy(long capacity, long maxTransfer) {
 		this(capacity, maxTransfer, maxTransfer, 0);
 	}
 
@@ -59,7 +60,7 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 	 * @param maxExtract
 	 *            The maximum amount of energy which can be extracted
 	 */
-	public TileEntityEnergy(int capacity, int maxReceive, int maxExtract) {
+	public TileEntityEnergy(long capacity, long maxReceive, long maxExtract) {
 		this(capacity, maxReceive, maxExtract, 0);
 	}
 
@@ -75,8 +76,8 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 	 * @param energy
 	 *            The energy inside of the energy storage
 	 */
-	public TileEntityEnergy(int capacity, int maxReceive, int maxExtract, int energy) {
-		this.storage = new CustomForgeEnergyStorage(capacity, maxReceive, maxExtract, energy);
+	public TileEntityEnergy(long capacity, long maxReceive, long maxExtract, long energy) {
+		this.storage = new EnergyStorage(capacity, maxReceive, maxExtract, energy);
 	}
 
 	@Override
@@ -100,8 +101,11 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY)
-			return (T) this.storage;
+		if (capability == CapabilityEnergy.ENERGY) {
+			if(this.forgeWrapper == null)
+				this.forgeWrapper = new ForgeEnergyWrapper(this.storage);
+			return (T) this.forgeWrapper;
+		}
 		return super.getCapability(capability, facing);
 	}
 	

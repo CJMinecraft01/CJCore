@@ -13,7 +13,7 @@ import net.darkhax.tesla.api.ITeslaProducer;
  */
 class TeslaWrapper implements ITeslaHolder, ITeslaConsumer, ITeslaProducer {
 
-	private CustomForgeEnergyStorage storage;
+	private EnergyStorage storage;
 
 	/**
 	 * Initialise a new tesla wrapper which makes the energy storage compatible
@@ -22,18 +22,18 @@ class TeslaWrapper implements ITeslaHolder, ITeslaConsumer, ITeslaProducer {
 	 * @param storage
 	 *            The actual energy storage
 	 */
-	public TeslaWrapper(CustomForgeEnergyStorage storage) {
+	public TeslaWrapper(EnergyStorage storage) {
 		this.storage = storage;
 	}
 
 	@Override
 	public long takePower(long power, boolean simulated) {
-		return this.storage.extractEnergy((int) power, simulated);
+		return this.storage.extractEnergy(power, simulated);
 	}
 
 	@Override
 	public long givePower(long power, boolean simulated) {
-		return this.storage.receiveEnergy((int) power, simulated);
+		return this.storage.receiveEnergy(power, simulated);
 	}
 
 	@Override

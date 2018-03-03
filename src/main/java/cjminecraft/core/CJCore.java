@@ -139,9 +139,7 @@ public class CJCore {
 
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
-		ICommandManager command = event.getServer().getCommandManager();
-		ServerCommandManager manager = (ServerCommandManager) command;
-		manager.registerCommand(new CommandEditTileEntity());
+		event.registerServerCommand(new CommandEditTileEntity());
 	}
 
 	@EventHandler

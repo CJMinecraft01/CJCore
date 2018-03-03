@@ -71,10 +71,19 @@ public class EnergyUtils {
 	 * Should not be called outside of {@link CJCore}
 	 */
 	public static void preInit() {
-		CJCore.logger.info("Adding Forge Energy Support!");
-		addEnergyHolderSupport(new ForgeEnergySupport.ForgeEnergyHolder());
-		addEnergyConsumerSupport(new ForgeEnergySupport.ForgeEnergyConsumer());
-		addEnergyProducerSupport(new ForgeEnergySupport.ForgeEnergyProducer());
+		if (TESLA_LOADED) {
+			CJCore.logger.info("Adding Tesla Support!");
+			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());
+			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
+			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
+		}
+
+		if (INDUSTRAIL_CRAFT_LOADED) {
+			CJCore.logger.info("Adding Industrial Craft 2 Support!");
+			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
+			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());
+			addEnergyProducerSupport(new IndustrialCraftSupport.IndustrialCraftSourceSupport());
+		}
 
 		if (REDSTONE_FLUX_API_LOADED) {
 			CJCore.logger.info("Adding CoFH Support!");
@@ -82,18 +91,11 @@ public class EnergyUtils {
 			addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
 			addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
 		}
-		if (TESLA_LOADED) {
-			CJCore.logger.info("Adding Tesla Support!");
-			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());
-			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
-			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
-		}
-		if (INDUSTRAIL_CRAFT_LOADED) {
-			CJCore.logger.info("Adding Industrial Craft 2 Support!");
-			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
-			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());
-			addEnergyProducerSupport(new IndustrialCraftSupport.IndustrialCraftSourceSupport());
-		}
+
+		CJCore.logger.info("Adding Forge Energy Support!");
+		addEnergyHolderSupport(new ForgeEnergySupport.ForgeEnergyHolder());
+		addEnergyConsumerSupport(new ForgeEnergySupport.ForgeEnergyConsumer());
+		addEnergyProducerSupport(new ForgeEnergySupport.ForgeEnergyProducer());
 	}
 
 	/**
@@ -1001,8 +1003,36 @@ public class EnergyUtils {
 	 *            actually be taken
 	 * @return The amount of energy taken in the {@link EnergyUnit} provided
 	 */
+	@Deprecated
 	public static long takeEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, @Nonnull EnergyUnit unit,
 			boolean simulate) {
+		return takeEnergyAllFaces(world, pos, energy, unit, simulate, true);
+	}
+
+	/**
+	 * Takes energy from all connecting energy handlers surrounding the target
+	 * block
+	 * 
+	 * @param world
+	 *            The world to get the {@link TileEntity} from
+	 * @param pos
+	 *            The center position
+	 * @param energy
+	 *            The energy to take altogether. Will be distributed evenly
+	 *            between the {@link TileEntity}s. Needs to be in the
+	 *            {@link EnergyUnit} provided
+	 * @param unit
+	 *            The unit the energy taken will be returned in
+	 * @param simulate
+	 *            Whether it is a simulation or not. If so, the energy won't
+	 *            actually be taken
+	 * @param share
+	 *            Whether to take the energy from every face or to share the
+	 *            amount of energy to take
+	 * @return The amount of energy taken in the {@link EnergyUnit} provided
+	 */
+	public static long takeEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, @Nonnull EnergyUnit unit,
+			boolean simulate, boolean share) {
 		HashMap<EnumFacing, TileEntity> tiles = new HashMap<EnumFacing, TileEntity>();
 		for (EnumFacing side : EnumFacing.VALUES) {
 			TileEntity te = world.getTileEntity(pos.offset(side));
@@ -1013,22 +1043,34 @@ public class EnergyUtils {
 		}
 		if (tiles.size() <= 0)
 			return 0;
-		long energyPerSide = energy / tiles.size();
-		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
-		long energyTaken = 0;
-		long extraEnergy = 0;
-		while (tilesIterator.hasNext()) {
-			Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
-			EnumFacing side = entry.getKey();
-			TileEntity te = entry.getValue();
-			long et = takeEnergy(te, energyPerSide + extraEnergy, unit, simulate, side);
-			energyTaken += et;
-			if (et < energyPerSide)
-				extraEnergy = energyPerSide - et;
-			else
-				extraEnergy = 0;
+		if (share) {
+			long energyPerSide = energy / tiles.size();
+			Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
+			long energyTaken = 0;
+			long extraEnergy = 0;
+			while (tilesIterator.hasNext()) {
+				Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
+				EnumFacing side = entry.getKey();
+				TileEntity te = entry.getValue();
+				long et = takeEnergy(te, energyPerSide + extraEnergy, unit, simulate, side);
+				energyTaken += et;
+				if (et < energyPerSide)
+					extraEnergy = energyPerSide - et;
+				else
+					extraEnergy = 0;
+			}
+			return energyTaken;
+		} else {
+			Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
+			long energyTaken = 0;
+			while (tilesIterator.hasNext()) {
+				Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
+				EnumFacing side = entry.getKey();
+				TileEntity te = entry.getValue();
+				energyTaken += takeEnergy(te, energy, unit, simulate, side);
+			}
+			return energyTaken;
 		}
-		return energyTaken;
 	}
 
 	/**
@@ -1050,8 +1092,36 @@ public class EnergyUtils {
 	 *            actually be given
 	 * @return The amount of energy given in the {@link EnergyUnit} provided
 	 */
+	@Deprecated
 	public static long giveEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, @Nonnull EnergyUnit unit,
 			boolean simulate) {
+		return giveEnergyAllFaces(world, pos, energy, unit, simulate, true);
+	}
+
+	/**
+	 * Gives energy to all connecting energy handlers surrounding the target
+	 * block
+	 * 
+	 * @param world
+	 *            The world to get the {@link TileEntity} from
+	 * @param pos
+	 *            The center position
+	 * @param energy
+	 *            The energy to give altogether. Will be distributed evenly
+	 *            between the {@link TileEntity}s. Needs to be in the
+	 *            {@link EnergyUnit} provided
+	 * @param unit
+	 *            The {@link EnergyUnit} the energy given will be returned in
+	 * @param simulate
+	 *            Whether it is a simulation or not. If so, the energy won't
+	 *            actually be given
+	 * @param share
+	 *            Whether to give energy to every side or to share the energy to
+	 *            give
+	 * @return The amount of energy given in the {@link EnergyUnit} provided
+	 */
+	public static long giveEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, @Nonnull EnergyUnit unit,
+			boolean simulate, boolean share) {
 		HashMap<EnumFacing, TileEntity> tiles = new HashMap<EnumFacing, TileEntity>();
 		for (EnumFacing side : EnumFacing.VALUES) {
 			TileEntity te = world.getTileEntity(pos.offset(side));
@@ -1062,22 +1132,34 @@ public class EnergyUtils {
 		}
 		if (tiles.size() <= 0)
 			return 0;
-		long energyPerSide = energy / tiles.size();
-		Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
-		long energyGiven = 0;
-		long extraEnergy = 0;
-		while (tilesIterator.hasNext()) {
-			Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
-			EnumFacing side = entry.getKey();
-			TileEntity te = entry.getValue();
-			long eg = giveEnergy(te, energyPerSide + extraEnergy, unit, simulate, side);
-			energyGiven += eg;
-			if (eg < energyPerSide)
-				extraEnergy = energyPerSide - eg;
-			else
-				extraEnergy = 0;
+		if (share) {
+			long energyPerSide = energy / tiles.size();
+			Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
+			long energyGiven = 0;
+			long extraEnergy = 0;
+			while (tilesIterator.hasNext()) {
+				Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
+				EnumFacing side = entry.getKey();
+				TileEntity te = entry.getValue();
+				long eg = giveEnergy(te, energyPerSide + extraEnergy, unit, simulate, side);
+				energyGiven += eg;
+				if (eg < energyPerSide)
+					extraEnergy = energyPerSide - eg;
+				else
+					extraEnergy = 0;
+			}
+			return energyGiven;
+		} else {
+			Iterator<Entry<EnumFacing, TileEntity>> tilesIterator = tiles.entrySet().iterator();
+			long energyGiven = 0;
+			while (tilesIterator.hasNext()) {
+				Entry<EnumFacing, TileEntity> entry = tilesIterator.next();
+				EnumFacing side = entry.getKey();
+				TileEntity te = entry.getValue();
+				energyGiven += giveEnergy(te, energy, unit, simulate, side);
+			}
+			return energyGiven;
 		}
-		return energyGiven;
 	}
 
 	/**

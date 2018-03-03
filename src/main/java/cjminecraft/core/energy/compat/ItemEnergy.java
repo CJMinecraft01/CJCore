@@ -20,41 +20,41 @@ import net.minecraftforge.fml.common.Optional;
 		@Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux") })
 public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerItem {
 
-	protected int capacity;
-	protected int maxReceive;
-	protected int maxExtract;
+	protected long capacity;
+	protected long maxReceive;
+	protected long maxExtract;
 
-	public ItemEnergy(int capacity) {
+	public ItemEnergy(long capacity) {
 		this(capacity, capacity, capacity);
 	}
 
-	public ItemEnergy(int capacity, int maxTransfer) {
+	public ItemEnergy(long capacity, long maxTransfer) {
 		this(capacity, maxTransfer, maxTransfer);
 	}
 
-	public ItemEnergy(int capacity, int maxReceive, int maxExtract) {
+	public ItemEnergy(long capacity, long maxReceive, long maxExtract) {
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
 	}
 
-	public ItemEnergy setCapacity(int capacity) {
+	public ItemEnergy setCapacity(long capacity) {
 		this.capacity = capacity;
 		return this;
 	}
 
-	public ItemEnergy setMaxTransfer(int maxTransfer) {
+	public ItemEnergy setMaxTransfer(long maxTransfer) {
 		setMaxReceive(maxTransfer);
 		setMaxExtract(maxTransfer);
 		return this;
 	}
 
-	public ItemEnergy setMaxReceive(int maxReceive) {
+	public ItemEnergy setMaxReceive(long maxReceive) {
 		this.maxReceive = maxReceive;
 		return this;
 	}
 
-	public ItemEnergy setMaxExtract(int maxExtract) {
+	public ItemEnergy setMaxExtract(long maxExtract) {
 		this.maxExtract = maxExtract;
 		return this;
 	}
@@ -133,7 +133,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	public int getTier(ItemStack stack) {
 		if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
 			return ((int) (Math.log(
-					((CustomForgeEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
+					((ForgeEnergyWrapper) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
 					/ Math.log(2)) - 3) / 2;
 		return 0;
 	}
@@ -150,7 +150,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	@Optional.Method(modid = "ic2")
 	public double getTransferLimit(ItemStack stack) {
 		if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
-			return ((CustomForgeEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer();
+			return ((ForgeEnergyWrapper) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer();
 		return 0;
 	}
 
@@ -159,14 +159,14 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 		if (!container.hasTagCompound())
 			container.setTagCompound(new NBTTagCompound());
-		int energy = container.getTagCompound().getInteger("Energy");
-		int energyReceived = Math.min(this.capacity - energy, Math.min(this.maxReceive, maxReceive));
+		long energy = container.getTagCompound().getLong("Energy");
+		long energyReceived = Math.min(this.capacity - energy, Math.min(this.maxReceive, maxReceive));
 
 		if (!simulate) {
 			energy += energyReceived;
-			container.getTagCompound().setInteger("Energy", energy);
+			container.getTagCompound().setLong("Energy", energy);
 		}
-		return energyReceived;
+		return (int) energyReceived;
 	}
 
 	@Optional.Method(modid = "redstoneflux")
@@ -174,14 +174,14 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
-		int energy = container.getTagCompound().getInteger("Energy");
-		int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+		long energy = container.getTagCompound().getLong("Energy");
+		long energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
 		if (!simulate) {
 			energy -= energyExtracted;
-			container.getTagCompound().setInteger("Energy", energy);
+			container.getTagCompound().setLong("Energy", energy);
 		}
-		return energyExtracted;
+		return (int) energyExtracted;
 	}
 
 	@Optional.Method(modid = "redstoneflux")
@@ -189,19 +189,19 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	public int getEnergyStored(ItemStack container) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
-		return container.getTagCompound().getInteger("Energy");
+		return (int) container.getTagCompound().getLong("Energy");
 	}
 
 	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getMaxEnergyStored(ItemStack container) {
-		return this.capacity;
+		return (int) this.capacity;
 	}
 
 	@Override
 	public ItemStack getDefaultInstance() {
 		NBTTagCompound nbt = new ItemStack(this).serializeNBT();
-		CustomForgeEnergyStorage storage = new CustomForgeEnergyStorage(this.capacity, this.maxReceive, this.maxExtract,
+		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract,
 				0);
 		storage.writeToNBT(nbt);
 		return new ItemStack(nbt);
