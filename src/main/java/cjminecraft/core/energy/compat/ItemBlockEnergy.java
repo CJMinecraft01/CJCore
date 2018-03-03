@@ -4,7 +4,6 @@ import java.util.List;
 
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;
@@ -20,42 +19,42 @@ import net.minecraftforge.fml.common.Optional;
 @Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2"), })
 public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergyContainerItem {
 
-	protected int capacity;
-	protected int maxReceive;
-	protected int maxExtract;
+	protected long capacity;
+	protected long maxReceive;
+	protected long maxExtract;
 
-	public ItemBlockEnergy(Block block, int capacity) {
+	public ItemBlockEnergy(Block block, long capacity) {
 		this(block, capacity, capacity, capacity);
 	}
 
-	public ItemBlockEnergy(Block block, int capacity, int maxTransfer) {
+	public ItemBlockEnergy(Block block, long capacity, long maxTransfer) {
 		this(block, capacity, maxTransfer, maxTransfer);
 	}
 
-	public ItemBlockEnergy(Block block, int capacity, int maxReceive, int maxExtract) {
+	public ItemBlockEnergy(Block block, long capacity, long maxReceive, long maxExtract) {
 		super(block);
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
 	}
 
-	public ItemBlockEnergy setCapacity(int capacity) {
+	public ItemBlockEnergy setCapacity(long capacity) {
 		this.capacity = capacity;
 		return this;
 	}
 
-	public ItemBlockEnergy setMaxTransfer(int maxTransfer) {
+	public ItemBlockEnergy setMaxTransfer(long maxTransfer) {
 		setMaxReceive(maxTransfer);
 		setMaxExtract(maxTransfer);
 		return this;
 	}
 
-	public ItemBlockEnergy setMaxReceive(int maxReceive) {
+	public ItemBlockEnergy setMaxReceive(long maxReceive) {
 		this.maxReceive = maxReceive;
 		return this;
 	}
 
-	public ItemBlockEnergy setMaxExtract(int maxExtract) {
+	public ItemBlockEnergy setMaxExtract(long maxExtract) {
 		this.maxExtract = maxExtract;
 		return this;
 	}
@@ -134,7 +133,7 @@ public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergy
 	public int getTier(ItemStack stack) {
 		if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
 			return ((int) (Math.log(
-					((CustomForgeEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
+					((EnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
 					/ Math.log(2)) - 3) / 2;
 		return 0;
 	}
@@ -151,7 +150,7 @@ public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergy
 	@Optional.Method(modid = "ic2")
 	public double getTransferLimit(ItemStack stack) {
 		if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
-			return ((CustomForgeEnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer();
+			return ((EnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer();
 		return 0;
 	}
 
@@ -159,46 +158,46 @@ public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergy
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 		if (!container.hasTagCompound())
 			container.setTagCompound(new NBTTagCompound());
-		int energy = container.getTagCompound().getInteger("Energy");
-		int energyReceived = Math.min(this.capacity - energy, Math.min(this.maxReceive, maxReceive));
+		long energy = container.getTagCompound().getLong("Energy");
+		long energyReceived = Math.min(this.capacity - energy, Math.min(this.maxReceive, maxReceive));
 
 		if (!simulate) {
 			energy += energyReceived;
-			container.getTagCompound().setInteger("Energy", energy);
+			container.getTagCompound().setLong("Energy", energy);
 		}
-		return energyReceived;
+		return (int) energyReceived;
 	}
 
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
-		int energy = container.getTagCompound().getInteger("Energy");
-		int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+		long energy = container.getTagCompound().getLong("Energy");
+		long energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
 		if (!simulate) {
 			energy -= energyExtracted;
-			container.getTagCompound().setInteger("Energy", energy);
+			container.getTagCompound().setLong("Energy", energy);
 		}
-		return energyExtracted;
+		return (int) energyExtracted;
 	}
 
 	@Override
 	public int getEnergyStored(ItemStack container) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
-		return container.getTagCompound().getInteger("Energy");
+		return (int) container.getTagCompound().getLong("Energy");
 	}
 
 	@Override
 	public int getMaxEnergyStored(ItemStack container) {
-		return this.capacity;
+		return (int) this.capacity;
 	}
 
 	@Override
 	public ItemStack getDefaultInstance() {
 		NBTTagCompound nbt = new ItemStack(this).serializeNBT();
-		CustomForgeEnergyStorage storage = new CustomForgeEnergyStorage(this.capacity, this.maxReceive, this.maxExtract,
+		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract,
 				0);
 		storage.writeToNBT(nbt);
 		return new ItemStack(nbt);

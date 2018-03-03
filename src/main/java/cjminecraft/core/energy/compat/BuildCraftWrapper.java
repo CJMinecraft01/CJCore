@@ -7,8 +7,6 @@ import buildcraft.api.mj.IMjReceiver;
 import buildcraft.api.mj.MjAPI;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
-import net.minecraftforge.energy.EnergyStorage;
 
 /**
  * An energy storage which is compatible with build craft
@@ -18,7 +16,7 @@ import net.minecraftforge.energy.EnergyStorage;
  */
 class BuildCraftWrapper implements IMjReceiver, IMjReadable, IMjPassiveProvider {
 
-	private CustomForgeEnergyStorage storage;
+	private EnergyStorage storage;
 	
 	/**
 	 * Initialise a new build craft wrapper which makes the energy storage compatible
@@ -27,7 +25,7 @@ class BuildCraftWrapper implements IMjReceiver, IMjReadable, IMjPassiveProvider 
 	 * @param storage
 	 *            The actual energy storage
 	 */
-	public BuildCraftWrapper(CustomForgeEnergyStorage storage) {
+	public BuildCraftWrapper(EnergyStorage storage) {
 		this.storage = storage;
 	}
 	

@@ -34,7 +34,7 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 	 * @param capacity
 	 *            The capacity of the energy storage
 	 */
-	public TileEntityEnergyProducer(int capacity) {
+	public TileEntityEnergyProducer(long capacity) {
 		super(capacity, capacity, capacity, 0);
 	}
 
@@ -46,7 +46,7 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 	 * @param maxTransfer
 	 *            The max receive and max extract of the energy storage
 	 */
-	public TileEntityEnergyProducer(int capacity, int maxTransfer) {
+	public TileEntityEnergyProducer(long capacity, long maxTransfer) {
 		super(capacity, maxTransfer, maxTransfer, 0);
 	}
 
@@ -60,7 +60,7 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 	 * @param maxExtract
 	 *            The maximum amount of energy which can be extracted
 	 */
-	public TileEntityEnergyProducer(int capacity, int maxReceive, int maxExtract) {
+	public TileEntityEnergyProducer(long capacity, long maxReceive, long maxExtract) {
 		super(capacity, maxReceive, maxExtract, 0);
 	}
 
@@ -76,18 +76,18 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 	 * @param energy
 	 *            The energy inside of the energy storage
 	 */
-	public TileEntityEnergyProducer(int capacity, int maxReceive, int maxExtract, int energy) {
+	public TileEntityEnergyProducer(long capacity, long maxReceive, long maxExtract, long energy) {
 		super(capacity, maxReceive, maxExtract, energy);
 	}
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return this.storage.getEnergyStored();
+		return (int) this.storage.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
-		return this.storage.getMaxEnergyStored();
+		return (int) this.storage.getMaxEnergyStored();
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		return this.storage.extractEnergy(maxExtract, simulate);
+		return (int) this.storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override

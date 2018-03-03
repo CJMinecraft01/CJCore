@@ -37,7 +37,7 @@ public class TileEntityEnergyConsumer extends TileEntityEnergy implements IEnerg
 	 * @param capacity
 	 *            The capacity of the energy storage
 	 */
-	public TileEntityEnergyConsumer(int capacity) {
+	public TileEntityEnergyConsumer(long capacity) {
 		super(capacity, capacity, capacity, 0);
 	}
 
@@ -49,7 +49,7 @@ public class TileEntityEnergyConsumer extends TileEntityEnergy implements IEnerg
 	 * @param maxTransfer
 	 *            The max receive and max extract of the energy storage
 	 */
-	public TileEntityEnergyConsumer(int capacity, int maxTransfer) {
+	public TileEntityEnergyConsumer(long capacity, long maxTransfer) {
 		super(capacity, maxTransfer, maxTransfer, 0);
 	}
 
@@ -63,7 +63,7 @@ public class TileEntityEnergyConsumer extends TileEntityEnergy implements IEnerg
 	 * @param maxExtract
 	 *            The maximum amount of energy which can be extracted
 	 */
-	public TileEntityEnergyConsumer(int capacity, int maxReceive, int maxExtract) {
+	public TileEntityEnergyConsumer(long capacity, long maxReceive, long maxExtract) {
 		super(capacity, maxReceive, maxExtract, 0);
 	}
 
@@ -79,18 +79,18 @@ public class TileEntityEnergyConsumer extends TileEntityEnergy implements IEnerg
 	 * @param energy
 	 *            The energy inside of the energy storage
 	 */
-	public TileEntityEnergyConsumer(int capacity, int maxReceive, int maxExtract, int energy) {
+	public TileEntityEnergyConsumer(long capacity, long maxReceive, long maxExtract, long energy) {
 		super(capacity, maxReceive, maxExtract, energy);
 	}
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return this.storage.getEnergyStored();
+		return (int) this.storage.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
-		return this.storage.getMaxEnergyStored();
+		return (int) this.storage.getMaxEnergyStored();
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class TileEntityEnergyConsumer extends TileEntityEnergy implements IEnerg
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return this.storage.receiveEnergy(maxReceive, simulate);
+		return (int) this.storage.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override

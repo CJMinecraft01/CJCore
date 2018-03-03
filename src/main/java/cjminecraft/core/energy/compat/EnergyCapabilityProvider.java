@@ -4,7 +4,6 @@ import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,164 +22,165 @@ import net.minecraftforge.energy.CapabilityEnergy;
  */
 public class EnergyCapabilityProvider implements ICapabilityProvider {
 
-	private CustomForgeEnergyStorage storage;
+	private EnergyStorage storage;
 	private Object teslaWrapper;
 	private Object buildCraftWrapper;
-
+	private Object forgeWrapper;
+	
 	/**
-	 * Create a new {@link CustomForgeEnergyStorage} for an {@link ItemStack}
+	 * Create a new {@link EnergyStorage} for an {@link ItemStack}
 	 * 
 	 * @param stack
-	 *            The stack which will have the {@link CustomForgeEnergyStorage}
+	 *            The stack which will have the {@link EnergyStorage}
 	 * @param nbt
 	 *            The {@link NBTTagCompound} with the data about energy (can be
 	 *            got from any {@link TileEntity} which has a
-	 *            {@link CustomForgeEnergyStorage}
+	 *            {@link EnergyStorage}
 	 * @param unit
 	 *            The {@link EnergyUnit} the energy is in
 	 */
 	public EnergyCapabilityProvider(ItemStack stack, NBTTagCompound nbt, EnergyUnit unit) {
-		this(stack, nbt.getInteger("Energy"), nbt.getInteger("Capacity"), nbt.getInteger("MaxReceive"),
-				nbt.getInteger("MaxExtract"), unit);
+		this(stack, nbt.getLong("Energy"), nbt.getLong("Capacity"), nbt.getLong("MaxReceive"),
+				nbt.getLong("MaxExtract"), unit);
 	}
 
 	/**
-	 * Create a new {@link CustomForgeEnergyStorage} for an {@link ItemStack}
+	 * Create a new {@link EnergyStorage} for an {@link ItemStack}
 	 * 
 	 * @param stack
-	 *            The stack which will have the {@link CustomForgeEnergyStorage}
+	 *            The stack which will have the {@link EnergyStorage}
 	 * @param energy
-	 *            The energy of the {@link CustomForgeEnergyStorage}
+	 *            The energy of the {@link EnergyStorage}
 	 * @param capacity
-	 *            The capacity of the {@link CustomForgeEnergyStorage}
+	 *            The capacity of the {@link EnergyStorage}
 	 * @param maxReceive
 	 *            The maximum amount of energy the
-	 *            {@link CustomForgeEnergyStorage} can receive
+	 *            {@link EnergyStorage} can receive
 	 * @param maxExtract
 	 *            The maximum amount of energy that can be extracted from the
-	 *            {@link CustomForgeEnergyStorage}
+	 *            {@link EnergyStorage}
 	 * @param unit
 	 *            The {@link EnergyUnit} the energy is in
 	 */
-	public EnergyCapabilityProvider(ItemStack stack, int energy, int capacity, int maxReceive, int maxExtract,
+	public EnergyCapabilityProvider(ItemStack stack, long energy, long capacity, long maxReceive, long maxExtract,
 			EnergyUnit unit) {
-		this.storage = new CustomForgeEnergyStorage(
-				(int) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, capacity),
-				(int) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxReceive),
-				(int) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxExtract),
-				(int) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, energy)) {
+		this.storage = new EnergyStorage(
+				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, capacity),
+				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxReceive),
+				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxExtract),
+				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, energy)) {
 			@Override
-			public int getEnergyStored() {
+			public long getEnergyStored() {
 				if (stack.hasTagCompound())
-					return stack.getTagCompound().getInteger("Energy");
+					return stack.getTagCompound().getLong("Energy");
 				return 0;
 			}
 
 			@Override
-			public CustomForgeEnergyStorage setEnergyStored(int energy) {
+			public EnergyStorage setEnergyStored(long energy) {
 				if (!stack.hasTagCompound())
 					stack.setTagCompound(new NBTTagCompound());
-				stack.getTagCompound().setInteger("Energy", energy);
+				stack.getTagCompound().setLong("Energy", energy);
 				return this;
 			}
 
 			@Override
-			public int getMaxEnergyStored() {
+			public long getMaxEnergyStored() {
 				if (stack.hasTagCompound())
-					return stack.getTagCompound().getInteger("Capacity");
+					return stack.getTagCompound().getLong("Capacity");
 				return 0;
 			}
 
 			@Override
-			public CustomForgeEnergyStorage setCapacity(int capacity) {
+			public EnergyStorage setCapacity(long capacity) {
 				if (!stack.hasTagCompound())
 					stack.setTagCompound(new NBTTagCompound());
-				stack.getTagCompound().setInteger("Capacity", capacity);
+				stack.getTagCompound().setLong("Capacity", capacity);
 				return this;
 			}
 
 			@Override
-			public int getMaxReceive() {
+			public long getMaxReceive() {
 				if (stack.hasTagCompound())
-					return stack.getTagCompound().getInteger("MaxReceive");
+					return stack.getTagCompound().getLong("MaxReceive");
 				return 0;
 			}
 
 			@Override
 			public boolean canExtract() {
 				if (stack.hasTagCompound())
-					return stack.getTagCompound().getInteger("MaxExtract") > 0;
+					return stack.getTagCompound().getLong("MaxExtract") > 0;
 				return super.canExtract();
 			}
 
 			@Override
 			public boolean canReceive() {
 				if (stack.hasTagCompound())
-					return stack.getTagCompound().getInteger("MaxReceive") > 0;
+					return stack.getTagCompound().getLong("MaxReceive") > 0;
 				return super.canReceive();
 			}
 
 			@Override
-			public CustomForgeEnergyStorage setMaxReceive(int maxReceive) {
+			public EnergyStorage setMaxReceive(long maxReceive) {
 				if (!stack.hasTagCompound())
 					stack.setTagCompound(new NBTTagCompound());
-				stack.getTagCompound().setInteger("MaxReceive", maxReceive);
+				stack.getTagCompound().setLong("MaxReceive", maxReceive);
 				return this;
 			}
 
 			@Override
-			public int getMaxExtract() {
+			public long getMaxExtract() {
 				if (stack.hasTagCompound())
-					return stack.getTagCompound().getInteger("MaxExtract");
+					return stack.getTagCompound().getLong("MaxExtract");
 				return 0;
 			}
 
 			@Override
-			public CustomForgeEnergyStorage setMaxExtract(int maxExtract) {
+			public EnergyStorage setMaxExtract(long maxExtract) {
 				if (!stack.hasTagCompound())
 					stack.setTagCompound(new NBTTagCompound());
-				stack.getTagCompound().setInteger("MaxExtract", maxExtract);
+				stack.getTagCompound().setLong("MaxExtract", maxExtract);
 				return this;
 			}
 
 			@Override
-			public int getMaxTransfer() {
+			public long getMaxTransfer() {
 				if (stack.hasTagCompound()) {
-					int maxReceive = stack.getTagCompound().getInteger("MaxReceive");
-					int maxExtract = stack.getTagCompound().getInteger("MaxExtract");
+					long maxReceive = stack.getTagCompound().getLong("MaxReceive");
+					long maxExtract = stack.getTagCompound().getLong("MaxExtract");
 					return maxReceive == maxExtract ? maxReceive : Math.max(maxReceive, maxExtract);
 				}
 				return 0;
 			}
 
 			@Override
-			public CustomForgeEnergyStorage setMaxTransfer(int transfer) {
+			public EnergyStorage setMaxTransfer(long transfer) {
 				if (!stack.hasTagCompound())
 					stack.setTagCompound(new NBTTagCompound());
-				stack.getTagCompound().setInteger("MaxExtract", transfer);
-				stack.getTagCompound().setInteger("MaxReceive", transfer);
+				stack.getTagCompound().setLong("MaxExtract", transfer);
+				stack.getTagCompound().setLong("MaxReceive", transfer);
 				return this;
 			}
 
 			@Override
-			public int receiveEnergy(int maxReceive, boolean simulate) {
+			public long receiveEnergy(long maxReceive, boolean simulate) {
 				if (!canReceive())
 					return 0;
 
-				int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(),
+				long energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(),
 						Math.min(getMaxReceive(), maxReceive));
 				if (!simulate)
-					stack.getTagCompound().setInteger("Energy", getEnergyStored() + energyReceived);
+					stack.getTagCompound().setLong("Energy", getEnergyStored() + energyReceived);
 				return energyReceived;
 			}
 
 			@Override
-			public int extractEnergy(int maxExtract, boolean simulate) {
+			public long extractEnergy(long maxExtract, boolean simulate) {
 				if (!canExtract())
 					return 0;
-				int energyExtracted = Math.min(getEnergyStored(), Math.min(getMaxExtract(), maxExtract));
+				long energyExtracted = Math.min(getEnergyStored(), Math.min(getMaxExtract(), maxExtract));
 				if (!simulate)
-					stack.getTagCompound().setInteger("Energy", getEnergyStored() - energyExtracted);
+					stack.getTagCompound().setLong("Energy", getEnergyStored() - energyExtracted);
 				return energyExtracted;
 			}
 		};
@@ -199,8 +199,11 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 */
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY)
-			return (T) this.storage;
+		if (capability == CapabilityEnergy.ENERGY) {
+			if(this.forgeWrapper == null)
+				this.forgeWrapper = new ForgeEnergyWrapper(this.storage);
+			return (T) this.forgeWrapper;
+		}
 		if (EnergyUtils.TESLA_LOADED && (capability == EnergyUtils.TESLA_HOLDER
 				|| capability == EnergyUtils.TESLA_CONSUMER || capability == EnergyUtils.TESLA_PRODUCER)) {
 			if (this.teslaWrapper == null)

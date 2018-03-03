@@ -1,0 +1,88 @@
+energy.utils.repeat_support=Поддержка энергии %s уже зарегистрирована - ПРОПУСК
+energy.utils.support_success=Успешно зарегистрирована поддержка энергии %s
+
+energy.unit.repeat_registration=Единица энергии %s уже зарегистрирована - ПРОПУСК
+energy.unit.registration_success=Успешно зарегистрирована единица энергии %s
+energy.unit.name=Имя: %s
+energy.unit.suffix=Суффикс: %s
+energy.unit.multiplier=Множитель: %s
+energy.percentage=%s Зарядки
+
+energy.unit.forge_energy.name=Forge Energy
+energy.unit.forge_energy.suffix=FE
+energy.unit.redstone_flux.name=Redstone Flux
+energy.unit.redstone_flux.suffix=RF
+energy.unit.tesla.name=Tesla
+energy.unit.tesla.suffix=T
+energy.unit.joules.name=Joules
+energy.unit.joules.suffix=J
+energy.unit.minecraft_joules.name=Minecraft Joules
+energy.unit.minecraft_joules.suffix=MJ
+energy.unit.energy_unit.name=Energy Unit
+energy.unit.energy_unit.suffix=EU
+
+energy.container.energy=Энергия
+energy.container.capacity=Емкость
+energy.container.max_input=Макс Вход
+energy.container.max_output=Макс Выход
+
+fluid.empty=Пусто
+
+gui.config.main_title=Конфигурация CJCore
+
+gui.config.category.energy=Конфигурация Энергии
+gui.config.category.energy.tooltip=Все что связано с энергией
+gui.config.energy.default_energy_unit.name=Единица Энергии По Умолчанию
+gui.config.energy.default_energy_unit.comment=Единица энергии которую вы обычно видите
+gui.config.energy.energy_bar_show_capacity.name=Показать Емкость на Шкале Энергии 
+gui.config.energy.energy_bar_show_capacity.comment=Должна ли емкость отображаться на шкале энергии
+gui.config.energy.energy_bar_simplify_energy.name=Упростить Энергию на Шкале Энергии
+gui.config.energy.energy_bar_simplify_energy.comment=Должен ли способ отображения энергии на шкале быть упрощенным
+
+gui.config.category.fluid=Конфигурация Жидкостей
+gui.config.category.fluid.tooltip=Все что связано с жидкостями
+gui.config.fluid.fluid_bar_show_capacity.name=Показать Емкость на Шкале Жидкости
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Должна ли емкость отображаться на шкале жидкости
+gui.config.fluid.fluid_bar_simplify_fluids.name=Упростить Жидкости на Шкале Жидкости
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Должен ли способ отображения жидкостей на шкале быть упрощенным
+
+gui.config.category.update_checker=Проверка Обновлений
+gui.config.category.update_checker.tooltip=Отключить проверку обновлений где используется CJCore
+gui.config.update_checker.enabled.comment=Отключена ли проверка обновлений у этого мода
+
+gui.config.category.multimeter=Конфигурация Мультиметра
+gui.config.category.multimeter.tooltip=Все что связано с мультиметром
+gui.config.multimeter.offset_x.name=Сдвиг мультиметра по оси X
+gui.config.multimeter.offset_x.comment=Сдвиг слева во время использования мультиметра
+gui.config.multimeter.offset_y.name=Сдвиг мультиметра по оси Y
+gui.config.multimeter.offset_y.comment=Сдвиг снизу во время использования мультиметра
+gui.config.multimeter.energy_width.name=Ширина энергии в мультиметре
+gui.config.multimeter.energy_width.comment=Ширина интерфейса энергии в мультиметре
+gui.config.multimeter.energy_height.name=Высота энергии в мультиметре
+gui.config.multimeter.energy_height.comment=Высота интерфейса энергии в мультиметре
+gui.config.multimeter.fluid_width.name=Ширина жидкости в мультиметре
+gui.config.multimeter.fluid_width.comment=Ширина интерфейса жидкости в мультиметре
+gui.config.multimeter.fluid_height.name=Высота жидкости в мультиметре
+gui.config.multimeter.fluid_height.comment=Высота интерфейса жидкости в мультиметре
+gui.config.multimeter.item_max_columns.name=Макс Столбцов Предметов в Мультиметре
+gui.config.multimeter.item_max_columns.comment=Макс число столбцов в мультиметре для множителя предметов
+
+item.multimeter.energy.name=Мультиметр (Энергия)
+item.multimeter.item.name=Мультиметр (Предмет)
+item.multimeter.fluid.name=Мультиметр (Жидкость)
+item.multimeter.tooltip.blockpos=Отмечаю блок %s на %s %s %s
+item.multimeter.tooltip.energy=Мультиметр позволяет пользователям видеть энергию внутри любого блока без открытия его интерфейса! Присядьте и нажмите правой кнопкой мыши на блоке чтобы мультиметр показывал энергию только того блока. Нажав ПКМ на воздух отмеченый блок будет сброшен
+item.multimeter.tooltip.item=Мультиметр позволяет пользователям видеть инвентарь внутри любого блока без открытия его интерфейса! Присядьте и нажмите правой кнопкой мыши на блоке чтобы мультиметр показывал инвентарь только того блока. Нажав ПКМ на воздух отмеченый блок будет сброшен
+item.multimeter.tooltip.fluid=Мультиметр позволяет пользователям видеть жидкости внутри любого блока без открытия его интерфейса! Присядьте и нажмите правой кнопкой мыши на блоке чтобы мультиметр показывал жидкости только того блока. Нажав ПКМ на воздух отмеченый блок будет сброшен
+
+update.ready=Доступно обновление для %s!
+update.version=Данная версия: %s, новая: %s
+update.download=Нажмите чтобы скачать
+update.changelog=Наведите для просмотра изменений
+
+command.tileentity.usage=/tileentity <x> <y> <z> <energy:inventory:fluid> get [side] или /tileentity <x> <y> <z> energy <set:give:take> <energy> <unit> [side] или /tileentity <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] или /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] или /tileentity <x> <y> <z> fluid drain <amount> [side]
+command.tileentity.nosupport=Для блока с данными на %s %s %s нет поддержки
+command.tileentity.notake=Этот блок с данными не позволяет забрать энергию
+command.tileentity.nogive=Этот блок с данными не позволяет давать энергию
+command.tileentity.noset=Этот блок с данными не позволяет назначать количество энергии
+command.tileentity.invalidFluid=Эта жидкость не существует!

@@ -29,7 +29,7 @@ public class CraftingHandler {
 				new Object[] { " G ", "GRG", " G ", 'G', Items.GOLD_INGOT, 'R', Blocks.REDSTONE_BLOCK });
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CJCoreItems.multimeter, 1, 1),
 				new Object[] { " G ", "GCG", " G ", 'G', Items.GOLD_INGOT, 'C', "chestWood" }));
-		GameRegistry.addRecipe(new ItemStack(CJCoreItems.multimeter, 1, 1),
+		GameRegistry.addRecipe(new ItemStack(CJCoreItems.multimeter, 1, 2),
 				new Object[] { " G ", "GBG", " G ", 'G', Items.GOLD_INGOT, 'B', Items.BUCKET });
 	}
 
