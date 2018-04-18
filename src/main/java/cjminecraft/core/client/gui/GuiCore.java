@@ -373,7 +373,7 @@ public abstract class GuiCore extends GuiContainer {
 	 */
 	public void drawSizedTexturedModalRectWithBorder(int x, int y, int u, int v, int width, int height,
 			float textureWidth, float textureHeight) {
-		this.drawSizedTexturedModalRect(x + 1, y + 1, u, v, width - 2, height - 2, textureHeight, textureHeight);
+		this.drawSizedTexturedModalRect(x + 1, y + 1, u, v, width - 2, height - 2, textureWidth, textureHeight);
 		this.drawBorder(x, y, width, height);
 	}
 
