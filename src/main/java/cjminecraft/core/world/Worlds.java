@@ -1,9 +1,11 @@
 package cjminecraft.core.world;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
 import cjminecraft.core.world.entity.Entities;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -254,5 +256,36 @@ public class Worlds {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Checks a cubic volume for any instances of {@code blockState}. The anchor is in the absolute center of the cube. Make sure the side length is an odd number
+	 * 
+	 * @param world
+	 *            the world
+	 * @param blockState
+	 *            the {@link IBlockState} to check for
+	 * @param pos
+	 *            the anchor {@link BlockPos}
+	 * @param sideLength
+	 *            the length of the cube's sides
+	 * @return {@link ArrayList} of all the BlockPos instances that contain {@code blockState}
+	 */
+	public static ArrayList<BlockPos> checkCube(World world, IBlockState blockState, BlockPos pos, int sideLength) {
+		ArrayList<BlockPos> posList = new ArrayList<BlockPos>();
+
+		for (int x = -sideLength / 2; x < sideLength / 2 + 1; x++) {
+			for (int y = -sideLength / 2; y < sideLength / 2 + 1; y++) {
+				for (int z = -sideLength / 2; z < sideLength / 2 + 1; z++) {
+					BlockPos currPos = pos.add(x, y, z);
+
+					if (world.getBlockState(currPos).equals(blockState)) {
+						posList.add(currPos);
+					}
+				}
+			}
+		}
+
+		return posList;
 	}
 }

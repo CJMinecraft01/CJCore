@@ -804,4 +804,54 @@ public class Entities {
 			return EnumFacing.NORTH;
 		}
 	}
+	
+	/**
+	 * Replaces {@code current} with {@code next} in the same world. Can transfer pitch and yaw rotation angles from {@code current} to {@code next}. If pitch/yaw not transferred, they are both set to {@code 0}
+	 * 
+	 * @param current
+	 *            the entity to replace
+	 * @param next
+	 *            the replacement
+	 * @param keepRot
+	 *            whether or not to transfer the pitch and yaw rotation angles of {@code current} to {@code next}
+	 */
+	public static void replaceEntity(boolean keepRot, Entity current, Entity... next) {
+		if (!current.world.isRemote) {
+			if (keepRot) {
+				for (Entity e : next) {
+					e.setLocationAndAngles(current.posX, current.posY, current.posZ, current.rotationYaw, current.rotationPitch);
+				}
+			} else {
+				for (Entity e : next) {
+					e.setLocationAndAngles(current.posX, current.posY, current.posZ, 0, 0);
+				}
+			}
+
+			for (Entity e : next) {
+				current.world.spawnEntity(e);
+			}
+
+			current.setDead();
+		}
+	}
+	
+	/**
+	 * Replaces {@code current} with {@code next} in the same world. Sets the pitch/yaw of all objects on {@code next} to {@code pitch} and {@code yaw}, respectively.<br>
+	 * This is done by setting {@code current}'s pitch/yaw, then calling {@link #replaceEntity(boolean, Entity, Entity)} with parameters {@code true}, {@code current}, and {@code next} as a means of transferring {@code current}'s new pitch/yaw angles to {@code next}
+	 * 
+	 * @param pitch
+	 *            the pitch to use
+	 * @param yaw
+	 *            the yaw to use
+	 * @param current
+	 *            the {@link Entity} to replace
+	 * @param next
+	 *            the {@link Entity} objects to replace {@code current}
+	 */
+	public static void replaceEntity(float pitch, float yaw, Entity current, Entity... next) {
+		if (!current.world.isRemote) {
+			current.setLocationAndAngles(current.posX, current.posY, current.posZ, yaw, pitch);
+			replaceEntity(true, current, next);
+		}
+	}
 }
