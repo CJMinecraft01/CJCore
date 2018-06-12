@@ -147,4 +147,12 @@ public class MathUtils {
 	public static int compare(double a, double b) {
 		return a == b ? 0 : a < b ? -1 : 1;
 	}
+	
+	public static int secondsToTicks(int seconds) {
+		return seconds * 20;
+	}
+	
+	public static float ticksToSeconds(int ticks) {
+		return ticks / 20;
+	}
 }
