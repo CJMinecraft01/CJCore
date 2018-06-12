@@ -1,11 +1,8 @@
 package cjminecraft.core.energy.compat.forge;
 
-import cjminecraft.core.CJCore;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * An improved version of an {@link EnergyStorage}

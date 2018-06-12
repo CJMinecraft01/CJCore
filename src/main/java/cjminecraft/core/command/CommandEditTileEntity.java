@@ -9,7 +9,6 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;

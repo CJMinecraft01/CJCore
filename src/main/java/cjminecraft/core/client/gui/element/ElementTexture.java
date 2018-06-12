@@ -1,10 +1,7 @@
 package cjminecraft.core.client.gui.element;
 
-import java.util.List;
-
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.GuiCore;
-import cjminecraft.core.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 
 /**

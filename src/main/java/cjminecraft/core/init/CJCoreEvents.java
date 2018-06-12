@@ -1,7 +1,6 @@
 package cjminecraft.core.init;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.inventory.InventoryUtils;

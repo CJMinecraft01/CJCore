@@ -1,14 +1,7 @@
 package cjminecraft.core.items;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.GuiOverlay;
@@ -48,8 +41,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The item which shows how much energy is in any {@link TileEntity}

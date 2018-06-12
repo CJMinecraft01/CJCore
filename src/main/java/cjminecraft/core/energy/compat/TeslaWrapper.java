@@ -1,6 +1,5 @@
 package cjminecraft.core.energy.compat;
 
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;

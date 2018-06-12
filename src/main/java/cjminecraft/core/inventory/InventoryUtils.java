@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.inventory.PacketGetInventory;
 import net.minecraft.entity.item.EntityItem;

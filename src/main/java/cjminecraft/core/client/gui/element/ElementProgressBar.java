@@ -2,7 +2,6 @@ package cjminecraft.core.client.gui.element;
 
 import cjminecraft.core.client.gui.GuiCore;
 import cjminecraft.core.util.RenderUtils;
-import net.minecraft.tileentity.TileEntity;
 
 /**
  * A simple yet effective progress bar which displays an operations progress in

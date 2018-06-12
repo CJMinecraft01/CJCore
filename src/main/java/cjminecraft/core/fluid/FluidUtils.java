@@ -6,18 +6,21 @@ import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.network.PacketHandler;
-import cjminecraft.core.network.fluid.*;
+import cjminecraft.core.network.fluid.PacketGetFluidData;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fluids.capability.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * Utility class for fluids

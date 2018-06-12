@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyData;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.util.NetworkUtils;
 import cjminecraft.core.energy.EnergyUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;

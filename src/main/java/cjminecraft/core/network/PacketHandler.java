@@ -1,9 +1,16 @@
 package cjminecraft.core.network;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.network.energy.*;
-import cjminecraft.core.network.fluid.*;
-import cjminecraft.core.network.inventory.*;
+import cjminecraft.core.network.energy.PacketGetCapacity;
+import cjminecraft.core.network.energy.PacketGetEnergy;
+import cjminecraft.core.network.energy.PacketGetEnergyData;
+import cjminecraft.core.network.energy.PacketReturnCapacity;
+import cjminecraft.core.network.energy.PacketReturnEnergy;
+import cjminecraft.core.network.energy.PacketReturnEnergyData;
+import cjminecraft.core.network.fluid.PacketGetFluidData;
+import cjminecraft.core.network.fluid.PacketReturnFluidData;
+import cjminecraft.core.network.inventory.PacketGetInventory;
+import cjminecraft.core.network.inventory.PacketReturnInventory;
 import cjminecraft.core.proxy.CommonProxy;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
