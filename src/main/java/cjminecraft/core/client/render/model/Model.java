@@ -66,9 +66,6 @@ public abstract class Model extends ModelBase {
 		}
 	}
 
-	/**
-	 * TODO: Figure out what this is, and why.
-	 */
 	public void render() {
 		this.render(null);
 	}
@@ -199,7 +196,7 @@ public abstract class Model extends ModelBase {
 	 * 
 	 * @param modelClass
 	 *            - A class extending ModelBaseExtension which will be
-	 *            instantaniated.
+	 *            instantiated.
 	 * @return Instance of the class specified in the modelClass parameter.
 	 */
 	public static Model createExtendedModelBase(Class<? extends Model> modelClass) {
