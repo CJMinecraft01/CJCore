@@ -9,3 +9,8 @@ Yes you can but please notify me so I can see where my mod is being used (you do
 Of course! My mod is open source and means that anyone can use my code but please don't claim any code as your own :D
 
 http://www.youtube.com/cjminecraft
+
+## Adding the mod to your environment
+
+Just use this link to get all you need: https://jitpack.io/#CJMinecraft01/CJCore/
+Use the branch button and select the correct minecraft version. Then you can add what the website says. Where the website says "implementation", use "compile"
