@@ -100,9 +100,9 @@ public class PacketGetFluidData implements IMessage {
 		}
 		
 		void processMessage(PacketGetFluidData message, MessageContext ctx) {
-			if(!ctx.getServerHandler().player.getServerWorld().isBlockLoaded(message.pos))
+			if(!ctx.getServerHandler().playerEntity.getServerWorld().isBlockLoaded(message.pos))
 				return;
-			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
+			TileEntity te = ctx.getServerHandler().playerEntity.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
 			if (!FluidUtils.hasSupport(te, message.side))
@@ -110,9 +110,9 @@ public class PacketGetFluidData implements IMessage {
 			int capacity = FluidUtils.getCapacity(te, message.side, message.tankIndex);
 			FluidStack fluidStack = FluidUtils.getFluidStack(te, message.side, message.tankIndex);
 			if(message.updateFields)
-				PacketHandler.INSTANCE.sendTo(new PacketReturnFluidData(capacity, fluidStack, true, message.className, message.capacityFieldName, message.fluidStackFieldName), ctx.getServerHandler().player);
+				PacketHandler.INSTANCE.sendTo(new PacketReturnFluidData(capacity, fluidStack, true, message.className, message.capacityFieldName, message.fluidStackFieldName), ctx.getServerHandler().playerEntity);
 			else
-				PacketHandler.INSTANCE.sendTo(new PacketReturnFluidData(capacity, fluidStack, false, message.modid, message.className), ctx.getServerHandler().player);
+				PacketHandler.INSTANCE.sendTo(new PacketReturnFluidData(capacity, fluidStack, false, message.modid, message.className), ctx.getServerHandler().playerEntity);
 		}
 		
 	}

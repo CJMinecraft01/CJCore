@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.*;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * Utility class for fluids
@@ -54,8 +55,8 @@ public class FluidUtils {
 	 * @return Whether the {@link ItemStack} has fluid support
 	 */
 	public static boolean hasSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		return stack == null || stack.isEmpty() ? false
-				: stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		return stack == null || stack == null ? false
+				: stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 	}
 
 	/**
@@ -130,9 +131,9 @@ public class FluidUtils {
 	 * @return the number of tanks inside of the {@link ItemStack}
 	 */
 	public static int getNumberOfTanks(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return 0;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from)
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from)
 				.getTankProperties().length;
 	}
 
@@ -173,9 +174,9 @@ public class FluidUtils {
 	 * @return the amount of fluid inside of the fluid tank specified
 	 */
 	public static int getFluidAmount(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return 0;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return 0;
 		return handler.getTankProperties()[tankIndex].getContents() != null
@@ -220,9 +221,9 @@ public class FluidUtils {
 	 */
 	@Nullable
 	public static FluidStack getFluidStack(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return null;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return null;
 		return handler.getTankProperties()[tankIndex].getContents();
@@ -264,9 +265,9 @@ public class FluidUtils {
 	 * @return the capacity of the fluid tank specified
 	 */
 	public static int getCapacity(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return 0;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return 0;
 		return handler.getTankProperties()[tankIndex].getCapacity();
@@ -310,9 +311,9 @@ public class FluidUtils {
 	 * @return the fluid inside of the tank
 	 */
 	public static Fluid getFluidInTank(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return FluidRegistry.WATER;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return FluidRegistry.WATER;
 		return handler.getTankProperties()[tankIndex].getContents().getFluid();
@@ -354,9 +355,9 @@ public class FluidUtils {
 	 * @return whether you can fill up the tank
 	 */
 	public static boolean canFill(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canFill();
@@ -398,9 +399,9 @@ public class FluidUtils {
 	 * @return whether you can drain the tank
 	 */
 	public static boolean canDrain(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrain();
@@ -450,9 +451,9 @@ public class FluidUtils {
 	 */
 	public static boolean canFillFluidType(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex,
 			FluidStack fluidStack) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canFillFluidType(fluidStack);
@@ -500,9 +501,9 @@ public class FluidUtils {
 	 */
 	public static boolean canDrainFluidType(@Nullable ItemStack stack, @Nullable EnumFacing from, int tankIndex,
 			FluidStack fluidStack) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return false;
-		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from);
+		IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from);
 		if (tankIndex >= handler.getTankProperties().length)
 			return false;
 		return handler.getTankProperties()[tankIndex].canDrainFluidType(fluidStack);
@@ -550,9 +551,9 @@ public class FluidUtils {
 	 */
 	public static int fill(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nullable FluidStack resource,
 			boolean simulate) {
-		if (stack == null || stack.isEmpty() || resource == null)
+		if (stack == null || stack == null || resource == null)
 			return 0;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).fill(resource, !simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).fill(resource, !simulate);
 	}
 
 	/**
@@ -598,9 +599,9 @@ public class FluidUtils {
 	@Nullable
 	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nullable FluidStack resource,
 			boolean simulate) {
-		if (stack == null || stack.isEmpty() || resource == null)
+		if (stack == null || stack == null || resource == null)
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(resource, !simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(resource, !simulate);
 	}
 
 	/**
@@ -646,9 +647,9 @@ public class FluidUtils {
 	@Nullable
 	public static FluidStack drain(@Nullable ItemStack stack, @Nullable EnumFacing from, @Nonnull int maxDrain,
 			boolean simulate) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack == null)
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(maxDrain, !simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, from).drain(maxDrain, !simulate);
 	}
 
 	/**

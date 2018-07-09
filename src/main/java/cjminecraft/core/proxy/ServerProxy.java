@@ -10,7 +10,7 @@ import cjminecraft.core.energy.EnergyUnits;
 public class ServerProxy extends CommonProxy {
 	
 	@Override
-	public void preInit() {	
+	public void preInit() {
 		super.preInit();
 	}
 	

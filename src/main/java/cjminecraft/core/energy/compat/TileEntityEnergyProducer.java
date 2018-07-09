@@ -1,10 +1,12 @@
 package cjminecraft.core.energy.compat;
 
+import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
-import cofh.redstoneflux.api.IEnergyProvider;
+import cofh.api.energy.IEnergyProvider;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
+import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.energy.tile.IMultiEnergySource;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -20,8 +22,7 @@ import net.minecraftforge.fml.common.Optional;
  * @author CJMinecraft
  *
  */
-@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "ic2"),
-		@Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider", modid = "redstoneflux") })
+@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "ic2") })
 public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnergyProvider, IEnergySource {
 
 	private Object teslaWrapper;
@@ -78,25 +79,21 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 		super(capacity, maxReceive, maxExtract, energy);
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getEnergyStored(EnumFacing from) {
 		return (int) this.storage.getEnergyStored();
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
 		return (int) this.storage.getMaxEnergyStored();
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
 		return true;
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		return (int) this.storage.extractEnergy(maxExtract, simulate);

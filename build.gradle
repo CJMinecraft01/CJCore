@@ -4,58 +4,56 @@ buildscript {
         maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'maven-publish'
+//Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 version = "0.0.3.2"
 group = "cjminecraft.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "cjcore-1.12"
+archivesBaseName = "cjcore-1.10"
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+    sourceCompatibility = targetCompatibility = "1.8"
 }
 
-task javadocJar(type: Jar, dependsOn: 'javadoc') {
-    from javadoc.destinationDir
-    classifier "javadoc"
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
 }
 
-/*
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
 }
-*/
 
 task srcJar(type: Jar, dependsOn: "sourceMainJava") {
     from sourceSets.main.allSource
     classifier = 'sources'
 }
 
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    from "build/docs/javadoc"
+    classifier "javadoc"
+}
 artifacts {
+	archives javadocJar
 	archives srcJar
 	archives deobfJar
-	archives javadocJar
 }
 
 minecraft {
-    version = "1.12.2-14.23.1.2583"
+    version = "1.10.2-12.18.3.2511"
     runDir = "run"
 	replace '${version}', project.version
-    mappings = "snapshot_20180203"
+    mappings = "stable_29"
 }
 
 repositories {
-	maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }
 
     maven {
 		name "Tesla"
@@ -66,22 +64,14 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
-	
-	maven { 
-		url 'https://jitpack.io' 
-	}
-}
-
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
 }
 
 dependencies {
-    compile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
-	compile 'net.industrial-craft:industrialcraft-2:2.8.16-ex112:api'
-	deobfCompile "cofh:RedstoneFlux:1.12-2.0.1.2:universal"
+
+	compile "net.darkhax.tesla:Tesla:1.10.2-1.2.1.50"
+	
+	compile 'net.industrial-craft:industrialcraft-2:2.6.252-ex110:api'
+
 }
 
 processResources {
@@ -101,18 +91,6 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
 }
 
-publishing {
-    publications {
-        all(MavenPublication) {
-            artifact jar
-            artifact deobfJar
-            artifact srcJar
-            artifactId = archivesBaseName
-        }
-    }
-	repositories {
-        mavenLocal()
-    }
-}

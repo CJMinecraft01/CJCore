@@ -95,18 +95,18 @@ public class PacketGetEnergy implements IMessage {
 		}
 		
 		void processMessage(PacketGetEnergy message, MessageContext ctx) {
-			if(!ctx.getServerHandler().player.getServerWorld().isBlockLoaded(message.pos))
+			if(!ctx.getServerHandler().playerEntity.getServerWorld().isBlockLoaded(message.pos))
 				return;
-			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
+			TileEntity te = ctx.getServerHandler().playerEntity.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
 			if (!EnergyUtils.hasSupport(te, message.side))
 				return;
 			long energy = EnergyUtils.getEnergyStored(te, message.side, message.unit);
 			if(message.updateFields)
-				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergy(energy, true, message.className, message.energyFieldName), ctx.getServerHandler().player);
+				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergy(energy, true, message.className, message.energyFieldName), ctx.getServerHandler().playerEntity);
 			else
-				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergy(energy, false, message.modid, message.className), ctx.getServerHandler().player);
+				PacketHandler.INSTANCE.sendTo(new PacketReturnEnergy(energy, false, message.modid, message.className), ctx.getServerHandler().playerEntity);
 		}
 		
 	}

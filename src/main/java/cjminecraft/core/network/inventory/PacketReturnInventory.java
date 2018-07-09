@@ -52,8 +52,8 @@ public class PacketReturnInventory implements IMessage {
 			List<ItemStack> inv = new ArrayList<ItemStack>();
 			int size = buf.readInt();
 			for (int i = 0; i < size; i++) {
-				ItemStack stack = new ItemStack(ByteBufUtils.readTag(buf));
-				stack.setCount(buf.readInt());
+				ItemStack stack = ItemStack.loadItemStackFromNBT(ByteBufUtils.readTag(buf));
+				stack.stackSize = buf.readInt();
 				inv.add(stack);
 			}
 			this.inventory = ImmutableList.<ItemStack>copyOf(inv);
@@ -79,7 +79,7 @@ public class PacketReturnInventory implements IMessage {
 			NBTTagCompound nbt = stack.serializeNBT();
 			nbt.removeTag("count");
 			ByteBufUtils.writeTag(buf, nbt);
-			buf.writeInt(stack.getCount());
+			buf.writeInt(stack.stackSize);
 		}
 		ByteBufUtils.writeUTF8String(buf, this.className);
 		buf.writeBoolean(this.updateField);

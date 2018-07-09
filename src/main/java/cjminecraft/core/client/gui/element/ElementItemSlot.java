@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ElementItemSlot extends ElementBase implements ISpecialOverlayElement {
 
-	protected ItemStack stack = ItemStack.EMPTY;
+	protected ItemStack stack = null;
 
 	/**
 	 * A simple item slot display for any {@link ItemStack}
@@ -60,7 +60,7 @@ public class ElementItemSlot extends ElementBase implements ISpecialOverlayEleme
 	
 	@Override
 	public void addOverlayText(List<String> text) {
-		if(this.stack != ItemStack.EMPTY && !text.contains(this.stack.getDisplayName()))
+		if(this.stack != null && !text.contains(this.stack.getDisplayName()))
 			text.add(this.stack.getDisplayName());
 	}
 

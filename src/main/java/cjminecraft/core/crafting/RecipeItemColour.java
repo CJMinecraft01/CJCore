@@ -1,5 +1,6 @@
 package cjminecraft.core.crafting;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,18 +11,16 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
  * The recipe for items which can be coloured
  * @author CJMinecraft
  *
  */
-public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeItemColour implements IRecipe {
 
 	/**
 	 * Use if you want to see if the item stack is a dye {@link #getCraftingResult(InventoryCrafting)}
@@ -41,7 +40,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	 * Default constructor for registering the recipe {@link CraftingHandler#registerCraftingRecipes()}
 	 */
 	public RecipeItemColour() {
-		this(ItemStack.EMPTY);
+		this.targetItemStack = new ItemStack(Blocks.AIR);
 	}
 	
 	/**
@@ -57,13 +56,13 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	 */
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn) {
-		ItemStack itemColour = ItemStack.EMPTY;
+		ItemStack itemColour = new ItemStack(Blocks.AIR);
 		boolean randomItemDetected = false;
 
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
 			ItemStack stackInSlot = inv.getStackInSlot(slot);
 
-			if (!stackInSlot.isEmpty()) {
+			if (stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR)) {
 				if (stackInSlot.hasTagCompound() && stackInSlot.getItem() == targetItemStack.getItem()) {
 					if (stackInSlot.getTagCompound().hasKey("colour") || stackInSlot.getTagCompound().hasKey("color")) {
 						itemColour = stackInSlot;
@@ -80,7 +79,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 					randomItemDetected = true;
 			}
 		}
-		return !itemColour.isEmpty() && itemColour.getItem() == targetItemStack.getItem() && !randomItemDetected; //As long as there is a item there and the item is the item we want
+		return itemColour.getItem() != Item.getItemFromBlock(Blocks.AIR) && itemColour.getItem() == targetItemStack.getItem() && !randomItemDetected; //As long as there is a item there and the item is the item we want
 	}
 
 	/**
@@ -88,7 +87,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	 */
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv) {
-		ItemStack stack = ItemStack.EMPTY;
+		ItemStack stack = new ItemStack(Blocks.AIR);
 		int[] colour = new int[3]; //RGB values
 		int i = 0; //Tracker variables
 		int j = 0;
@@ -98,7 +97,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
 			ItemStack stackInSlot = inv.getStackInSlot(slot);
 
-			if (!stackInSlot.isEmpty()) {
+			if (stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR)) {
 				if (stackInSlot.hasTagCompound()) {
 					if (stackInSlot.getTagCompound().hasKey("colour") || stackInSlot.getTagCompound().hasKey("color")) {
 						int currentColour = 0xFFFFFF;
@@ -109,7 +108,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 							tagName = "color";
 						}
 						stack = stackInSlot.copy();
-						stack.setCount(1);
+						stack.stackSize = 1;
 
 						if (currentColour != 0xFFFFFF) { //Math to add the colour
 							float r = (float) (currentColour >> 15 & 255) / 255.0F;
@@ -140,7 +139,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 			}
 		}
 		if (stack.getItem() != targetItemStack.getItem())
-			return ItemStack.EMPTY;
+			return new ItemStack(Blocks.AIR);
 		else {
 			int r = colour[0] / j;
 			int g = colour[1] / j;
@@ -159,30 +158,33 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	}
 	
 	/**
+	 * How many slots required (10 because 9 in the table and 1 for output)
+	 */
+	@Override
+	public int getRecipeSize() {
+		return 10;
+	}
+	
+	/**
 	 * The default output for us is nothing unless stated above
 	 */
 	@Override
 	public ItemStack getRecipeOutput() {
-		return ItemStack.EMPTY;
+		return new ItemStack(Blocks.AIR);
 	}
 	
 	/**
 	 * All the items which were not used
 	 */
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-		NonNullList<ItemStack> remaining = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+	public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+		List<ItemStack> remaining = new ArrayList<ItemStack>();
 		
-		for(int slot = 0; slot < remaining.size(); slot++) {
+		for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
 			ItemStack stackInSlot = inv.getStackInSlot(slot);
 			remaining.set(slot, ForgeHooks.getContainerItem(stackInSlot));
 		}
-		return remaining;
-	}
-
-	@Override
-	public boolean canFit(int width, int height) {
-		return width * height >= 2;
+		return (ItemStack[]) remaining.toArray();
 	}
 
 }

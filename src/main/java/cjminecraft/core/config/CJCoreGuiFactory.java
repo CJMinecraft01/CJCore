@@ -43,16 +43,6 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 		return null;
 	}
 
-	@Override
-	public boolean hasConfigGui() {
-		return true;
-	}
-
-	@Override
-	public GuiScreen createConfigGui(GuiScreen parentScreen) {
-		return new CJCoreConfigGui(parentScreen);
-	}
-
 	/**
 	 * The actual {@link GuiConfig}
 	 * 
@@ -203,6 +193,16 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 		}
 
+	}
+
+	@Override
+	public Class<? extends GuiScreen> mainConfigGuiClass() {
+		return CJCoreConfigGui.class;
+	}
+
+	@Override
+	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
+		return null;
 	}
 
 }

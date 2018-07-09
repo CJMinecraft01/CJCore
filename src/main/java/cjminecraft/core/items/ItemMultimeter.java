@@ -26,7 +26,6 @@ import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -38,7 +37,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -77,12 +75,10 @@ public class ItemMultimeter extends Item {
 	 * Add the different variants
 	 */
 	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if (isInCreativeTab(tab)) {
-			items.add(new ItemStack(this, 1, 0));
-			items.add(new ItemStack(this, 1, 1));
-			items.add(new ItemStack(this, 1, 2));
-		}
+	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> items) {
+		items.add(new ItemStack(item, 1, 0));
+		items.add(new ItemStack(item, 1, 1));
+		items.add(new ItemStack(item, 1, 2));
 	}
 
 	@Override
@@ -95,7 +91,7 @@ public class ItemMultimeter extends Item {
 	 * Allows the player to remove the target block
 	 */
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 		if (!player.isSneaking())
 			player.getHeldItem(hand).setTagCompound(new NBTTagCompound());
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
@@ -105,7 +101,7 @@ public class ItemMultimeter extends Item {
 	 * Add the target block
 	 */
 	@Override
-	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX,
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX,
 			float hitY, float hitZ, EnumHand hand) {
 		if (player.isSneaking() && ((EnergyUtils.hasSupport(world.getTileEntity(pos), side)
 				&& player.getHeldItem(hand).getItemDamage() == 0)
@@ -133,12 +129,12 @@ public class ItemMultimeter extends Item {
 	 * Add the tooltip
 	 */
 	@Override
-	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean flagIn) {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockPos")) {
 			BlockPos pos = NBTUtil.getPosFromTag(stack.getTagCompound().getCompoundTag("BlockPos"));
-			String blockName = world.getBlockState(pos).getBlock()
-					.getPickBlock(world.getBlockState(pos), new RayTraceResult(Type.BLOCK, new Vec3d(pos), null, pos),
-							world, pos, world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 8, false))
+			String blockName = player.getEntityWorld().getBlockState(pos).getBlock()
+					.getPickBlock(player.getEntityWorld().getBlockState(pos), new RayTraceResult(Type.BLOCK, new Vec3d(pos), null, pos),
+							player.getEntityWorld(), pos, player)
 					.getDisplayName();
 			tooltip.add(TextFormatting.GREEN
 					+ I18n.format("item.multimeter.tooltip.blockpos", blockName, pos.getX(), pos.getY(), pos.getZ()));
@@ -164,16 +160,16 @@ public class ItemMultimeter extends Item {
 
 		public MultimeterOverlay() {
 			super();
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_shock_suppressor"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_display_stand"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_firework_box"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_atomic_reconstructor"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_miner"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_lava_factory_controller"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_furnace_solar"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_heat_collector"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_leaf_generator"));
-			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "block_player_interface"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockShockSuppressor"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockDisplayStand"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockFireworkBox"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockAtomicReconstructor"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockMiner"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockLavaFactoryController"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockFurnaceSolar"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockHeatCollector"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockLeafGenerator"));
+			blacklistBlocksEnergy.add(new ResourceLocation("actuallyadditions", "blockPlayerInterface"));
 
 			OverlayBase itemOverlay = new OverlayInventory(this, CJCoreConfig.MULTIMETER_OFFSET_X,
 					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y).showOverlayText(false);
@@ -181,7 +177,7 @@ public class ItemMultimeter extends Item {
 			addOverlay(itemOverlay);
 
 			OverlayBase fluidOverlay = new OverlayBase(this, CJCoreConfig.MULTIMETER_OFFSET_X,
-					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 20)
+					this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30)
 							.showOverlayText(false);
 			fluidOverlay.addElement(new ElementItemSlot(this, 0, CJCoreConfig.MULTIMETER_FLUID_HEIGHT + 1));
 			fluidOverlay.setVisible(false);
@@ -206,21 +202,21 @@ public class ItemMultimeter extends Item {
 				if (this.overlays.get(2).isVisible())
 					this.overlays.get(1).setPosition(
 							this.overlays.get(2).getPosX() + this.overlays.get(2).getWidth() + 6,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 27);
 				else
 					this.overlays.get(1).setPosition(
 							this.overlays.get(0).getPosX() + this.overlays.get(0).getWidth() + 6,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 27);
 			} else {
 				this.overlays.get(2).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
 						this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_ENERGY_HEIGHT - 27);
 				if (this.overlays.get(2).isVisible())
 					this.overlays.get(1).setPosition(
 							this.overlays.get(2).getPosX() + this.overlays.get(2).getWidth() + 6,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 27);
 				else
 					this.overlays.get(1).setPosition(CJCoreConfig.MULTIMETER_OFFSET_X,
-							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 30);
+							this.height - CJCoreConfig.MULTIMETER_OFFSET_Y - CJCoreConfig.MULTIMETER_FLUID_HEIGHT - 27);
 			}
 			addInventoryOverlay();
 			addEnergyOverlay();
@@ -233,7 +229,7 @@ public class ItemMultimeter extends Item {
 		private void addEnergyOverlay() {
 			ItemStack energyMultimeter = InventoryUtils.findInHotbar(new ItemStack(CJCoreItems.multimeter, 1, 0),
 					this.player, true, false);
-			if (energyMultimeter.isEmpty()) {
+			if (energyMultimeter == null) {
 				this.overlays.get(2).setEnabled(false);
 				return;
 			}
@@ -306,7 +302,7 @@ public class ItemMultimeter extends Item {
 		private void addInventoryOverlay() {
 			ItemStack itemMultimeter = InventoryUtils.findInHotbar(new ItemStack(CJCoreItems.multimeter, 1, 1), player,
 					true, false);
-			if (itemMultimeter.isEmpty()) {
+			if (itemMultimeter == null) {
 				this.overlays.get(0).setEnabled(false);
 				return;
 			}
@@ -358,13 +354,13 @@ public class ItemMultimeter extends Item {
 		private void addFluidOverlay() {
 			ItemStack fluidMultimeter = InventoryUtils.findInHotbar(new ItemStack(CJCoreItems.multimeter, 1, 2), player,
 					true, false);
-			if (fluidMultimeter.isEmpty()) {
+			if (fluidMultimeter == null) {
 				this.overlays.get(1).setEnabled(false);
 				return;
 			}
 			this.overlays.get(1).setEnabled(false);
 			ElementItemSlot itemSlot = (ElementItemSlot) this.overlays.get(1).getElements().get(0);
-			if(this.overlays.get(1).getElements().size() > 1)
+			if (this.overlays.get(1).getElements().size() > 1)
 				itemSlot.setPosition(itemSlot.getPosX(), this.overlays.get(1).getElements().get(1).getHeight() + 6);
 			else
 				itemSlot.setPosition(itemSlot.getPosX(), CJCoreConfig.MULTIMETER_FLUID_HEIGHT + 2);
@@ -412,11 +408,12 @@ public class ItemMultimeter extends Item {
 													CJCoreConfig.MULTIMETER_ENERGY_HEIGHT));
 					} else {
 						for (int i = 0; i < FluidUtils.getNumberOfTanks(
-								this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit); i++)
+								this.mc.world.getTileEntity(result.getBlockPos()), result.sideHit); i++) {
 							((ElementFluidBar) this.overlays.get(1).getElements().get(i + 1))
 									.shouldSync(result.getBlockPos(), result.sideHit)
 									.setSize(CJCoreConfig.MULTIMETER_ENERGY_WIDTH,
 											CJCoreConfig.MULTIMETER_ENERGY_HEIGHT);
+						}
 					}
 					ItemStack block = getStackFromBlock(result.getBlockPos(), result.sideHit);
 					if (!InventoryUtils.isStackEqual(block, itemSlot.getStack(), true, false))
@@ -494,11 +491,11 @@ public class ItemMultimeter extends Item {
 				}
 			}
 			List<String> newText = new ArrayList<String>();
-			for(String text : overlayText)
-				if(!newText.contains(text))
+			for (String text : overlayText)
+				if (!newText.contains(text))
 					newText.add(text);
-			for(int i = 0; i < newText.size(); i++)
-				this.fontRenderer.drawStringWithShadow(newText.get(i), getOverlayTextX(),
+			for (int i = 0; i < newText.size(); i++)
+				this.fontRendererObj.drawStringWithShadow(newText.get(i), getOverlayTextX(),
 						this.height - 7 - ((i + 1) * 10), 0xFFFFFF);
 		}
 

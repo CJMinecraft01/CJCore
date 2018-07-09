@@ -13,10 +13,10 @@ import cjminecraft.core.util.SoundUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
@@ -123,7 +123,7 @@ public abstract class GuiCore extends GuiContainer {
 		if (stack != null)
 			font = stack.getItem().getFontRenderer(stack);
 		if (font == null)
-			font = this.fontRenderer;
+			font = this.fontRendererObj;
 
 		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
 		RenderHelper.disableStandardItemLighting();
@@ -313,7 +313,7 @@ public abstract class GuiCore extends GuiContainer {
 		GlStateManager.color(red, green, blue, alpha);
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
+		VertexBuffer buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		buffer.pos(x1, y2, this.zLevel).endVertex();
 		buffer.pos(x2, y2, this.zLevel).endVertex();
@@ -373,7 +373,7 @@ public abstract class GuiCore extends GuiContainer {
 	 */
 	public void drawSizedTexturedModalRectWithBorder(int x, int y, int u, int v, int width, int height,
 			float textureWidth, float textureHeight) {
-		this.drawSizedTexturedModalRect(x + 1, y + 1, u, v, width - 2, height - 2, textureWidth, textureHeight);
+		this.drawSizedTexturedModalRect(x + 1, y + 1, u, v, width - 2, height - 2, textureHeight, textureHeight);
 		this.drawBorder(x, y, width, height);
 	}
 
@@ -463,7 +463,7 @@ public abstract class GuiCore extends GuiContainer {
 		double minV = icon.getMinV();
 		double maxV = icon.getMaxV();
 
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buffer.pos(x, y + height, this.zLevel).tex(minU, minV + (maxV - minV) * height / 16F).endVertex();
 		buffer.pos(x + width, y + height, this.zLevel)
@@ -581,7 +581,7 @@ public abstract class GuiCore extends GuiContainer {
 	 * @return The font renderer
 	 */
 	public FontRenderer getFontRenderer() {
-		return this.fontRenderer;
+		return this.fontRendererObj;
 	}
 
 	/**
@@ -605,7 +605,7 @@ public abstract class GuiCore extends GuiContainer {
 	 * @return The x position of the string so that it is centered on the gui
 	 */
 	protected int getCenteredOffset(String string, int xWidth) {
-		return (xWidth - this.fontRenderer.getStringWidth(string)) / 2;
+		return (xWidth - this.fontRendererObj.getStringWidth(string)) / 2;
 	}
 
 }

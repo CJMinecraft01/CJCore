@@ -16,19 +16,20 @@ import net.minecraftforge.fml.relauncher.Side;
 public class CustomForgeEnergyStorage extends EnergyStorage {
 
 	public CustomForgeEnergyStorage(int capacity) {
-		super(capacity, capacity, capacity, 0);
+		super(capacity, capacity, capacity);
 	}
 
 	public CustomForgeEnergyStorage(int capacity, int maxTransfer) {
-		super(capacity, maxTransfer, maxTransfer, 0);
+		super(capacity, maxTransfer, maxTransfer);
 	}
 
 	public CustomForgeEnergyStorage(int capacity, int maxReceive, int maxExtract) {
-		super(capacity, maxReceive, maxExtract, 0);
+		super(capacity, maxReceive, maxExtract);
 	}
 
 	public CustomForgeEnergyStorage(int capacity, int maxReceive, int maxExtract, int energy) {
-		super(capacity, maxReceive, maxExtract, energy);
+		super(capacity, maxReceive, maxExtract);
+		this.energy = energy;
 	}
 
 	/**

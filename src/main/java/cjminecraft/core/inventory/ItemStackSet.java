@@ -50,14 +50,14 @@ public class ItemStackSet implements Set<ItemStack>, Iterable<ItemStack> {
 
 	@Override
 	public boolean add(ItemStack e) {
-		if(e.isEmpty())
+		if(e == null)
 			return false;
 		nbt = e.serializeNBT();
 		nbt.removeTag("Count");
 		if (contains(nbt))
-			this.stacks.replace(nbt, this.stacks.get(nbt) + e.getCount());
+			this.stacks.replace(nbt, this.stacks.get(nbt) + e.stackSize);
 		else 
-			this.stacks.put(nbt, e.getCount());
+			this.stacks.put(nbt, e.stackSize);
 		return true;
 	}
 
@@ -141,8 +141,8 @@ public class ItemStackSet implements Set<ItemStack>, Iterable<ItemStack> {
 	public ImmutableList<ItemStack> getStacks() {
 		List<ItemStack> stacksFinal = new ArrayList<ItemStack>();
 		for (NBTTagCompound nbt : this.stacks.keySet()) {
-			ItemStack stack = new ItemStack(nbt);
-			stack.setCount(this.stacks.get(nbt));
+			ItemStack stack = ItemStack.loadItemStackFromNBT(nbt);
+			stack.stackSize = this.stacks.get(nbt);
 			stacksFinal.add(stack);
 		}
 		return ImmutableList.<ItemStack>copyOf(stacksFinal);

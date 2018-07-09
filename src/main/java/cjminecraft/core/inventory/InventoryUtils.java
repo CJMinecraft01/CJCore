@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.inventory.PacketGetInventory;
 import net.minecraft.entity.item.EntityItem;
@@ -73,7 +72,7 @@ public class InventoryUtils {
 	 * @return How many slots are inside of the inventory
 	 */
 	public static int getSizeInventory(@Nullable ItemStack stack, @Nullable EnumFacing side) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null)
 			return 0;
 		if (stack.getItem() instanceof IInventory)
 			return ((IInventory) stack.getItem()).getSizeInventory();
@@ -117,7 +116,7 @@ public class InventoryUtils {
 	 * @return The last slot index in the inventory
 	 */
 	public static int getLastSlotIndex(@Nullable ItemStack stack, @Nullable EnumFacing side) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null)
 			return 0;
 		if (stack.getItem() instanceof IInventory)
 			return ((IInventory) stack.getItem()).getSizeInventory() - 1;
@@ -205,7 +204,7 @@ public class InventoryUtils {
 	 */
 	public static boolean isStackEqual(@Nullable ItemStack a, @Nullable ItemStack b, boolean ignoreNBT,
 			boolean ignoreMetaData) {
-		if (a == null || b == null || a.isEmpty() || b.isEmpty())
+		if (a == null || b == null)
 			return false;
 		if (ignoreNBT && ignoreMetaData)
 			return a.getItem() == b.getItem();
@@ -250,8 +249,9 @@ public class InventoryUtils {
 	 * @param to
 	 *            The last slot to search
 	 * @return The {@link ItemStack} from the player's inventory if it is found.
-	 *         If not it will return {@link ItemStack#EMPTY}
+	 *         If not it will return null
 	 */
+	@Nullable
 	public static ItemStack findInInventory(ItemStack toFind, @Nonnull EntityPlayer player, boolean ignoreNBT,
 			boolean ignoreMetaData, int from, int to) {
 		for (int slot = from; slot < player.inventory.getSizeInventory() && slot <= to; slot++) {
@@ -260,7 +260,7 @@ public class InventoryUtils {
 				return stack;
 			}
 		}
-		return ItemStack.EMPTY;
+		return null;
 	}
 
 	/**
@@ -277,12 +277,13 @@ public class InventoryUtils {
 	 *            Whether meta data should be ignored. Reference
 	 *            {@link #findInInventory(ItemStack, EntityPlayer, boolean, boolean, int, int)}
 	 * @return The {@link ItemStack} from the player's inventory if it is found.
-	 *         If not, it will return {@link ItemStack#EMPTY}
+	 *         If not, it will return null
 	 */
+	@Nullable
 	public static ItemStack findInHotbar(ItemStack toFind, @Nonnull EntityPlayer player, boolean ignoreNBT,
 			boolean ignoreMetaData) {
 		ItemStack stack = findInInventory(toFind, player, ignoreNBT, ignoreMetaData, 0, 8);
-		if (!isStackEqual(stack, toFind, ignoreNBT, ignoreMetaData) && !player.getHeldItemOffhand().isEmpty())
+		if (!isStackEqual(stack, toFind, ignoreNBT, ignoreMetaData) && player.getHeldItemOffhand() != null)
 			stack = findInInventory(toFind, player, ignoreNBT, ignoreMetaData, 40, 40);
 		return stack;
 	}
@@ -319,8 +320,8 @@ public class InventoryUtils {
 				if (slot < toSlot && slot > fromSlot) {
 					ItemStack stack = inv.getStackInSlot(slot);
 
-					if (!stack.isEmpty()) {
-						proportion += (float) stack.getCount()
+					if (stack != null) {
+						proportion += (float) stack.stackSize
 								/ (float) Math.min(inv.getInventoryStackLimit(), stack.getMaxStackSize());
 						itemsFound++;
 					}
@@ -328,7 +329,7 @@ public class InventoryUtils {
 			}
 
 			proportion = proportion / (float) inv.getSizeInventory();
-			return MathHelper.floor(proportion * 14.0F) + (itemsFound > 0 ? 1 : 0);
+			return MathHelper.absFloor(proportion * 14.0F) + (itemsFound > 0 ? 1 : 0);
 		}
 		if (te instanceof IInventory) {
 			IInventory inv = (IInventory) te;
@@ -341,8 +342,8 @@ public class InventoryUtils {
 				if (slot < toSlot && slot > fromSlot) {
 					ItemStack stack = inv.getStackInSlot(slot);
 
-					if (!stack.isEmpty()) {
-						proportion += (float) stack.getCount()
+					if (stack != null) {
+						proportion += (float) stack.stackSize
 								/ (float) Math.min(inv.getInventoryStackLimit(), stack.getMaxStackSize());
 						itemsFound++;
 					}
@@ -350,7 +351,7 @@ public class InventoryUtils {
 			}
 
 			proportion = proportion / (float) inv.getSizeInventory();
-			return MathHelper.floor(proportion * 14.0F) + (itemsFound > 0 ? 1 : 0);
+			return MathHelper.absFloor(proportion * 14.0F) + (itemsFound > 0 ? 1 : 0);
 		}
 		if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
@@ -363,15 +364,15 @@ public class InventoryUtils {
 				if (slot < toSlot && slot > fromSlot) {
 					ItemStack stack = inv.getStackInSlot(slot);
 
-					if (!stack.isEmpty()) {
-						proportion += (float) stack.getCount() / (float) Math.min(64, stack.getMaxStackSize());
+					if (stack != null) {
+						proportion += (float) stack.stackSize / (float) Math.min(64, stack.getMaxStackSize());
 						itemsFound++;
 					}
 				}
 			}
 
 			proportion = proportion / (float) inv.getSlots();
-			return MathHelper.floor(proportion * 14.0F) + (itemsFound > 0 ? 1 : 0);
+			return MathHelper.absFloor(proportion * 14.0F) + (itemsFound > 0 ? 1 : 0);
 		}
 		return 0;
 	}
@@ -424,9 +425,9 @@ public class InventoryUtils {
 	 *            into. For use with {@link ISidedInventory} and
 	 *            {@link Capability}
 	 * @return The items which were not inserted. If all the items were inserted
-	 *         (or would have been if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         (or would have been if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack insertStackInInventory(@Nullable TileEntity te, ItemStack stack, int fromSlot, int toSlot,
 			boolean simulate, @Nullable EnumFacing side) {
 		if (te == null)
@@ -441,69 +442,68 @@ public class InventoryUtils {
 				return stack;
 			for (int slot : slots) {
 				if (slot <= toSlot && slot >= fromSlot) {
-					if (remainder.isEmpty())
-						return ItemStack.EMPTY;
+					if (remainder == null || remainder.stackSize <= 0)
+						return null;
 					ItemStack inSlot = inv.getStackInSlot(slot);
-					if (inSlot.getCount() >= inv.getInventoryStackLimit()
-							|| inSlot.getCount() >= inSlot.getMaxStackSize())
+					if (inSlot != null && (inSlot.stackSize >= inv.getInventoryStackLimit()
+							|| inSlot.stackSize >= inSlot.getMaxStackSize()))
 						continue;
-					if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
-						int grow = Math.min(remainder.getCount(), inv.getInventoryStackLimit() - inSlot.getCount());
+					if (isStackEqual(stack, inSlot, false, false) || inSlot == null) {
+						int grow = Math.min(remainder.stackSize, inv.getInventoryStackLimit() - (inSlot == null ? 0 : inSlot.stackSize));
 						if (!simulate) {
-							if (inSlot.isEmpty() || inSlot.getCount() <= 0) {
+							if (inSlot == null || inSlot.stackSize <= 0) {
 								inv.setInventorySlotContents(slot,
 										new ItemStack(stack.getItem(), grow, stack.getItemDamage()));
 								if (stack.hasTagCompound())
 									inv.getStackInSlot(slot).setTagCompound(stack.getTagCompound());
 							} else
-								inv.getStackInSlot(slot).grow(grow);
+								inv.getStackInSlot(slot).stackSize += grow;
 						}
-						remainder.shrink(grow);
+						remainder.stackSize -= grow;
 					}
 				}
 			}
-			return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
+			return remainder;
 		}
 		if (te instanceof IInventory) {
 			IInventory inv = (IInventory) te;
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
 				return stack;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
-				if (remainder.isEmpty())
-					return ItemStack.EMPTY;
+				if (remainder == null || remainder.stackSize <= 0)
+					return null;
 				ItemStack inSlot = inv.getStackInSlot(slot);
-				if (inSlot.getCount() >= inv.getInventoryStackLimit()
-						|| inSlot.getCount() >= inSlot.getMaxStackSize())
+				if (inSlot != null && (inSlot.stackSize >= inv.getInventoryStackLimit()
+						|| inSlot.stackSize >= inSlot.getMaxStackSize()))
 					continue;
-				if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
-					int grow = Math.min(remainder.getCount(),
-							inv.getInventoryStackLimit() - inSlot.getCount());
+				if (isStackEqual(stack, inSlot, false, false) || inSlot == null) {
+					int grow = Math.min(remainder.stackSize, inv.getInventoryStackLimit() - (inSlot == null ? 0 : inSlot.stackSize));
 					if (!simulate) {
-						if (inSlot.isEmpty() || inSlot.getCount() <= 0) {
+						if (inSlot == null || inSlot.stackSize <= 0) {
 							inv.setInventorySlotContents(slot,
 									new ItemStack(stack.getItem(), grow, stack.getItemDamage()));
 							if (stack.hasTagCompound())
 								inv.getStackInSlot(slot).setTagCompound(stack.getTagCompound());
 						} else
-							inv.getStackInSlot(slot).grow(grow);
+							inv.getStackInSlot(slot).stackSize += grow;
 					}
-					remainder.shrink(grow);
+					remainder.stackSize -= grow;
 				}
 			}
-			return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
+			return remainder;
 		}
 		if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
 				return stack;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
-				if (remainder.isEmpty())
-					return ItemStack.EMPTY;
+				if (remainder == null || remainder.stackSize <= 0)
+					return null;
 				remainder = inv.insertItem(slot, remainder, simulate);
 			}
-			return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
+			return remainder;
 		}
-		return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
+		return remainder;
 	}
 
 	/**
@@ -523,9 +523,9 @@ public class InventoryUtils {
 	 *            into. For use with {@link ISidedInventory} and
 	 *            {@link Capability}
 	 * @return The items which were not inserted. If all the items were inserted
-	 *         (or would have been if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         (or would have been if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack insertStackInInventory(@Nullable TileEntity te, ItemStack stack, boolean simulate,
 			@Nullable EnumFacing side) {
 		return insertStackInInventory(te, stack, getFirstSlotIndex(te, side), getLastSlotIndex(te, side), simulate,
@@ -551,12 +551,12 @@ public class InventoryUtils {
 	 *            The side of the inventory to insert the {@link ItemStack}
 	 *            into. For use with {@link Capability}
 	 * @return The items which were not inserted. If all the items were inserted
-	 *         (or would have been if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         (or would have been if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack insertStackInInventory(@Nullable ItemStack inventory, ItemStack stack, int fromSlot,
 			int toSlot, boolean simulate, @Nullable EnumFacing side) {
-		if (inventory == null || inventory.isEmpty())
+		if (inventory == null)
 			return stack;
 		ItemStack remainder = stack.copy();
 		if (inventory.getItem() instanceof IInventory) {
@@ -564,41 +564,40 @@ public class InventoryUtils {
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
 				return stack;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
-				if (remainder.isEmpty())
-					return ItemStack.EMPTY;
+				if (remainder == null || remainder.stackSize <= 0)
+					return null;
 				ItemStack inSlot = inv.getStackInSlot(slot);
-				if (inSlot.getCount() >= inv.getInventoryStackLimit()
-						|| inSlot.getCount() >= inSlot.getMaxStackSize())
+				if (inSlot != null && (inSlot.stackSize >= inv.getInventoryStackLimit()
+						|| inSlot.stackSize >= inSlot.getMaxStackSize()))
 					continue;
-				if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
-					int grow = Math.min(remainder.getCount(),
-							inv.getInventoryStackLimit() - inSlot.getCount());
+				if (isStackEqual(stack, inSlot, false, false) || inSlot == null) {
+					int grow = Math.min(remainder.stackSize, inv.getInventoryStackLimit() - (inSlot == null ? 0 : inSlot.stackSize));
 					if (!simulate) {
-						if (inSlot.isEmpty() || inSlot.getCount() <= 0) {
+						if (inSlot == null || inSlot.stackSize <= 0) {
 							inv.setInventorySlotContents(slot,
 									new ItemStack(stack.getItem(), grow, stack.getItemDamage()));
 							if (stack.hasTagCompound())
 								inv.getStackInSlot(slot).setTagCompound(stack.getTagCompound());
 						} else
-							inv.getStackInSlot(slot).grow(grow);
+							inv.getStackInSlot(slot).stackSize += grow;
 					}
-					remainder.shrink(grow);
+					remainder.stackSize -= grow;
 				}
 			}
-			return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
+			return remainder;
 		}
 		if (inventory.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = inventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
 				return stack;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
-				if (remainder.isEmpty())
-					return ItemStack.EMPTY;
+				if (remainder == null || remainder.stackSize <= 0)
+					return null;
 				remainder = inv.insertItem(slot, remainder, simulate);
 			}
-			return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
+			return remainder;
 		}
-		return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
+		return remainder;
 	}
 
 	/**
@@ -617,9 +616,9 @@ public class InventoryUtils {
 	 *            The side of the inventory to insert the {@link ItemStack}
 	 *            into. For use with {@link Capability}
 	 * @return The items which were not inserted. If all the items were inserted
-	 *         (or would have been if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         (or would have been if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack insertStackInInventory(@Nullable ItemStack inventory, ItemStack stack, boolean simulate,
 			@Nullable EnumFacing side) {
 		return insertStackInInventory(inventory, stack, getFirstSlotIndex(stack, side), getLastSlotIndex(stack, side),
@@ -646,67 +645,67 @@ public class InventoryUtils {
 	 *            from. For use with {@link ISidedInventory} and
 	 *            {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable TileEntity te, ItemStack stack, int fromSlot,
 			int toSlot, boolean simulate, @Nullable EnumFacing side) {
 		if (te == null)
-			return ItemStack.EMPTY;
+			return null;
 		ItemStack extracted = stack.copy();
-		extracted.setCount(0);
+		extracted.stackSize = 0;
 		if (te instanceof ISidedInventory) {
 			ISidedInventory inv = (ISidedInventory) te;
 			int[] slots = inv.getSlotsForFace(side);
 			if (slots.length == 0)
-				return ItemStack.EMPTY;
+				return null;
 			if (slots[0] > toSlot || fromSlot > toSlot || slots[slots.length - 1] < fromSlot)
-				return ItemStack.EMPTY;
+				return null;
 			for (int slot : slots) {
 				if (slot <= toSlot && slot >= fromSlot) {
 					ItemStack inSlot = inv.getStackInSlot(slot);
 					if (isStackEqual(stack, inSlot, false, false)) {
-						int decreaseBy = Math.min(stack.getCount(), inSlot.getCount());
+						int decreaseBy = Math.min(stack.stackSize, inSlot.stackSize);
 						if (!simulate)
 							inv.decrStackSize(slot, decreaseBy);
-						stack.shrink(decreaseBy);
-						extracted.grow(decreaseBy);
+						stack.stackSize -= decreaseBy;
+						extracted.stackSize += decreaseBy;
 					}
 				}
 			}
-			return extracted.isEmpty() ? ItemStack.EMPTY : extracted;
+			return extracted;
 		}
 		if (te instanceof IInventory) {
 			IInventory inv = (IInventory) te;
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
-				return ItemStack.EMPTY;
+				return null;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
 				ItemStack inSlot = inv.getStackInSlot(slot);
 				if (isStackEqual(stack, inSlot, false, false)) {
-					int decreaseBy = Math.min(stack.getCount(), inSlot.getCount());
+					int decreaseBy = Math.min(stack.stackSize, inSlot.stackSize);
 					if (!simulate)
 						inv.decrStackSize(slot, decreaseBy);
-					stack.shrink(decreaseBy);
-					extracted.grow(decreaseBy);
+					stack.stackSize -= decreaseBy;
+					extracted.stackSize += decreaseBy;
 				}
 			}
-			return extracted.isEmpty() ? ItemStack.EMPTY : extracted;
+			return extracted;
 		}
 		if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
-				return ItemStack.EMPTY;
+				return null;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
 				ItemStack inSlot = inv.getStackInSlot(slot);
 				if (isStackEqual(stack, inSlot, false, false)) {
-					int countBefore = extracted.getCount();
-					extracted = inv.extractItem(slot, stack.getCount(), simulate);
-					stack.shrink(extracted.getCount() - countBefore);
+					int countBefore = extracted.stackSize;
+					extracted = inv.extractItem(slot, stack.stackSize, simulate);
+					stack.stackSize -= extracted.stackSize - countBefore;
 				}
 			}
-			return extracted.isEmpty() ? ItemStack.EMPTY : extracted;
+			return extracted;
 		}
-		return ItemStack.EMPTY;
+		return null;
 	}
 
 	/**
@@ -726,9 +725,9 @@ public class InventoryUtils {
 	 *            from. For use with {@link ISidedInventory} and
 	 *            {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable TileEntity te, ItemStack stack, boolean simulate,
 			@Nullable EnumFacing side) {
 		return extractStackFromInventory(te, stack, getFirstSlotIndex(te, side), getLastSlotIndex(te, side), simulate,
@@ -755,18 +754,18 @@ public class InventoryUtils {
 	 *            from. For use with {@link ISidedInventory} and
 	 *            {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable TileEntity te, int amount, int fromSlot, int toSlot,
 			boolean simulate, @Nullable EnumFacing side) {
 		if (te == null)
-			return ItemStack.EMPTY;
+			return null;
 		ImmutableList<ItemStack> inventory = getInventory(te, fromSlot, toSlot, side);
 		if (inventory.size() <= 0)
-			return ItemStack.EMPTY;
+			return null;
 		ItemStack stack = inventory.get(0);
-		stack.setCount(Math.min(amount, stack.getCount()));
+		stack.stackSize = Math.min(amount, stack.stackSize);
 		return extractStackFromInventory(te, stack, simulate, side);
 	}
 
@@ -786,9 +785,9 @@ public class InventoryUtils {
 	 *            from. For use with {@link ISidedInventory} and
 	 *            {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable TileEntity te, int amount, boolean simulate,
 			@Nullable EnumFacing side) {
 		return extractStackFromInventory(te, amount, getFirstSlotIndex(te, side), getLastSlotIndex(te, side), simulate,
@@ -814,46 +813,46 @@ public class InventoryUtils {
 	 *            The side of the inventory to extract the {@link ItemStack}
 	 *            from. For use with {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable ItemStack inventory, ItemStack stack, int fromSlot,
 			int toSlot, boolean simulate, @Nullable EnumFacing side) {
-		if (inventory == null || inventory.isEmpty())
-			return ItemStack.EMPTY;
+		if (inventory == null)
+			return null;
 		ItemStack extracted = stack.copy();
-		extracted.setCount(0);
+		extracted.stackSize = 0;
 		if (inventory.getItem() instanceof IInventory) {
 			IInventory inv = (IInventory) inventory.getItem();
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
-				return ItemStack.EMPTY;
+				return null;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
 				ItemStack inSlot = inv.getStackInSlot(slot);
 				if (isStackEqual(stack, inSlot, false, false)) {
-					int decreaseBy = MathHelper.clamp(stack.getCount(), 0, inSlot.getCount());
+					int decreaseBy = Math.min(stack.stackSize, inSlot.stackSize);
 					if (!simulate)
 						inv.decrStackSize(slot, decreaseBy);
-					stack.shrink(decreaseBy);
-					extracted.grow(decreaseBy);
+					stack.stackSize -= decreaseBy;
+					extracted.stackSize += decreaseBy;
 				}
 			}
-			return extracted.isEmpty() ? ItemStack.EMPTY : extracted;
+			return extracted;
 		}
 		if (inventory.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = inventory.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
-				return ItemStack.EMPTY;
+				return null;
 			for (int slot = fromSlot; slot <= toSlot; slot++) {
 				ItemStack inSlot = inv.getStackInSlot(slot);
 				if (isStackEqual(stack, inSlot, false, false)) {
-					int countBefore = extracted.getCount();
-					extracted = inv.extractItem(slot, stack.getCount(), simulate);
-					stack.shrink(extracted.getCount() - countBefore);
+					int countBefore = extracted.stackSize;
+					extracted = inv.extractItem(slot, stack.stackSize, simulate);
+					stack.stackSize -= extracted.stackSize - countBefore;
 				}
 			}
-			return extracted.isEmpty() ? ItemStack.EMPTY : extracted;
+			return extracted;
 		}
-		return ItemStack.EMPTY;
+		return null;
 	}
 
 	/**
@@ -872,9 +871,9 @@ public class InventoryUtils {
 	 *            The side of the inventory to extract the {@link ItemStack}
 	 *            from. For use with {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable ItemStack inventory, ItemStack stack, boolean simulate,
 			@Nullable EnumFacing side) {
 		return extractStackFromInventory(inventory, stack, getFirstSlotIndex(inventory, side),
@@ -900,18 +899,18 @@ public class InventoryUtils {
 	 *            The side of the inventory to extract the {@link ItemStack}
 	 *            from. For use with {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable ItemStack inventory, int amount, int fromSlot,
 			int toSlot, boolean simulate, @Nullable EnumFacing side) {
-		if (inventory == null || inventory.isEmpty())
-			return ItemStack.EMPTY;
+		if (inventory == null)
+			return null;
 		ImmutableList<ItemStack> inv = getInventory(inventory, fromSlot, toSlot, side);
 		if (inv.size() <= 0)
-			return ItemStack.EMPTY;
+			return null;
 		ItemStack stack = inv.get(0);
-		stack.setCount(Math.min(amount, stack.getCount()));
+		stack.stackSize = Math.min(amount, stack.stackSize);
 		return extractStackFromInventory(inventory, stack, simulate, side);
 	}
 
@@ -930,9 +929,9 @@ public class InventoryUtils {
 	 *            The side of the inventory to extract the {@link ItemStack}
 	 *            from. For use with {@link Capability}
 	 * @return The items which were extracted. If no items were extracted (or
-	 *         supposedly extracted if a simulation) it will return
-	 *         {@link ItemStack#EMPTY}
+	 *         supposedly extracted if a simulation) it will return null
 	 */
+	@Nullable
 	public static ItemStack extractStackFromInventory(@Nullable ItemStack inventory, int amount, boolean simulate,
 			@Nullable EnumFacing side) {
 		return extractStackFromInventory(inventory, amount, getFirstSlotIndex(inventory, side),
@@ -980,7 +979,7 @@ public class InventoryUtils {
 				for (int slot : slots) {
 					if (slot >= fromSlot && slot <= toSlot) {
 						ItemStack stack = inv.getStackInSlot(slot);
-						if (stack.isEmpty() || stack.getCount() != stack.getMaxStackSize())
+						if (stack == null || stack.stackSize != stack.getMaxStackSize())
 							return false;
 					}
 				}
@@ -991,7 +990,7 @@ public class InventoryUtils {
 			if (fromSlot <= toSlot && inv.getSizeInventory() > toSlot && inv.getSizeInventory() > fromSlot) {
 				for (int slot = fromSlot; slot < toSlot; slot++) {
 					ItemStack stack = inv.getStackInSlot(slot);
-					if (stack.isEmpty() || stack.getCount() != stack.getMaxStackSize())
+					if (stack == null || stack.stackSize != stack.getMaxStackSize())
 						return false;
 				}
 			}
@@ -1001,7 +1000,7 @@ public class InventoryUtils {
 			if (fromSlot <= toSlot && handler.getSlots() > toSlot && handler.getSlots() > fromSlot) {
 				for (int slot = fromSlot; slot < toSlot; slot++) {
 					ItemStack stack = handler.getStackInSlot(slot);
-					if (stack.isEmpty() || stack.getCount() != stack.getMaxStackSize())
+					if (stack == null || stack.stackSize != stack.getMaxStackSize())
 						return false;
 				}
 			}
@@ -1039,14 +1038,14 @@ public class InventoryUtils {
 	 */
 	public static boolean isInventoryFull(@Nullable ItemStack inventory, int fromSlot, int toSlot,
 			@Nullable EnumFacing side) {
-		if (inventory == null || inventory.isEmpty())
+		if (inventory == null)
 			return true;
 		if (inventory.getItem() instanceof IInventory) {
 			IInventory inv = (IInventory) inventory.getItem();
 			if (fromSlot <= toSlot && inv.getSizeInventory() > toSlot && inv.getSizeInventory() > fromSlot) {
 				for (int slot = fromSlot; slot < toSlot; slot++) {
 					ItemStack stack = inv.getStackInSlot(slot);
-					if (stack.isEmpty() || stack.getCount() != stack.getMaxStackSize())
+					if (stack == null || stack.stackSize != stack.getMaxStackSize())
 						return false;
 				}
 			}
@@ -1056,7 +1055,7 @@ public class InventoryUtils {
 			if (fromSlot <= toSlot && handler.getSlots() > toSlot && handler.getSlots() > fromSlot) {
 				for (int slot = fromSlot; slot < toSlot; slot++) {
 					ItemStack stack = handler.getStackInSlot(slot);
-					if (stack.isEmpty() || stack.getCount() != stack.getMaxStackSize())
+					if (stack == null || stack.stackSize != stack.getMaxStackSize())
 						return false;
 				}
 			}
@@ -1091,19 +1090,22 @@ public class InventoryUtils {
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot : slots)
 				if (slot <= toSlot && slot >= fromSlot)
-					inventory.add(inv.getStackInSlot(slot));
+					if (inv.getStackInSlot(slot) != null)
+						inventory.add(inv.getStackInSlot(slot));
 		} else if (te instanceof IInventory) {
 			IInventory inv = (IInventory) te;
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (inv.getStackInSlot(slot) != null)
+					inventory.add(inv.getStackInSlot(slot));
 		} else if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (inv.getStackInSlot(slot) != null)
+					inventory.add(inv.getStackInSlot(slot));
 		}
 		return ImmutableList.<ItemStack>copyOf(inventory);
 	}
@@ -1125,7 +1127,7 @@ public class InventoryUtils {
 	 */
 	public static ImmutableList<ItemStack> getInventory(@Nullable ItemStack stack, int fromSlot, int toSlot,
 			@Nullable EnumFacing side) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null)
 			return ImmutableList.<ItemStack>of();
 		List<ItemStack> inventory = new ArrayList<ItemStack>();
 		if (stack.getItem() instanceof IInventory) {
@@ -1133,13 +1135,15 @@ public class InventoryUtils {
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (inv.getStackInSlot(slot) != null)
+					inventory.add(inv.getStackInSlot(slot));
 		} else if (stack.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (inv.getStackInSlot(slot) != null)
+					inventory.add(inv.getStackInSlot(slot));
 		}
 		return ImmutableList.<ItemStack>copyOf(inventory);
 	}
@@ -1231,7 +1235,7 @@ public class InventoryUtils {
 	 */
 	public static ImmutableList<ItemStack> getInventoryStacked(@Nullable ItemStack inventory, int fromSlot, int toSlot,
 			@Nullable EnumFacing side) {
-		if (inventory == null || inventory.isEmpty())
+		if (inventory == null)
 			return ImmutableList.<ItemStack>of();
 		return ImmutableList
 				.<ItemStack>copyOf(new ItemStackSet(getInventory(inventory, fromSlot, toSlot, side)).getStacks());
@@ -1267,7 +1271,7 @@ public class InventoryUtils {
 	public static ImmutableList<ItemStack> getHotbar(@Nonnull EntityPlayer player, boolean includeOffhand) {
 		List<ItemStack> inv = new ArrayList<ItemStack>();
 		for (int i = 0; i < 8; i++)
-			inv.add(player.inventory.mainInventory.get(i));
+			inv.add(player.inventory.mainInventory[i]);
 		if (includeOffhand)
 			inv.add(player.getHeldItemOffhand());
 		return ImmutableList.<ItemStack>copyOf(inv);
@@ -1556,11 +1560,11 @@ public class InventoryUtils {
 	 * @return The {@link ItemStack} as a string
 	 */
 	public static String stackToString(ItemStack stack) {
-		String string = (stack.getCount() / 64 != 0 ? stack.getCount() / 64 + "x64" : "x")
-				+ ((stack.getCount() - ((stack.getCount() / 64) * 64)) != 0
-						? " + " + (stack.getCount() - ((stack.getCount() / 64) * 64)) : "")
+		String string = (stack.stackSize / 64 != 0 ? stack.stackSize / 64 + "x64" : "x")
+				+ ((stack.stackSize - ((stack.stackSize / 64) * 64)) != 0
+						? " + " + (stack.stackSize - ((stack.stackSize / 64) * 64)) : "")
 				+ " " + stack.getDisplayName();
-		if ((stack.getCount() / 64) == 0)
+		if ((stack.stackSize / 64) == 0)
 			string = string.replace(" + ", "");
 		return string;
 	}
@@ -1593,7 +1597,7 @@ public class InventoryUtils {
 	 * @return Whether the given {@link ItemStack} has an inventory
 	 */
 	public static boolean hasSupport(@Nullable ItemStack stack, @Nullable EnumFacing side) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null)
 			return false;
 		return stack.getItem() instanceof IInventory
 				|| stack.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
@@ -1816,9 +1820,8 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. The
-	 * inventory will be "stacked" - see
-	 * {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}. The
+	 * in the class path provided in the cache. The inventory will be "stacked"
+	 * - see {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}. The
 	 * calling class will be used as the name of the class in the cache
 	 * 
 	 * @param pos

@@ -312,7 +312,7 @@ public class CommandEditTileEntity extends CommandBase {
 		if (args[4].equalsIgnoreCase("get")) {
 			ImmutableList<ItemStack> inv = InventoryUtils.getInventoryStacked(te, side);
 			for (ItemStack stack : inv)
-				if (stack.getCount() > 0)
+				if (stack.stackSize > 0)
 					sender.sendMessage(new TextComponentString(InventoryUtils.stackToString(stack)));
 			return;
 		}

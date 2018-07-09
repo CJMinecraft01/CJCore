@@ -96,9 +96,9 @@ public class PacketGetCapacity implements IMessage {
 		}
 
 		void processMessage(PacketGetCapacity message, MessageContext ctx) {
-			if(!ctx.getServerHandler().player.getServerWorld().isBlockLoaded(message.pos))
+			if(!ctx.getServerHandler().playerEntity.getServerWorld().isBlockLoaded(message.pos))
 				return;
-			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
+			TileEntity te = ctx.getServerHandler().playerEntity.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
 			if (!EnergyUtils.hasSupport(te, message.side))
@@ -107,11 +107,11 @@ public class PacketGetCapacity implements IMessage {
 			if (message.updateField)
 				PacketHandler.INSTANCE.sendTo(
 						new PacketReturnCapacity(capacity, true, message.className, message.capacityFieldName),
-						ctx.getServerHandler().player);
+						ctx.getServerHandler().playerEntity);
 			else
 				PacketHandler.INSTANCE.sendTo(
 						new PacketReturnCapacity(capacity, false, message.modid, message.className),
-						ctx.getServerHandler().player);
+						ctx.getServerHandler().playerEntity);
 		}
 
 	}

@@ -39,8 +39,8 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 *            The {@link EnergyUnit} the energy is in
 	 */
 	public EnergyCapabilityProvider(ItemStack stack, NBTTagCompound nbt, EnergyUnit unit) {
-		this(stack, nbt.getInteger("Energy"), nbt.getInteger("Capacity"), nbt.getInteger("MaxReceive"),
-				nbt.getInteger("MaxExtract"), unit);
+		this(stack, nbt.getLong("Energy"), nbt.getLong("Capacity"), nbt.getLong("MaxReceive"),
+				nbt.getLong("MaxExtract"), unit);
 	}
 
 	/**
@@ -53,8 +53,8 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 * @param capacity
 	 *            The capacity of the {@link EnergyStorage}
 	 * @param maxReceive
-	 *            The maximum amount of energy the
-	 *            {@link EnergyStorage} can receive
+	 *            The maximum amount of energy the {@link EnergyStorage} can
+	 *            receive
 	 * @param maxExtract
 	 *            The maximum amount of energy that can be extracted from the
 	 *            {@link EnergyStorage}
@@ -63,11 +63,10 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 */
 	public EnergyCapabilityProvider(ItemStack stack, long energy, long capacity, long maxReceive, long maxExtract,
 			EnergyUnit unit) {
-		this.storage = new EnergyStorage(
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, capacity),
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxReceive),
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxExtract),
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, energy)) {
+		this.storage = new EnergyStorage((long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, capacity),
+				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxReceive),
+				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxExtract),
+				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, energy)) {
 			@Override
 			public long getEnergyStored() {
 				if (stack.hasTagCompound())

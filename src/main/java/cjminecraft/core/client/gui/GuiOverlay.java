@@ -43,7 +43,7 @@ public class GuiOverlay extends GuiCore {
 		});
 		this.mc = Minecraft.getMinecraft();
 		this.itemRender = this.mc.getRenderItem();
-		this.fontRenderer = this.mc.fontRenderer;
+		this.fontRendererObj = this.mc.fontRendererObj;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class GuiOverlay extends GuiCore {
 	 *            The event
 	 */
 	@SubscribeEvent(receiveCanceled = true)
-	public void drawOverlay(RenderGameOverlayEvent.Pre event) {
+	public void drawOverlay(RenderGameOverlayEvent.Post event) {
 		if (Minecraft.getMinecraft().currentScreen != null)
 			return;
 		this.player = Minecraft.getMinecraft().player;

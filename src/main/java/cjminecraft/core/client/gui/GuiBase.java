@@ -82,7 +82,7 @@ public abstract class GuiBase extends GuiCore {
 
 		super.drawScreen(x, y, partialTicks);
 
-		if (this.tooltips && this.mc.player.inventory.getItemStack().isEmpty()) {
+		if (this.tooltips && this.mc.player.inventory.getItemStack() == null) {
 			addTooltips(this.tooltip);
 			drawTooltip(this.tooltip);
 		}
@@ -100,14 +100,14 @@ public abstract class GuiBase extends GuiCore {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		if (this.drawTitle & this.name != null) {
 			if(this.centerTitle)
-				this.fontRenderer.drawString(I18n.format(this.name), getCenteredOffset(I18n.format(this.name)), 6,
+				this.fontRendererObj.drawString(I18n.format(this.name), getCenteredOffset(I18n.format(this.name)), 6,
 					0x404040);
 			else
-				this.fontRenderer.drawString(I18n.format(this.name), 6, 6,
+				this.fontRendererObj.drawString(I18n.format(this.name), 6, 6,
 						0x404040);
 		}
 		if (this.drawInventory)
-			this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 93, 0x404040);
+			this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 93, 0x404040);
 		drawElements(0, true);
 	}
 
@@ -328,7 +328,7 @@ public abstract class GuiBase extends GuiCore {
 	 *            The tooltip to draw at the mouse position
 	 */
 	public void drawTooltip(List<String> tooltip) {
-		drawTooltipHoveringText(tooltip, this.mouseX + this.guiLeft, this.mouseY + this.guiTop, this.fontRenderer);
+		drawTooltipHoveringText(tooltip, this.mouseX + this.guiLeft, this.mouseY + this.guiTop, this.fontRendererObj);
 		this.tooltip.clear();
 	}
 

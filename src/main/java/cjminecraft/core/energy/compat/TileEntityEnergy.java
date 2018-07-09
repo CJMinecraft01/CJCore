@@ -34,7 +34,7 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 	 * @param capacity
 	 *            The capacity of the energy storage
 	 */
-	public TileEntityEnergy(long capacity) {
+	public TileEntityEnergy(int capacity) {
 		this(capacity, capacity, capacity, 0);
 	}
 
@@ -46,7 +46,7 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 	 * @param maxTransfer
 	 *            The max receive and max extract of the energy storage
 	 */
-	public TileEntityEnergy(long capacity, long maxTransfer) {
+	public TileEntityEnergy(int capacity, int maxTransfer) {
 		this(capacity, maxTransfer, maxTransfer, 0);
 	}
 
@@ -60,7 +60,7 @@ public class TileEntityEnergy extends TileEntityBase implements IEnergyTile {
 	 * @param maxExtract
 	 *            The maximum amount of energy which can be extracted
 	 */
-	public TileEntityEnergy(long capacity, long maxReceive, long maxExtract) {
+	public TileEntityEnergy(int capacity, int maxReceive, int maxExtract) {
 		this(capacity, maxReceive, maxExtract, 0);
 	}
 

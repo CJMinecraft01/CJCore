@@ -136,9 +136,9 @@ public class PacketGetInventory implements IMessage {
 		}
 
 		void processMessage(PacketGetInventory message, MessageContext ctx) {
-			if(!ctx.getServerHandler().player.getServerWorld().isBlockLoaded(message.pos))
+			if(!ctx.getServerHandler().playerEntity.getServerWorld().isBlockLoaded(message.pos))
 				return;
-			TileEntity te = ctx.getServerHandler().player.getServerWorld().getTileEntity(message.pos);
+			TileEntity te = ctx.getServerHandler().playerEntity.getServerWorld().getTileEntity(message.pos);
 			if (te == null)
 				return;
 			if (!InventoryUtils.hasSupport(te, message.side))
@@ -156,11 +156,11 @@ public class PacketGetInventory implements IMessage {
 			if (message.updateField)
 				PacketHandler.INSTANCE.sendTo(
 						new PacketReturnInventory(inventory, true, message.className, message.inventoryFieldName),
-						ctx.getServerHandler().player);
+						ctx.getServerHandler().playerEntity);
 			else
 				PacketHandler.INSTANCE.sendTo(
 						new PacketReturnInventory(inventory, false, message.modid, message.className),
-						ctx.getServerHandler().player);
+						ctx.getServerHandler().playerEntity);
 		}
 	}
 

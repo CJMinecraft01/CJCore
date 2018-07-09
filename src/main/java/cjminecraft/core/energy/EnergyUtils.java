@@ -48,9 +48,8 @@ public class EnergyUtils {
 	private static HashMap<String, HashMap<String, EnergyData>> cachedEnergyData = new HashMap<String, HashMap<String, EnergyData>>();
 
 	public static final boolean TESLA_LOADED = Loader.isModLoaded("tesla");
-	public static final boolean INDUSTRAIL_CRAFT_LOADED = Loader.isModLoaded("ic2");
-	public static final boolean REDSTONE_FLUX_API_LOADED = Loader.isModLoaded("redstoneflux");
-
+	public static final boolean INDUSTRAIL_CRAFT_LOADED = Loader.isModLoaded("IC2");
+	
 	@CapabilityInject(ITeslaConsumer.class)
 	public static Capability<ITeslaConsumer> TESLA_CONSUMER;
 
@@ -59,7 +58,6 @@ public class EnergyUtils {
 
 	@CapabilityInject(ITeslaHolder.class)
 	public static Capability<ITeslaHolder> TESLA_HOLDER;
-
 	/**
 	 * Lists of registered support
 	 */
@@ -77,25 +75,23 @@ public class EnergyUtils {
 			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
 			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
 		}
-
+		
 		if (INDUSTRAIL_CRAFT_LOADED) {
 			CJCore.logger.info("Adding Industrial Craft 2 Support!");
 			addEnergyHolderSupport(new IndustrialCraftSupport.IndustrialCraftHolderSupport());
 			addEnergyConsumerSupport(new IndustrialCraftSupport.IndustrialCraftSinkSupport());
 			addEnergyProducerSupport(new IndustrialCraftSupport.IndustrialCraftSourceSupport());
 		}
-
-		if (REDSTONE_FLUX_API_LOADED) {
-			CJCore.logger.info("Adding CoFH Support!");
-			addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
-			addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
-			addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
-		}
-
+		
 		CJCore.logger.info("Adding Forge Energy Support!");
 		addEnergyHolderSupport(new ForgeEnergySupport.ForgeEnergyHolder());
 		addEnergyConsumerSupport(new ForgeEnergySupport.ForgeEnergyConsumer());
 		addEnergyProducerSupport(new ForgeEnergySupport.ForgeEnergyProducer());
+
+		CJCore.logger.info("Adding CoFH Support!");
+		addEnergyHolderSupport(new CoFHSupport.CoFHHolderSupport());
+		addEnergyConsumerSupport(new CoFHSupport.CoFHReceiverSupport());
+		addEnergyProducerSupport(new CoFHSupport.CoFHProviderSupport());
 	}
 
 	/**
@@ -234,7 +230,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyHolderSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null)
 			return null;
 		for (IEnergySupport<I> support : energyHolderSupport)
 			if (support.hasSupport(stack, from))
@@ -257,7 +253,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyConsumerSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null)
 			return null;
 		for (IEnergySupport<I> support : energyConsumerSupport)
 			if (support.hasSupport(stack, from))
@@ -280,7 +276,7 @@ public class EnergyUtils {
 	 */
 	@Nullable
 	public static <I> IEnergySupport<I> getEnergyProducerSupport(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null)
 			return null;
 		for (IEnergySupport<I> support : energyProducerSupport)
 			if (support.hasSupport(stack, from))
@@ -1199,7 +1195,6 @@ public class EnergyUtils {
 	 *            The name of the class which the data was requested from
 	 * @return The latest data from the given class
 	 */
-	@Nullable
 	public static EnergyData getCachedEnergyData(String modid, String className) {
 		if (!cachedEnergyData.containsKey(modid))
 			return null;
