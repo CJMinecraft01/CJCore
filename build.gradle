@@ -26,10 +26,12 @@ task javadocJar(type: Jar, dependsOn: 'javadoc') {
     classifier "javadoc"
 }
 
+/*
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
 }
+*/
 
 task srcJar(type: Jar, dependsOn: "sourceMainJava") {
     from sourceSets.main.allSource
@@ -64,6 +66,10 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
+	
+	maven { 
+		url 'https://jitpack.io' 
+	}
 }
 
 allprojects {
@@ -105,5 +111,8 @@ publishing {
             artifact srcJar
             artifactId = archivesBaseName
         }
+    }
+	repositories {
+        mavenLocal()
     }
 }
