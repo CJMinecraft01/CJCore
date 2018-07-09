@@ -8,8 +8,9 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'maven-publish'
 
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 version = "0.0.3.2"
 group = "cjminecraft.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -99,9 +100,9 @@ processResources {
 publishing {
     publications {
         all(MavenPublication) {
-            artifact srcJar
+            artifact jar
             artifact deobfJar
-            artifact sourcesJar
+            artifact srcJar
             artifactId = archivesBaseName
         }
     }
