@@ -96,3 +96,13 @@ processResources {
     }
 }
 
+publishing {
+    publications {
+        all(MavenPublication) {
+            artifact srcJar
+            artifact deobfJar
+            artifact sourcesJar
+            artifactId = archivesBaseName
+        }
+    }
+}
