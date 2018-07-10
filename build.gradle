@@ -40,7 +40,7 @@ task srcJar(type: Jar, dependsOn: "sourceMainJava") {
 
 artifacts {
 	archives srcJar
-	archives deobfJar
+	// archives deobfJar
 	archives javadocJar
 }
 
@@ -107,7 +107,7 @@ publishing {
     publications {
         all(MavenPublication) {
             artifact jar
-            artifact deobfJar
+            // artifact deobfJar
             artifact srcJar
             artifactId = archivesBaseName
         }
