@@ -25,10 +25,12 @@ task javadocJar(type: Jar, dependsOn: 'javadoc') {
     classifier "javadoc"
 }
 
+/*
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
 }
+*/
 
 task srcJar(type: Jar, dependsOn: "sourceMainJava") {
     from sourceSets.main.allSource
@@ -37,7 +39,7 @@ task srcJar(type: Jar, dependsOn: "sourceMainJava") {
 
 artifacts {
 	archives srcJar
-	archives deobfJar
+	// archives deobfJar
 	archives javadocJar
 }
 
@@ -96,3 +98,16 @@ processResources {
     }
 }
 
+publishing {
+    publications {
+        all(MavenPublication) {
+            artifact jar
+            // artifact deobfJar
+            artifact srcJar
+            artifactId = archivesBaseName
+        }
+    }
+	repositories {
+        mavenLocal()
+    }
+}
