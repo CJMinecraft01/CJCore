@@ -26,10 +26,12 @@ allprojects {
     }
 }
 
+/*
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
 }
+*/
 
 task srcJar(type: Jar, dependsOn: "sourceMainJava") {
     from sourceSets.main.allSource
@@ -43,7 +45,7 @@ task javadocJar(type: Jar, dependsOn: 'javadoc') {
 artifacts {
 	archives javadocJar
 	archives srcJar
-	archives deobfJar
+	// archives deobfJar
 }
 
 minecraft {
@@ -94,3 +96,16 @@ processResources {
 
 }
 
+publishing {
+    publications {
+        all(MavenPublication) {
+            artifact jar
+            // artifact deobfJar
+            artifact srcJar
+            artifactId = archivesBaseName
+        }
+    }
+	repositories {
+        mavenLocal()
+    }
+}
