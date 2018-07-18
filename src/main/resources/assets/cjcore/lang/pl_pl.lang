@@ -71,9 +71,9 @@ item.multimeter.energy.name=Multimetr (Energia)
 item.multimeter.item.name=Multimetr (Przedmiot)
 item.multimeter.fluid.name=Multimetr (Płyn)
 item.multimeter.tooltip.blockpos=Wskazuję na blok %s w %s %s %s
-item.multimeter.tooltip.energy=Multimetr pozwala użytkownikom widzieć energię wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko energię wewnątrz tego bloku. Poprzez klinkięcie PPM w powietrzu, celowany blok się zresetuje.
-item.multimeter.tooltip.item=Multimetr pozwala użytkownikom widzieć przedmioty wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko przedmioty wewnątrz tego bloku. Poprzez klinkięcie PPM w powietrzu, celowany blok się zresetuje.
-item.multimeter.tooltip.fluid=Multimetr pozwala użytkownikom widzieć płyny wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko płyny wewnątrz tego bloku. Poprzez klinkięcie PPM w powietrzu, celowany blok się zresetuje.
+item.multimeter.tooltip.energy=Multimetr pozwala użytkownikom widzieć energię wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko energię wewnątrz tego bloku. Poprzez kliknięcie PPM w powietrzu, celowany blok się zresetuje.
+item.multimeter.tooltip.item=Multimetr pozwala użytkownikom widzieć przedmioty wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko przedmioty wewnątrz tego bloku. Poprzez kliknięcie PPM w powietrzu, celowany blok się zresetuje.
+item.multimeter.tooltip.fluid=Multimetr pozwala użytkownikom widzieć płyny wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko płyny wewnątrz tego bloku. Poprzez kliknięcie PPM w powietrzu, celowany blok się zresetuje.
 
 update.ready=Aktualizacja dla %s jest dostępna!
 update.version=Obecna wersja: %s, najnowsza: %s
@@ -82,7 +82,7 @@ update.changelog=Najedź aby zobaczyć zmiany
 
 command.tileentity.usage=/tileenitty <x> <y> <z> <energy:inventory:fluid> get [side] lub /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side] lub /tileenitty <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] lub /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] lub /tileentity <x> <y> <z> fluid drain <amount> [side]
 command.tileentity.nosupport=Blok z danymi w %s %s %s nie jest wspierany
-command.tileentity.notake=Ten blok z danymi nie poznwala na zabieranie energii 
-command.tileentity.nogive=Ten blok z danymi nie poznwala na dawanie energii
-command.tileentity.noset=Ten blok z danymi nie poznwala na ustawianie poziomu energii
+command.tileentity.notake=Ten blok z danymi nie pozwala na zabieranie energii 
+command.tileentity.nogive=Ten blok z danymi nie pozwala na dawanie energii
+command.tileentity.noset=Ten blok z danymi nie pozwala na ustawianie poziomu energii
 command.tileentity.invalidFluid=Ta ciecz nie istnieje!
