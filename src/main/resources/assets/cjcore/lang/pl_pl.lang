@@ -1,0 +1,88 @@
+energy.utils.repeat_support=Wsparcie energetyczne %s jest już zarejestrowane - POMIJAM
+energy.utils.support_success=Pomyślnie zarejestrowano wsparcie energetyczne %s
+
+energy.unit.repeat_registration=Jednostka energii %s jest już zarejestrowana - POMIJAM
+energy.unit.registration_success=Pomyślnie zarejestrowano jednostkę energii %s
+energy.unit.name=Nazwa: %s
+energy.unit.suffix=Sufiks: %s
+energy.unit.multiplier=Mnożnik: %s
+energy.percentage=%s Naładowania
+
+energy.unit.forge_energy.name=Forge Energy
+energy.unit.forge_energy.suffix=FE
+energy.unit.redstone_flux.name=Redstone Flux
+energy.unit.redstone_flux.suffix=RF
+energy.unit.tesla.name=Tesla
+energy.unit.tesla.suffix=T
+energy.unit.joules.name=Joules
+energy.unit.joules.suffix=J
+energy.unit.minecraft_joules.name=Minecraft Joules
+energy.unit.minecraft_joules.suffix=MJ
+energy.unit.energy_unit.name=Energy Unit
+energy.unit.energy_unit.suffix=EU
+
+energy.container.energy=Energia
+energy.container.capacity=Pojemność
+energy.container.max_input=Maks. Wejście
+energy.container.max_output=Maks. Wyjście
+
+fluid.empty=Pusty
+
+gui.config.main_title=Konfiguracja CJCore
+
+gui.config.category.energy=Konfiguracja Energii
+gui.config.category.energy.tooltip=Wszystko związane z energią
+gui.config.energy.default_energy_unit.name=Domyślna Jednostka Energii
+gui.config.energy.default_energy_unit.comment=Jednostka energii, którą będziesz widział
+gui.config.energy.energy_bar_show_capacity.name=Wyświetlanie Pojemności Paska Energii
+gui.config.energy.energy_bar_show_capacity.comment=Czy pasek energii powinien pokazywać pojemność
+gui.config.energy.energy_bar_simplify_energy.name=Uproszczenie Energii Paska Energii 
+gui.config.energy.energy_bar_simplify_energy.comment=Czy upraszczać sposób, w jaki energia jest wyświetlana używając paska energii
+
+gui.config.category.fluid=Konfiguracja Płynów
+gui.config.category.fluid.tooltip=Wszystko związane z płynami
+gui.config.fluid.fluid_bar_show_capacity.name=Wyświetlanie Pojemności Paska Płynów
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Czy pasek płynów powinien pokazywać pojemność
+gui.config.fluid.fluid_bar_simplify_fluids.name=Uproszczenie Płynów Paska Płynów 
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Czy upraszczać sposób, w jaki płyny są wyświetlane używając paska płynów
+
+gui.config.category.update_checker=Sprawdzanie Aktualizacji
+gui.config.category.update_checker.tooltip=Wyłącz dowolne sprawdzanie aktualizacji, które używa CJCore
+gui.config.update_checker.enabled.comment=Czy sprawdzanie aktualizacji tego moda jest włączone
+
+gui.config.category.multimeter=Konfiguracja Multimetra
+gui.config.category.multimeter.tooltip=Wszystko związane z multimetrem
+gui.config.multimeter.offset_x.name=Przesunięcie multimetra na osi X
+gui.config.multimeter.offset_x.comment=Przesunięcie z lewej strony podczas używania multimetra
+gui.config.multimeter.offset_y.name=Przesunięcie multimetra na osi Y
+gui.config.multimeter.offset_y.comment=Przesunięcie z dołu podczas używania multimetra
+gui.config.multimeter.energy_width.name=Szerokość Energii Multimetra
+gui.config.multimeter.energy_width.comment=Szerokość interfejsu energii multimetra
+gui.config.multimeter.energy_height.name=Wysokość Energii Multimetra
+gui.config.multimeter.energy_height.comment=Wysokość interfejsu energii multimetra
+gui.config.multimeter.fluid_width.name=Szerokość Płynów Multimetra
+gui.config.multimeter.fluid_width.comment=Szerokość interfejsu płynów multimetra
+gui.config.multimeter.fluid_height.name=Wysokość Płynów Multimetra
+gui.config.multimeter.fluid_height.comment=Wysokość interfejsu płynów multimetra
+gui.config.multimeter.item_max_columns.name=Maks. Kolumn Przedmiotów Multimetra
+gui.config.multimeter.item_max_columns.comment=Maksymalna liczba kolum w multimetrze do przedmiotów
+
+item.multimeter.energy.name=Multimetr (Energia)
+item.multimeter.item.name=Multimetr (Przedmiot)
+item.multimeter.fluid.name=Multimetr (Płyn)
+item.multimeter.tooltip.blockpos=Wskazuję na blok %s w %s %s %s
+item.multimeter.tooltip.energy=Multimetr pozwala użytkownikom widzieć energię wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko energię wewnątrz tego bloku. Poprzez klinkięcie PPM w powietrzu, celowany blok się zresetuje.
+item.multimeter.tooltip.item=Multimetr pozwala użytkownikom widzieć przedmioty wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko przedmioty wewnątrz tego bloku. Poprzez klinkięcie PPM w powietrzu, celowany blok się zresetuje.
+item.multimeter.tooltip.fluid=Multimetr pozwala użytkownikom widzieć płyny wewnątrz dowolnego bloku, bez otwierania jego gui! Podczas kucania, kliknij PPM na blok, aby ustawić go jako cel po to, żeby multimetr wskazywał tylko płyny wewnątrz tego bloku. Poprzez klinkięcie PPM w powietrzu, celowany blok się zresetuje.
+
+update.ready=Aktualizacja dla %s jest dostępna!
+update.version=Obecna wersja: %s, najnowsza: %s
+update.download=Kliknij aby pobrać
+update.changelog=Najedź aby zobaczyć zmiany
+
+command.tileentity.usage=/tileenitty <x> <y> <z> <energy:inventory:fluid> get [side] lub /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side] lub /tileenitty <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] lub /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] lub /tileentity <x> <y> <z> fluid drain <amount> [side]
+command.tileentity.nosupport=Blok z danymi w %s %s %s nie jest wspierany
+command.tileentity.notake=Ten blok z danymi nie poznwala na zabieranie energii 
+command.tileentity.nogive=Ten blok z danymi nie poznwala na dawanie energii
+command.tileentity.noset=Ten blok z danymi nie poznwala na ustawianie poziomu energii
+command.tileentity.invalidFluid=Ta ciecz nie istnieje!
