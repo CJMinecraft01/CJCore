@@ -5,7 +5,7 @@ import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.inventory.InventoryUtils;
-import cjminecraft.core.util.VersionChecker;
+import cjminecraft.core.util.UpdateChecker;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
@@ -16,11 +16,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CJCoreEvents {
-
-	@SubscribeEvent
-	public void onPlayerLogIn(PlayerLoggedInEvent event) {
-		VersionChecker.checkForUpdate(VersionChecker.cjcoreURL, CJCore.MODID, CJCore.VERSION, event.player);
-	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)

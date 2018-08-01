@@ -64,7 +64,7 @@ public class CJCoreItems {
 	 */
 	public static void registerRender(Item item) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(
-				new ResourceLocation(CJCore.MODID, item.getUnlocalizedName().substring(5)), "inventory"));
+				new ResourceLocation(CJCore.MODID, item.getTranslationKey()), "inventory"));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class CJCoreItems {
 	 */
 	public static void registerRender(Item item, int meta) {
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(
-				new ResourceLocation(CJCore.MODID, item.getUnlocalizedName().substring(5)), "inventory"));
+				new ResourceLocation(CJCore.MODID, item.getTranslationKey()), "inventory"));
 	}
 
 	/**
