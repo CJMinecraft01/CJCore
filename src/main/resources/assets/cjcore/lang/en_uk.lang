@@ -76,7 +76,7 @@ item.multimeter.tooltip.item=The multimeter allows users to see the inventory in
 item.multimeter.tooltip.fluid=The multimeter allows users to see the fluids inside of any block without actually opening their gui! Sneak right click on a block to set the target block so the multimeter will only show the fluids inside of that block. By right clicking air, the target block will reset
 
 update.ready=There is an update for %s available!
-update.version=Current Version: %s, newest Version: %s
+update.version=Current version: %s, newest version: %s
 update.download=Click To Download
 update.changelog=Hover to show change log
 
