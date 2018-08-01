@@ -155,6 +155,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 		if (!container.hasTagCompound())
 			container.setTagCompound(new NBTTagCompound());
@@ -169,6 +170,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
@@ -183,6 +185,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int getEnergyStored(ItemStack container) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
@@ -190,6 +193,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int getMaxEnergyStored(ItemStack container) {
 		return (int) this.capacity;
 	}
