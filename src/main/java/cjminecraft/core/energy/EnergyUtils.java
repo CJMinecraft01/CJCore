@@ -1780,6 +1780,13 @@ public class EnergyUtils {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetEnergyData(unit, pos, side, true, className, energyFieldName, capacityFieldName));
 	}
+	
+	/**
+ 	 * Clears all the cached energy data
+ 	 */
+ 	public static void clearCache() {
+ 		cachedEnergyData.clear();
+ 	}
 
 	/**
 	 * Gets the durability for use with a durability bar for the given

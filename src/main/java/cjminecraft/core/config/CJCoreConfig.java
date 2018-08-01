@@ -141,7 +141,7 @@ public class CJCoreConfig {
 	/**
 	 * For use in {@link CJCore} only
 	 */
-	public static void preInit() {
+	public static void init() {
 		File configFile = new File(Loader.instance().getConfigDir(), "CJCore.cfg");
 		config = new Configuration(configFile);
 		syncFromFile();

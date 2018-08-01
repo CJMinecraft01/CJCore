@@ -2023,5 +2023,12 @@ public class InventoryUtils {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetInventory(pos, side, true, true,
 				new Exception().getStackTrace()[1].getClassName(), inventoryFieldName));
 	}
+	
+	/**
+	 * Clear all the cached inventory data
+	 */
+	public static void clearCache() {
+		cachedInventoryData.clear();
+	}
 
 }

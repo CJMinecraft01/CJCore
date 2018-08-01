@@ -720,9 +720,35 @@ public class FluidUtils {
 				new Exception().getStackTrace()[1].getClassName()));
 	}
 
+	/**
+	 * Sync fluid data with the server. To get the data, use
+	 * {@link #getCachedFluidData(String)} or
+	 * {@link #getCachedFluidData(String, String)}. This will store the data in
+	 * the calling class in the cache
+	 * 
+	 * @param tankIndex
+	 *            The index of the tank to get the information from (for blocks
+	 *            which have more than one tank)
+	 * @param pos
+	 *            The position of the {@link TileEntity}
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param modid
+	 *            The modid for mod specific data
+	 * @param className
+	 *            The name of the class which will be used by the cache
+	 */
 	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing from, String modid,
 			String className) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, from, false, modid, className));
+	}
+	
+	/**
+	 * Clears all the cached fluid data
+	 */
+	public static void clearCache() {
+		cachedFluidData.clear();
 	}
 
 }

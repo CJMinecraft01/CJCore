@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "0.0.3.2"
+version = "0.0.4.0"
 group = "cjminecraft.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cjcore-1.11"
 
@@ -44,10 +44,10 @@ artifacts {
 }
 
 minecraft {
-    version = "1.11.2-13.20.1.2579"
+    version = "1.11.2-13.20.1.2588"
     runDir = "run"
 	replace '${version}', project.version
-    mappings = "stable_32"
+    mappings = "snapshot_20170612"
 }
 
 repositories {

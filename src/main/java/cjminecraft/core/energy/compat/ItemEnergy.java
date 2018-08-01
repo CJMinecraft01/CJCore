@@ -82,7 +82,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		if (nbt != null && nbt.hasKey("Energy") && nbt.hasKey("Capacity") && nbt.hasKey("MaxReceive")
 				&& nbt.hasKey("MaxExtract"))
 			return new EnergyCapabilityProvider(stack, nbt, EnergyUnits.FORGE_ENERGY);
-		return new EnergyCapabilityProvider(stack, getEnergyStored(stack), this.capacity, this.maxReceive,
+		return new EnergyCapabilityProvider(stack, 0, this.capacity, this.maxReceive,
 				this.maxExtract, EnergyUnits.FORGE_ENERGY);
 	}
 
