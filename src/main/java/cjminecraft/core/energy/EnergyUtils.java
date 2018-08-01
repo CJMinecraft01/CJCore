@@ -11,9 +11,13 @@ import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import buildcraft.api.mj.IMjPassiveProvider;
+import buildcraft.api.mj.IMjReadable;
+import buildcraft.api.mj.IMjReceiver;
 import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
 import cjminecraft.core.energy.support.IEnergySupport;
@@ -49,6 +53,7 @@ public class EnergyUtils {
 
 	public static final boolean TESLA_LOADED = Loader.isModLoaded("tesla");
 	public static final boolean INDUSTRAIL_CRAFT_LOADED = Loader.isModLoaded("ic2");
+	public static final boolean BUILDCRAFT_LOADED = Loader.isModLoaded("buildcraftlib");
 	public static final boolean REDSTONE_FLUX_API_LOADED = Loader.isModLoaded("redstoneflux");
 
 	@CapabilityInject(ITeslaConsumer.class)
@@ -59,6 +64,15 @@ public class EnergyUtils {
 
 	@CapabilityInject(ITeslaHolder.class)
 	public static Capability<ITeslaHolder> TESLA_HOLDER;
+	
+	@CapabilityInject(IMjReceiver.class)
+	public static Capability<IMjReceiver> BUILDCRAFT_RECEIVER;
+
+	@CapabilityInject(IMjPassiveProvider.class)
+	public static Capability<IMjPassiveProvider> BUILDCRAFT_PASSIVE_PROVIDER;
+
+	@CapabilityInject(IMjReadable.class)
+	public static Capability<IMjReadable> BUILDCRAFT_READABLE;
 
 	/**
 	 * Lists of registered support
@@ -76,6 +90,13 @@ public class EnergyUtils {
 			addEnergyHolderSupport(new TeslaSupport.TeslaHolderSupport());
 			addEnergyConsumerSupport(new TeslaSupport.TeslaConsumerSupport());
 			addEnergyProducerSupport(new TeslaSupport.TeslaProducerSupport());
+		}
+		
+		if (BUILDCRAFT_LOADED) {
+			CJCore.logger.info("Adding Buildcraft Support!");
+			addEnergyHolderSupport(new BuildCraftSupport.BuildCraftHolderSupport());
+			addEnergyConsumerSupport(new BuildCraftSupport.BuildCraftReceiverSupport());
+			addEnergyProducerSupport(new BuildCraftSupport.BuildCraftProviderSupport());
 		}
 
 		if (INDUSTRAIL_CRAFT_LOADED) {
@@ -1762,6 +1783,13 @@ public class EnergyUtils {
 			String className, String energyFieldName, String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(
 				new PacketGetEnergyData(unit, pos, side, true, className, energyFieldName, capacityFieldName));
+	}
+	
+	/**
+	 * Clears all the cached energy data
+	 */
+	public static void clearCache() {
+		cachedEnergyData.clear();
 	}
 
 	/**
