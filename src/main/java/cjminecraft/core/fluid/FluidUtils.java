@@ -552,7 +552,8 @@ public class FluidUtils {
 			boolean simulate) {
 		if (stack == null || stack.isEmpty() || resource == null)
 			return 0;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).fill(resource, !simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).fill(resource,
+				!simulate);
 	}
 
 	/**
@@ -600,7 +601,8 @@ public class FluidUtils {
 			boolean simulate) {
 		if (stack == null || stack.isEmpty() || resource == null)
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(resource, !simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(resource,
+				!simulate);
 	}
 
 	/**
@@ -648,7 +650,8 @@ public class FluidUtils {
 			boolean simulate) {
 		if (stack == null || stack.isEmpty())
 			return null;
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(maxDrain, !simulate);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, from).drain(maxDrain,
+				!simulate);
 	}
 
 	/**
@@ -720,9 +723,35 @@ public class FluidUtils {
 				new Exception().getStackTrace()[1].getClassName()));
 	}
 
+	/**
+	 * Sync fluid data with the server. To get the data, use
+	 * {@link #getCachedFluidData(String)} or
+	 * {@link #getCachedFluidData(String, String)}. This will store the data in
+	 * the calling class in the cache
+	 * 
+	 * @param tankIndex
+	 *            The index of the tank to get the information from (for blocks
+	 *            which have more than one tank)
+	 * @param pos
+	 *            The position of the {@link TileEntity}
+	 * @param from
+	 *            The side of the {@link TileEntity} for use with
+	 *            {@link Capability}
+	 * @param modid
+	 *            The modid for mod specific data
+	 * @param className
+	 *            The name of the class which will be used by the cache
+	 */
 	public static void syncFluidData(int tankIndex, BlockPos pos, @Nullable EnumFacing from, String modid,
 			String className) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetFluidData(tankIndex, pos, from, false, modid, className));
+	}
+
+	/**
+	 * Clears all the cached fluid data
+	 */
+	public static void clearCache() {
+		cachedFluidData.clear();
 	}
 
 }

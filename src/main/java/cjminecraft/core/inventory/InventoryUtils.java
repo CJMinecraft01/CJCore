@@ -472,12 +472,10 @@ public class InventoryUtils {
 				if (remainder.isEmpty())
 					return ItemStack.EMPTY;
 				ItemStack inSlot = inv.getStackInSlot(slot);
-				if (inSlot.getCount() >= inv.getInventoryStackLimit()
-						|| inSlot.getCount() >= inSlot.getMaxStackSize())
+				if (inSlot.getCount() >= inv.getInventoryStackLimit() || inSlot.getCount() >= inSlot.getMaxStackSize())
 					continue;
 				if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
-					int grow = Math.min(remainder.getCount(),
-							inv.getInventoryStackLimit() - inSlot.getCount());
+					int grow = Math.min(remainder.getCount(), inv.getInventoryStackLimit() - inSlot.getCount());
 					if (!simulate) {
 						if (inSlot.isEmpty() || inSlot.getCount() <= 0) {
 							inv.setInventorySlotContents(slot,
@@ -567,12 +565,10 @@ public class InventoryUtils {
 				if (remainder.isEmpty())
 					return ItemStack.EMPTY;
 				ItemStack inSlot = inv.getStackInSlot(slot);
-				if (inSlot.getCount() >= inv.getInventoryStackLimit()
-						|| inSlot.getCount() >= inSlot.getMaxStackSize())
+				if (inSlot.getCount() >= inv.getInventoryStackLimit() || inSlot.getCount() >= inSlot.getMaxStackSize())
 					continue;
 				if (isStackEqual(stack, inSlot, false, false) || inSlot.isEmpty()) {
-					int grow = Math.min(remainder.getCount(),
-							inv.getInventoryStackLimit() - inSlot.getCount());
+					int grow = Math.min(remainder.getCount(), inv.getInventoryStackLimit() - inSlot.getCount());
 					if (!simulate) {
 						if (inSlot.isEmpty() || inSlot.getCount() <= 0) {
 							inv.setInventorySlotContents(slot,
@@ -1816,9 +1812,8 @@ public class InventoryUtils {
 	 * Sync an inventory with the server. To get the inventory use
 	 * {@link #getCachedInventoryData(String)} or
 	 * {@link #getCachedInventoryData(String, String)}. This will store the data
-	 * in the class path provided in the cache. The
-	 * inventory will be "stacked" - see
-	 * {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}. The
+	 * in the class path provided in the cache. The inventory will be "stacked"
+	 * - see {@link #getInventoryStacked(TileEntity, int, int, EnumFacing)}. The
 	 * calling class will be used as the name of the class in the cache
 	 * 
 	 * @param pos
@@ -2022,6 +2017,13 @@ public class InventoryUtils {
 	public static void syncInventoryFieldStacked(BlockPos pos, @Nullable EnumFacing side, String inventoryFieldName) {
 		PacketHandler.INSTANCE.sendToServer(new PacketGetInventory(pos, side, true, true,
 				new Exception().getStackTrace()[1].getClassName(), inventoryFieldName));
+	}
+
+	/**
+	 * Clear all the cached inventory data
+	 */
+	public static void clearCache() {
+		cachedInventoryData.clear();
 	}
 
 }

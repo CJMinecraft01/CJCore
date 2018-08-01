@@ -11,9 +11,12 @@ import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
+import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.init.CJCoreItems;
+import cjminecraft.core.inventory.InventoryUtils;
 import cjminecraft.core.items.ItemMultimeter;
 import cjminecraft.core.proxy.CommonProxy;
+import cjminecraft.core.util.UpdateChecker;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.common.ForgeVersion;
@@ -38,11 +41,8 @@ import net.minecraftforge.fml.common.versioning.ArtifactVersion;
  * @author CJMinecraft
  *
  */
-@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, guiFactory = CJCore.GUI_FACTORY, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, customProperties = {
-		@CustomProperty(k = "useVersionChecker", v = "true") }, useMetadata = true)
+@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, guiFactory = CJCore.GUI_FACTORY, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, useMetadata = true)
 public class CJCore {
-
-	public static final List<String> DEPENDANTS = new ArrayList<String>();
 
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
@@ -53,55 +53,6 @@ public class CJCore {
 	public static final String SERVER_PROXY_CLASS = "cjminecraft.core.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "cjminecraft.core.proxy.ClientProxy";
 	public static final Logger logger = LogManager.getFormatterLogger(NAME);
-
-	/**
-	 * Update the API's list of mods which use it
-	 */
-	private static void updateDependants() {
-		CJCoreConfig.UPDATE_CHECKER_MODS.put(MODID, true);
-		for (ModContainer mod : Loader.instance().getActiveModList()) {
-			for (ArtifactVersion version : mod.getDependencies()) {
-				if (version.getLabel().equals(MODID)) {
-					if (!DEPENDANTS.contains(mod.getModId())) {
-						DEPENDANTS.add(mod.getModId());
-						if (mod.getCustomModProperties().containsKey("useVersionChecker")) {
-							if (Boolean.valueOf(mod.getCustomModProperties().get("useVersionChecker"))) {
-								if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
-									CJCoreConfig.UPDATE_CHECKER_MODS.put(mod.getModId(), true);
-								}
-							}
-						} else {
-							logger.error("Mod " + mod.getModId()
-									+ " does not say whether it uses an version checker! Please fix this!");
-						}
-					}
-				}
-			}
-			for (ArtifactVersion version : mod.getRequirements()) {
-				if (version.getLabel().equals(MODID)) {
-					if (!DEPENDANTS.contains(mod.getModId())) {
-						DEPENDANTS.add(mod.getModId());
-						if (mod.getCustomModProperties().containsKey("useVersionChecker")) {
-							if (Boolean.valueOf(mod.getCustomModProperties().get("useVersionChecker"))) {
-								if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
-									CJCoreConfig.UPDATE_CHECKER_MODS.put(mod.getModId(), true);
-								}
-							}
-						} else {
-							logger.error("Mod " + mod.getModId()
-									+ " does not say whether it uses an version checker! Please fix this!");
-						}
-					}
-				}
-			}
-		}
-		DEPENDANTS.forEach(mod -> {
-			CJCore.logger.info("Found dependant: " + mod);
-		});
-		CJCoreConfig.UPDATE_CHECKER_MODS.forEach((key, value) -> {
-			CJCore.logger.info("Mod " + key + " says it has a version checker!");
-		});
-	}
 
 	/**
 	 * The instance for guis
@@ -117,29 +68,34 @@ public class CJCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		updateDependants();
+		UpdateChecker.registerUpdateURL(MODID, UpdateChecker.cjcoreURL);
 		CJCoreItems.init();
 		CJCoreItems.register();
 		EnergyUnits.preInit();
 		EnergyUtils.preInit();
-		CJCoreConfig.preInit();
 		proxy.preInit();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		CraftingHandler.registerCraftingRecipes();
+		CJCoreConfig.init();
 		proxy.init();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit();
+		UpdateChecker.postInit();
 	}
 
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandEditTileEntity());
+
+		EnergyUtils.clearCache();
+		InventoryUtils.clearCache();
+		FluidUtils.clearCache();
 	}
 
 	@EventHandler
@@ -148,8 +104,8 @@ public class CJCore {
 			if (message.isResourceLocationMessage() && message.key == "multimeterBlacklist") {
 				ItemMultimeter.MultimeterOverlay.blacklistBlocksEnergy.add(message.getResourceLocationValue());
 				logger.info(String.format("Blacklisting block: %s:%s",
-						message.getResourceLocationValue().getResourceDomain(),
-						message.getResourceLocationValue().getResourcePath()));
+						message.getResourceLocationValue().getNamespace(),
+						message.getResourceLocationValue().getPath()));
 			}
 		}
 	}

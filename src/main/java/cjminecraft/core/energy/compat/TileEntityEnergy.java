@@ -1,7 +1,6 @@
 package cjminecraft.core.energy.compat;
 
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import cjminecraft.core.util.TileEntityBase;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
