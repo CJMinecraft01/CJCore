@@ -12,7 +12,7 @@ apply plugin: 'maven-publish'
 
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = "0.0.3.2"
+version = "0.0.4.0"
 group = "cjminecraft.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cjcore-1.12"
 
@@ -45,10 +45,10 @@ artifacts {
 }
 
 minecraft {
-    version = "1.12.2-14.23.1.2583"
+    version = "1.12.2-14.23.4.2705"
     runDir = "run"
 	replace '${version}', project.version
-    mappings = "snapshot_20180203"
+    mappings = "snapshot_20180801"
 }
 
 repositories {
@@ -70,6 +70,11 @@ repositories {
 	maven { 
 		url 'https://jitpack.io' 
 	}
+	
+	maven {
+        name "BuildCraft"
+        url = "https://mod-buildcraft.com/maven"
+    }
 }
 
 allprojects {
@@ -82,6 +87,7 @@ dependencies {
     compile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
 	compile 'net.industrial-craft:industrialcraft-2:2.8.16-ex112:api'
 	deobfCompile "cofh:RedstoneFlux:1.12-2.0.1.2:universal"
+	deobfCompile "com.mod-buildcraft:buildcraft-api:7.99.12"
 }
 
 processResources {

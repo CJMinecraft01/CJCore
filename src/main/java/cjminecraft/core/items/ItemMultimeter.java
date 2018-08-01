@@ -66,7 +66,7 @@ public class ItemMultimeter extends Item {
 	 *            The unlocalized name of the item
 	 */
 	public ItemMultimeter(String unlocalizedName) {
-		this.setUnlocalizedName(unlocalizedName);
+		this.setTranslationKey(unlocalizedName);
 		this.setRegistryName(new ResourceLocation(CJCore.MODID, unlocalizedName));
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
@@ -86,8 +86,8 @@ public class ItemMultimeter extends Item {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		return this.getUnlocalizedName()
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return this.getTranslationKey()
 				+ (stack.getItemDamage() == 0 ? ".energy" : stack.getItemDamage() == 1 ? ".item" : ".fluid");
 	}
 
