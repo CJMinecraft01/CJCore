@@ -1,6 +1,5 @@
 package cjminecraft.core.energy.support;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import net.minecraft.item.ItemStack;

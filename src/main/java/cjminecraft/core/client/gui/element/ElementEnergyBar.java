@@ -1,7 +1,6 @@
 package cjminecraft.core.client.gui.element;
 
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -12,18 +11,13 @@ import cjminecraft.core.client.gui.ISpecialOverlayElement;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyData;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.util.RenderUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 

@@ -1,7 +1,6 @@
 package cjminecraft.core.energy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -13,7 +12,6 @@ import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Handler of all the different types of {@link EnergyUnit}

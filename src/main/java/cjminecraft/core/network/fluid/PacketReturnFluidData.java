@@ -3,10 +3,7 @@ package cjminecraft.core.network.fluid;
 import java.lang.reflect.Field;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyData;
-import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
-import cjminecraft.core.network.energy.PacketReturnEnergyData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;

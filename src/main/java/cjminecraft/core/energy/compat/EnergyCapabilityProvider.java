@@ -1,9 +1,8 @@
 package cjminecraft.core.energy.compat;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

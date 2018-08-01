@@ -4,7 +4,6 @@ import java.util.List;
 
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import net.minecraft.block.Block;

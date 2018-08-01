@@ -1,6 +1,5 @@
 package cjminecraft.core.energy.compat.forge;
 
-import cjminecraft.core.CJCore;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

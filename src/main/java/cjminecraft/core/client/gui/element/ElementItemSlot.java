@@ -2,7 +2,6 @@ package cjminecraft.core.client.gui.element;
 
 import java.util.List;
 
-import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.GuiCore;
 import cjminecraft.core.client.gui.ISpecialOverlayElement;
 import net.minecraft.item.ItemStack;
