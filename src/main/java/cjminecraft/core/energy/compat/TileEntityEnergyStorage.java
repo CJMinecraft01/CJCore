@@ -1,15 +1,18 @@
 package cjminecraft.core.energy.compat;
 
-import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cofh.redstoneflux.api.IEnergyStorage;
+import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUtils;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
+import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.energy.tile.IMultiEnergySource;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.Optional;
 
@@ -28,6 +31,7 @@ import net.minecraftforge.fml.common.Optional;
 public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergyStorage, IEnergySink, IEnergySource {
 
 	private Object teslaWrapper;
+	private Object buildCraftWrapper;
 
 	/**
 	 * Create an energy storage
@@ -81,25 +85,21 @@ public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergy
 		super(capacity, maxReceive, maxExtract, energy);
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 		return (int) this.storage.receiveEnergy(maxReceive, simulate);
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
 		return (int) this.storage.extractEnergy(maxExtract, simulate);
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getEnergyStored() {
 		return (int) this.storage.getEnergyStored();
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getMaxEnergyStored() {
 		return (int) this.storage.getMaxEnergyStored();
@@ -109,6 +109,9 @@ public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergy
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		if (EnergyUtils.TESLA_LOADED && (capability == EnergyUtils.TESLA_CONSUMER
 				|| capability == EnergyUtils.TESLA_PRODUCER || capability == EnergyUtils.TESLA_HOLDER))
+			return true;
+		if (EnergyUtils.BUILDCRAFT_LOADED && (capability == EnergyUtils.BUILDCRAFT_PASSIVE_PROVIDER
+				|| capability == EnergyUtils.BUILDCRAFT_RECEIVER || capability == EnergyUtils.BUILDCRAFT_READABLE))
 			return true;
 		return super.hasCapability(capability, facing);
 	}
@@ -120,6 +123,12 @@ public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergy
 			if (this.teslaWrapper == null)
 				this.teslaWrapper = new TeslaWrapper(this.storage);
 			return (T) this.teslaWrapper;
+		}
+		if (EnergyUtils.BUILDCRAFT_LOADED && (capability == EnergyUtils.BUILDCRAFT_PASSIVE_PROVIDER
+				|| capability == EnergyUtils.BUILDCRAFT_RECEIVER || capability == EnergyUtils.BUILDCRAFT_READABLE)) {
+			if (this.buildCraftWrapper == null)
+				this.buildCraftWrapper = new BuildCraftWrapper(this.storage);
+			return (T) this.buildCraftWrapper;
 		}
 		return super.getCapability(capability, facing);
 	}
