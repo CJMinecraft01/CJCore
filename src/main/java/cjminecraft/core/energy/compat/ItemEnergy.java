@@ -4,10 +4,10 @@ import java.util.List;
 
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -58,9 +58,9 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		this.maxExtract = maxExtract;
 		return this;
 	}
-
+	
 	@Override
-	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		EnergyUtils.addEnergyInformation(stack, tooltip);
 	}
 
@@ -84,7 +84,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		if (nbt != null && nbt.hasKey("Energy") && nbt.hasKey("Capacity") && nbt.hasKey("MaxReceive")
 				&& nbt.hasKey("MaxExtract"))
 			return new EnergyCapabilityProvider(stack, nbt, EnergyUnits.FORGE_ENERGY);
-		return new EnergyCapabilityProvider(stack, getEnergyStored(stack), this.capacity, this.maxReceive,
+		return new EnergyCapabilityProvider(stack, 0, this.capacity, this.maxReceive,
 				this.maxExtract, EnergyUnits.FORGE_ENERGY);
 	}
 
@@ -132,8 +132,8 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	@Optional.Method(modid = "ic2")
 	public int getTier(ItemStack stack) {
 		if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
-			return ((int) (Math.log(
-					((ForgeEnergyWrapper) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
+			return ((int) (Math
+					.log(((EnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
 					/ Math.log(2)) - 3) / 2;
 		return 0;
 	}
@@ -150,11 +150,10 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	@Optional.Method(modid = "ic2")
 	public double getTransferLimit(ItemStack stack) {
 		if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
-			return ((ForgeEnergyWrapper) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer();
+			return ((EnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer();
 		return 0;
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 		if (!container.hasTagCompound())
@@ -169,7 +168,6 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		return (int) energyReceived;
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
@@ -184,7 +182,6 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		return (int) energyExtracted;
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getEnergyStored(ItemStack container) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
@@ -192,7 +189,6 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		return (int) container.getTagCompound().getLong("Energy");
 	}
 
-	@Optional.Method(modid = "redstoneflux")
 	@Override
 	public int getMaxEnergyStored(ItemStack container) {
 		return (int) this.capacity;
@@ -201,8 +197,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	@Override
 	public ItemStack getDefaultInstance() {
 		NBTTagCompound nbt = new ItemStack(this).serializeNBT();
-		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract,
-				0);
+		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract, 0);
 		storage.writeToNBT(nbt);
 		return new ItemStack(nbt);
 	}
