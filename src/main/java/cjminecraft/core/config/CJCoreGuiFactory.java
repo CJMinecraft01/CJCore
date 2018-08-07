@@ -82,8 +82,8 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 					CategoryEntryEnergy.class));
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.fluid"), "gui.config.category.fluid",
 					CategoryEntryFluid.class));
-			list.add(new DummyCategoryElement(I18n.format("gui.config.category.update_checker"),
-					"gui.config.category.update_checker", CategoryEntryVersionChecker.class));
+			/*list.add(new DummyCategoryElement(I18n.format("gui.config.category.update_checker"),
+					"gui.config.category.update_checker", CategoryEntryVersionChecker.class));*/
 			list.add(new DummyCategoryElement(I18n.format("gui.config.category.multimeter"),
 					"gui.config.cateogry.multimeter", CategoryEntryMultimeter.class));
 			return list;
@@ -104,13 +104,13 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 			@Override
 			protected GuiScreen buildChildScreen() {
-				Configuration config = CJCoreConfig.getConfig();
+				Configuration config = CJCoreConfig2.getConfig();
 				ConfigElement category_energy = new ConfigElement(
-						config.getCategory(CJCoreConfig.CATEGORY_NAME_ENERGY));
+						config.getCategory("energy"));
 				List<IConfigElement> propertiesOnThisScreen = category_energy.getChildElements();
 				String windowTitle = I18n.format("gui.config.category.energy");
 				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
-						CJCoreConfig.CATEGORY_NAME_ENERGY,
+						CJCoreConfig2.CATEGORY_NAME_ENERGY,
 						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
 						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
 			}
@@ -132,15 +132,13 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 			@Override
 			protected GuiScreen buildChildScreen() {
-				Configuration config = CJCoreConfig.getConfig();
+				Configuration config = CJCoreConfig2.getConfig();
 				ConfigElement category_fluid = new ConfigElement(
-						config.getCategory(CJCoreConfig.CATEGORY_NAME_FLUID));
+						config.getCategory("fluid"));
 				List<IConfigElement> propertiesOnThisScreen = category_fluid.getChildElements();
-				for(IConfigElement element : propertiesOnThisScreen)
-					CJCore.logger.info(element.getLanguageKey());
 				String windowTitle = I18n.format("gui.config.category.fluid");
 				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
-						CJCoreConfig.CATEGORY_NAME_FLUID,
+						CJCoreConfig2.CATEGORY_NAME_FLUID,
 						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
 						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
 			}
@@ -162,13 +160,13 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 			@Override
 			protected GuiScreen buildChildScreen() {
-				Configuration config = CJCoreConfig.getConfig();
+				Configuration config = CJCoreConfig2.getConfig();
 				ConfigElement category_version_checker = new ConfigElement(
-						config.getCategory(CJCoreConfig.CATEGORY_NAME_VERSION_CHECKER));
+						config.getCategory(CJCoreConfig2.CATEGORY_NAME_VERSION_CHECKER));
 				List<IConfigElement> propertiesOnThisScreen = category_version_checker.getChildElements();
 				String windowTitle = I18n.format("gui.config.category.update_checker");
 				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
-						CJCoreConfig.CATEGORY_NAME_VERSION_CHECKER,
+						CJCoreConfig2.CATEGORY_NAME_VERSION_CHECKER,
 						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
 						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
 			}
@@ -190,13 +188,13 @@ public class CJCoreGuiFactory implements IModGuiFactory {
 
 			@Override
 			protected GuiScreen buildChildScreen() {
-				Configuration config = CJCoreConfig.getConfig();
+				Configuration config = CJCoreConfig2.getConfig();
 				ConfigElement category_multimeter = new ConfigElement(
-						config.getCategory(CJCoreConfig.CATEGORY_NAME_MULTIMETER));
+						config.getCategory("multimeter"));
 				List<IConfigElement> propertiesOnThisScreen = category_multimeter.getChildElements();
 				String windowTitle = I18n.format("gui.config.category.multimeter");
 				return new GuiConfig(this.owningScreen, propertiesOnThisScreen, this.owningScreen.modID,
-						CJCoreConfig.CATEGORY_NAME_MULTIMETER,
+						CJCoreConfig2.CATEGORY_NAME_MULTIMETER,
 						this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
 						this.configElement.requiresMcRestart() || this.owningScreen.allRequireMcRestart, windowTitle);
 			}

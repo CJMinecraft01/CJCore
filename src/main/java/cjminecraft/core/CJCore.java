@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cjminecraft.core.command.CommandEditTileEntity;
-import cjminecraft.core.config.CJCoreConfig;
+import cjminecraft.core.config.CJCoreConfig2;
 import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
@@ -41,7 +41,7 @@ import net.minecraftforge.fml.common.versioning.ArtifactVersion;
  * @author CJMinecraft
  *
  */
-@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, guiFactory = CJCore.GUI_FACTORY, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, useMetadata = true)
+@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, useMetadata = true)
 public class CJCore {
 
 	public static final String NAME = "CJCore";
@@ -79,7 +79,7 @@ public class CJCore {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		CraftingHandler.registerCraftingRecipes();
-		CJCoreConfig.init();
+		// CJCoreConfig.init();
 		proxy.init();
 	}
 

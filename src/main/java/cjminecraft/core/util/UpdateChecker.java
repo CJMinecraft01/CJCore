@@ -20,7 +20,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.config.CJCoreConfig;
+import cjminecraft.core.config.CJCoreConfig2;
 import joptsimple.internal.Strings;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -96,8 +96,8 @@ public class UpdateChecker {
 
 		if (!updateURLs.containsKey(mod)) {
 			updateURLs.put(mod, url);
-			if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
-				CJCoreConfig.UPDATE_CHECKER_MODS.put(mod.getModId(), false);
+			if (!CJCoreConfig2.UPDATE_CHECKER_MODS.containsKey(mod.getModId())) {
+				CJCoreConfig2.UPDATE_CHECKER_MODS.put(mod.getModId(), false);
 			}
 		}
 	}
@@ -158,8 +158,8 @@ public class UpdateChecker {
 	 *            The player to send the message to
 	 */
 	public static void outputUpdateAvailable(ModContainer mod, String url, EntityPlayer player) {
-		if (!CJCoreConfig.UPDATE_CHECKER_MODS.containsKey(mod.getModId())
-				|| !CJCoreConfig.UPDATE_CHECKER_MODS.get(mod.getModId()))
+		if (!CJCoreConfig2.UPDATE_CHECKER_MODS.containsKey(mod.getModId())
+				|| !CJCoreConfig2.UPDATE_CHECKER_MODS.get(mod.getModId()))
 			return;
 
 		String version = "";

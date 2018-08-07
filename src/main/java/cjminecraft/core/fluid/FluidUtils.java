@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.config.CJCoreConfig;
+import cjminecraft.core.config.CJCoreConfig2;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.network.fluid.*;
 import net.minecraft.client.resources.I18n;
@@ -89,15 +89,15 @@ public class FluidUtils {
 	public static String getFluidTankInfoToString(@Nullable FluidTankInfo fluidTankInfo) {
 		if (fluidTankInfo == null || fluidTankInfo.fluid == null)
 			return I18n.format("fluid.empty");
-		if (CJCoreConfig.FLUID_BAR_SIMPLIFY_FLUIDS)
-			return getFluidAsString(fluidTankInfo.fluid.amount, (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? ""
+		if (CJCoreConfig2.FLUID_BAR_SIMPLIFY_FLUIDS)
+			return getFluidAsString(fluidTankInfo.fluid.amount, (CJCoreConfig2.ENERGY_BAR_SHOW_CAPACITY ? ""
 					: fluidTankInfo.fluid.getLocalizedName())
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
+					+ (CJCoreConfig2.ENERGY_BAR_SHOW_CAPACITY
 							? " / " + getFluidAsString(fluidTankInfo.capacity, fluidTankInfo.fluid.getLocalizedName())
 							: ""));
 		else
 			return NumberFormat.getInstance().format(fluidTankInfo.fluid.amount) + " mb "
-					+ (CJCoreConfig.FLUID_BAR_SHOW_CAPACITY
+					+ (CJCoreConfig2.FLUID_BAR_SHOW_CAPACITY
 							? " / " + NumberFormat.getInstance().format(fluidTankInfo.capacity) + " mb "
 									+ fluidTankInfo.fluid.getLocalizedName()
 							: fluidTankInfo.fluid.getLocalizedName());
