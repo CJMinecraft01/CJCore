@@ -25,7 +25,7 @@ public class CJCoreConfig {
 		@Config.Name("DefaultEnergyUnit")
 		@Config.Comment("The energy unit which will be utilised by any Energy Bar which uses CJCore")
 		@Config.LangKey("gui.config.energy.default_energy_unit.name")
-		public EnergyUnit DEFAULT_ENERGY_UNIT = EnergyUnits.FORGE_ENERGY;
+		public String[] DEFAULT_ENERGY_UNIT = EnergyUnits.getEnergyUnits().toArray(new String[0]);
 
 		/**
 		 * Whether or not the energy bar should show capacity
