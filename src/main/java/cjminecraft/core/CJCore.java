@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cjminecraft.core.command.CommandEditTileEntity;
-import cjminecraft.core.config.CJCoreConfig2;
 import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
@@ -47,7 +46,6 @@ public class CJCore {
 	public static final String VERSION = "${version}";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.12,1.12.2]";
 	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
-	public static final String GUI_FACTORY = "cjminecraft.core.config.CJCoreGuiFactory";
 	public static final String SERVER_PROXY_CLASS = "cjminecraft.core.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "cjminecraft.core.proxy.ClientProxy";
 	public static final String UPDATE_URL = "https://github.com/CJMinecraft01/CJCore/raw/1.12/update.json";

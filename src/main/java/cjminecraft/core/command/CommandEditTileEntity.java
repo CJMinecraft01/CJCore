@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.config.CJCoreConfig2;
+import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
@@ -257,12 +257,12 @@ public class CommandEditTileEntity extends CommandBase {
 				throw new CommandException("command.tileentity.noset");
 		}
 		if (args[4].equalsIgnoreCase("get")) {
-			long energy = EnergyUtils.getEnergyStored(te, side, CJCoreConfig2.DEFAULT_ENERGY_UNIT);
-			long capacity = EnergyUtils.getCapacity(te, side, CJCoreConfig2.DEFAULT_ENERGY_UNIT);
+			long energy = EnergyUtils.getEnergyStored(te, side, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
+			long capacity = EnergyUtils.getCapacity(te, side, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
 			sender.sendMessage(new TextComponentString(
-					NumberFormat.getNumberInstance().format(energy) + " " + CJCoreConfig2.DEFAULT_ENERGY_UNIT.getSuffix()
+					NumberFormat.getNumberInstance().format(energy) + " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()
 							+ " / " + NumberFormat.getNumberInstance().format(capacity) + " "
-							+ CJCoreConfig2.DEFAULT_ENERGY_UNIT.getSuffix()));
+							+ CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()));
 		}
 		if (args[4].equalsIgnoreCase("give")) {
 			if (args.length < 7)

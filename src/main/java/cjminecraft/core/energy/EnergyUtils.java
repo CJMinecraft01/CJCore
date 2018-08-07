@@ -15,7 +15,7 @@ import buildcraft.api.mj.IMjPassiveProvider;
 import buildcraft.api.mj.IMjReadable;
 import buildcraft.api.mj.IMjReceiver;
 import cjminecraft.core.CJCore;
-import cjminecraft.core.config.CJCoreConfig2;
+import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
@@ -441,14 +441,14 @@ public class EnergyUtils {
 	 * @return The formatted energy string
 	 */
 	public static String getFormattedEnergy(long energy, long capacity) {
-		if (CJCoreConfig2.ENERGY_BAR_SIMPLIFY_ENERGY)
-			return EnergyUtils.getEnergyAsString(energy, CJCoreConfig2.DEFAULT_ENERGY_UNIT)
-					+ (CJCoreConfig2.ENERGY_BAR_SHOW_CAPACITY
-							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig2.DEFAULT_ENERGY_UNIT) : "");
+		if (CJCoreConfig.ENERGY.ENERGY_BAR_SIMPLIFY_ENERGY)
+			return EnergyUtils.getEnergyAsString(energy, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT)
+					+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY
+							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT) : "");
 		else
-			return NumberFormat.getInstance().format(energy) + " " + CJCoreConfig2.DEFAULT_ENERGY_UNIT.getSuffix()
-					+ (CJCoreConfig2.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(capacity) + " "
-							+ CJCoreConfig2.DEFAULT_ENERGY_UNIT.getSuffix() : "");
+			return NumberFormat.getInstance().format(energy) + " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()
+					+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(capacity) + " "
+							+ CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix() : "");
 	}
 
 	/**
@@ -1802,8 +1802,8 @@ public class EnergyUtils {
 	 */
 	public static double getEnergyDurabilityForDisplay(ItemStack stack) {
 		if (hasSupport(stack, null)) {
-			double capacity = getCapacity(stack, null, CJCoreConfig2.DEFAULT_ENERGY_UNIT);
-			double energyDiff = capacity - getEnergyStored(stack, null, CJCoreConfig2.DEFAULT_ENERGY_UNIT);
+			double capacity = getCapacity(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
+			double energyDiff = capacity - getEnergyStored(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
 			return energyDiff / capacity;
 		}
 		return 0;
@@ -1818,7 +1818,7 @@ public class EnergyUtils {
 	 * @return The RGB colour of the durability bar
 	 */
 	public static int getEnergyRGBDurabilityForDisplay(ItemStack stack) {
-		float[] colour = CJCoreConfig2.DEFAULT_ENERGY_UNIT.getColour();
+		float[] colour = CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getColour();
 		return MathHelper.rgb(colour[0], colour[1], colour[2]);
 	}
 
@@ -1832,24 +1832,24 @@ public class EnergyUtils {
 	 */
 	public static void addEnergyInformation(ItemStack stack, List<String> tooltip) {
 		if (hasSupport(stack, null)) {
-			CJCore.logger.info(CJCoreConfig2.DEFAULT_ENERGY_UNIT);
-			if (CJCoreConfig2.ENERGY_BAR_SIMPLIFY_ENERGY) {
-				tooltip.add(getEnergyAsString(getEnergyStored(stack, null, CJCoreConfig2.DEFAULT_ENERGY_UNIT),
-						CJCoreConfig2.DEFAULT_ENERGY_UNIT)
-						+ (CJCoreConfig2.ENERGY_BAR_SHOW_CAPACITY
-								? " / " + getEnergyAsString(getCapacity(stack, null, CJCoreConfig2.DEFAULT_ENERGY_UNIT),
-										CJCoreConfig2.DEFAULT_ENERGY_UNIT)
+			CJCore.logger.info(CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
+			if (CJCoreConfig.ENERGY.ENERGY_BAR_SIMPLIFY_ENERGY) {
+				tooltip.add(getEnergyAsString(getEnergyStored(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT),
+						CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT)
+						+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY
+								? " / " + getEnergyAsString(getCapacity(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT),
+										CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT)
 								: ""));
 			} else {
 				tooltip.add(
 						NumberFormat.getInstance()
 								.format(getEnergyStored(stack, null,
-										CJCoreConfig2.DEFAULT_ENERGY_UNIT))
-								+ " " + CJCoreConfig2.DEFAULT_ENERGY_UNIT.getSuffix()
-								+ (CJCoreConfig2.ENERGY_BAR_SHOW_CAPACITY ? " / "
+										CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT))
+								+ " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()
+								+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY ? " / "
 										+ NumberFormat.getInstance()
-												.format(getCapacity(stack, null, CJCoreConfig2.DEFAULT_ENERGY_UNIT))
-										+ " " + CJCoreConfig2.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
+												.format(getCapacity(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT))
+										+ " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
 			}
 		}
 	}

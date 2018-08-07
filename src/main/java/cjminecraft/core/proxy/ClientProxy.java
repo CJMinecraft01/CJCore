@@ -1,6 +1,5 @@
 package cjminecraft.core.proxy;
 
-import cjminecraft.core.config.CJCoreConfig2;
 import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.items.ItemMultimeter;
@@ -16,7 +15,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		CJCoreConfig2.clientPreInit();
 		CJCoreItems.registerRenders();
 	}
 	
