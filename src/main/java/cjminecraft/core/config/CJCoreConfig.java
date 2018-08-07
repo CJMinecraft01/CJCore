@@ -11,10 +11,12 @@ import net.minecraftforge.common.config.Config;
 @Config(modid = CJCore.MODID, category = "")
 public class CJCoreConfig {
 	
+	@Config.LangKey("gui.config.category.energy")
 	public static Energy ENERGY = new Energy();
+	@Config.LangKey("gui.config.category.fluid")
 	public static Fluids FLUIDS = new Fluids();
+	@Config.LangKey("gui.config.category.multimeter")
 	public static Multimeter MULTIMETER = new Multimeter();
-	public static UpdateCheckers UPDATE_CHECKERS = new UpdateCheckers();
 	
 	public static class Energy {
 		
@@ -129,18 +131,6 @@ public class CJCoreConfig {
 		@Config.RangeInt(min = 1)
 		public int MULTIMETER_ITEM_MAX_COLUMNS = 9;
 
-	}
-	
-	public static class UpdateCheckers {
-		
-		/**
-		 * Whether or not a specific mod's update checker is disabled (the key is
-		 * the mod's modid)
-		 */
-		@Config.Name("UpdateCheckerMods")
-		@Config.Comment("A list of all the mods and whether they are going to check for updates")
-		@Config.LangKey("gui.config.general.update_checker_mods.name")
-		public static HashMap<String, Boolean> UPDATE_CHECKER_MODS = new HashMap<String, Boolean>();
 	}
 
 }

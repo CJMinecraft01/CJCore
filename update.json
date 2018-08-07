@@ -1,8 +1,11 @@
 {
-	"name": "CJCore",
-	"version": "0.0.3.2",
-	"changelog": [
-		"=Fixed an issue with the fluid multimeter crafting recipe", "=Changed the priority of the energy support to allow for 64 bit energy storage", "+Added the Russian language file"
-	],
-	"download": "https://minecraft.curseforge.com/projects/cjcore/files"
+  "homepage": "https://minecraft.curseforge.com/projects/cjcore",
+  "promos": {
+    "1.12.2-latest": "0.0.3.2"
+    "1.12.2-recommended": "0.0.3.2",
+	"1.11.2-latest": "0.0.3.2"
+    "1.11.2-recommended": "0.0.3.2",
+	"1.10.2-latest": "0.0.3.2"
+    "1.10.2-recommended": "0.0.3.2"
+  }
 }
