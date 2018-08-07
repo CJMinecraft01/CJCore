@@ -69,7 +69,7 @@ public enum EnergyUnit implements IStringSerializable {
 		this.unlocalizedName = unlocalizedName;
 		this.multiplier = multiplier;
 		this.colour = new float[] { colour.getRed() / 255.0F, colour.getGreen() / 255.0F,
-				colour.getGreen() / 255.0F };
+				colour.getBlue() / 255.0F };
 	}
 	
 	/**

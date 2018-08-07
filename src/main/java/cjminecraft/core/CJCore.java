@@ -17,6 +17,8 @@ import cjminecraft.core.proxy.CommonProxy;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.config.Config.Type;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -74,7 +76,7 @@ public class CJCore {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		CraftingHandler.registerCraftingRecipes();
-		// CJCoreConfig.init();
+		ConfigManager.sync(MODID, Type.INSTANCE);
 		proxy.init();
 	}
 
