@@ -5,7 +5,6 @@ import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.inventory.InventoryUtils;
-import cjminecraft.core.util.UpdateChecker;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
