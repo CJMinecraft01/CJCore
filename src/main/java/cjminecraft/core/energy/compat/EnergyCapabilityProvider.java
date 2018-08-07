@@ -1,9 +1,8 @@
 package cjminecraft.core.energy.compat;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,10 +63,10 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	public EnergyCapabilityProvider(ItemStack stack, long energy, long capacity, long maxReceive, long maxExtract,
 			EnergyUnit unit) {
 		this.storage = new EnergyStorage(
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, capacity),
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxReceive),
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxExtract),
-				EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, energy)) {
+				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, capacity),
+				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, maxReceive),
+				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, maxExtract),
+				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, energy)) {
 			@Override
 			public long getEnergyStored() {
 				if (stack.hasTagCompound())

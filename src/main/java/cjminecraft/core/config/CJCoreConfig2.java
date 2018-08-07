@@ -11,8 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import cjminecraft.core.client.gui.element.ElementFluidBar;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.proxy.ClientProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -201,11 +200,11 @@ public class CJCoreConfig2 {
 		 * Energy Config
 		 */
 		List<String> energyUnits = new ArrayList<String>();
-		EnergyUnits.getEnergyUnits().forEach(unit -> {
+		EnergyUnit.VALUES.forEach(unit -> {
 			energyUnits.add(unit.getUnlocalizedName());
 		});
 		Property propertyDefaultEnergyUnit = config.get(CATEGORY_NAME_ENERGY, "DefaultEnergyUnit",
-				EnergyUnits.FORGE_ENERGY.getUnlocalizedName());
+				EnergyUnit.FORGE_ENERGY.getUnlocalizedName());
 		propertyDefaultEnergyUnit.setValidValues(energyUnits.toArray(new String[] {}));
 		propertyDefaultEnergyUnit.setComment("The energy unit that you will normally see");
 		propertyDefaultEnergyUnit.setLanguageKey("gui.config.energy.default_energy_unit.name");
@@ -293,7 +292,7 @@ public class CJCoreConfig2 {
 			/*
 			 * Energy Config
 			 */
-			DEFAULT_ENERGY_UNIT = EnergyUnits.byUnlocalizedName(propertyDefaultEnergyUnit.getString());
+			DEFAULT_ENERGY_UNIT = EnergyUnit.byUnlocalizedName(propertyDefaultEnergyUnit.getString());
 			ENERGY_BAR_SHOW_CAPACITY = propertyEnergyBarShowCapacity.getBoolean();
 			ENERGY_BAR_SIMPLIFY_ENERGY = propertyEnergyBarSimplifyEnergy.getBoolean();
 			

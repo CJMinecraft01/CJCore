@@ -11,8 +11,7 @@ import com.google.common.collect.Lists;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig2;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.inventory.InventoryUtils;
@@ -50,7 +49,7 @@ public class CommandEditTileEntity extends CommandBase {
 	 * Initialize the different energy units and faces
 	 */
 	public CommandEditTileEntity() {
-		EnergyUnits.getEnergyUnits().forEach((unit) -> {
+		EnergyUnit.VALUES.forEach((unit) -> {
 			energyUnits.add(unit.getUnlocalizedName());
 		});
 		Lists.newArrayList(EnumFacing.VALUES).forEach((face) -> {
@@ -251,9 +250,9 @@ public class CommandEditTileEntity extends CommandBase {
 			if (args.length < 7)
 				throw new CommandException("command.tileentity.usage");
 			long energy = Long.valueOf(args[5]);
-			EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
+			EnergyUnit unit = EnergyUnit.MINECRAFT_JOULES;
 			if (!args[6].isEmpty())
-				unit = EnergyUnits.byUnlocalizedName(args[6]);
+				unit = EnergyUnit.byUnlocalizedName(args[6]);
 			if (EnergyUtils.setEnergy(te, energy, unit, side) == 0)
 				throw new CommandException("command.tileentity.noset");
 		}
@@ -269,9 +268,9 @@ public class CommandEditTileEntity extends CommandBase {
 			if (args.length < 7)
 				throw new CommandException("command.tileentity.usage");
 			long energy = Long.valueOf(args[5]);
-			EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
+			EnergyUnit unit = EnergyUnit.MINECRAFT_JOULES;
 			if (!args[6].isEmpty())
-				unit = EnergyUnits.byUnlocalizedName(args[6]);
+				unit = EnergyUnit.byUnlocalizedName(args[6]);
 			if (EnergyUtils.giveEnergy(te, energy, unit, false, side) == 0)
 				throw new CommandException("command.tileentity.nogive");
 		}
@@ -279,9 +278,9 @@ public class CommandEditTileEntity extends CommandBase {
 			if (args.length < 7)
 				throw new CommandException("command.tileentity.usage");
 			long energy = Long.valueOf(args[5]);
-			EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
+			EnergyUnit unit = EnergyUnit.MINECRAFT_JOULES;
 			if (!args[6].isEmpty())
-				unit = EnergyUnits.byUnlocalizedName(args[6]);
+				unit = EnergyUnit.byUnlocalizedName(args[6]);
 			if (EnergyUtils.takeEnergy(te, energy, unit, false, side) == 0)
 				throw new CommandException("command.tileentity.notake");
 		}

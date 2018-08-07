@@ -2,7 +2,7 @@ package cjminecraft.core.energy.compat;
 
 import cjminecraft.core.energy.EnergyUtils;
 import cofh.redstoneflux.api.IEnergyProvider;
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
@@ -163,7 +163,7 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getOfferedEnergy() {
-		return EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.ENERGY_UNIT,
+		return EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.ENERGY_UNIT,
 				this.storage.getMaxExtract());
 	}
 
@@ -180,7 +180,7 @@ public class TileEntityEnergyProducer extends TileEntityEnergy implements IEnerg
 	@Optional.Method(modid = "ic2")
 	public void drawEnergy(double amount) {
 		this.storage.extractEnergy(
-				(int) EnergyUtils.convertEnergy(EnergyUnits.ENERGY_UNIT, EnergyUnits.FORGE_ENERGY, amount), false);
+				(int) EnergyUtils.convertEnergy(EnergyUnit.ENERGY_UNIT, EnergyUnit.FORGE_ENERGY, amount), false);
 	}
 
 	/**

@@ -5,8 +5,7 @@ import java.util.HashMap;
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
 import cjminecraft.core.client.gui.element.ElementFluidBar;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import net.minecraftforge.common.config.Config;
 
 @Config(modid = CJCore.MODID, category = "")
@@ -25,7 +24,7 @@ public class CJCoreConfig {
 		@Config.Name("DefaultEnergyUnit")
 		@Config.Comment("The energy unit which will be utilised by any Energy Bar which uses CJCore")
 		@Config.LangKey("gui.config.energy.default_energy_unit.name")
-		public String[] DEFAULT_ENERGY_UNIT = EnergyUnits.getEnergyUnits().toArray(new String[0]);
+		public EnergyUnit DEFAULT_ENERGY_UNIT = EnergyUnit.FORGE_ENERGY;
 
 		/**
 		 * Whether or not the energy bar should show capacity

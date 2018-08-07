@@ -1,7 +1,6 @@
 package cjminecraft.core.energy.support;
 
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cofh.redstoneflux.api.IEnergyProvider;
 import net.minecraft.item.ItemStack;
@@ -178,7 +177,7 @@ public interface IEnergySupport<I> {
 	 * The default {@link EnergyUnit} for the container
 	 * 
 	 * @return The default {@link EnergyUnit} for the container. See
-	 *         {@link EnergyUnits} for how to add your own unit or get a pre
+	 *         {@link EnergyUnit} for how to add your own unit or get a pre
 	 *         made one
 	 */
 	EnergyUnit defaultEnergyUnit();

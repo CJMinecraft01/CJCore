@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import cjminecraft.core.command.CommandEditTileEntity;
 import cjminecraft.core.config.CJCoreConfig2;
 import cjminecraft.core.crafting.CraftingHandler;
-import cjminecraft.core.energy.EnergyUnits;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.init.CJCoreItems;
@@ -71,7 +70,6 @@ public class CJCore {
 		UpdateChecker.registerUpdateURL(MODID, UpdateChecker.cjcoreURL);
 		CJCoreItems.init();
 		CJCoreItems.register();
-		EnergyUnits.preInit();
 		EnergyUtils.preInit();
 		proxy.preInit();
 	}

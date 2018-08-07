@@ -11,7 +11,7 @@ import cjminecraft.core.client.gui.GuiCore;
 import cjminecraft.core.client.gui.ISpecialOverlayElement;
 import cjminecraft.core.config.CJCoreConfig2;
 import cjminecraft.core.energy.EnergyData;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.util.RenderUtils;

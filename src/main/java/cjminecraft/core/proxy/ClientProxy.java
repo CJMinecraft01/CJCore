@@ -1,7 +1,7 @@
 package cjminecraft.core.proxy;
 
 import cjminecraft.core.config.CJCoreConfig2;
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.items.ItemMultimeter;
 import net.minecraftforge.common.MinecraftForge;

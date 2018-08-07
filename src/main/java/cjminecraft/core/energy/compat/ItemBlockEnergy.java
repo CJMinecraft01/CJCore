@@ -2,7 +2,7 @@ package cjminecraft.core.energy.compat;
 
 import java.util.List;
 
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
@@ -84,9 +84,9 @@ public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergy
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
 		if (nbt != null && nbt.hasKey("Energy") && nbt.hasKey("Capacity") && nbt.hasKey("MaxReceive")
 				&& nbt.hasKey("MaxExtract"))
-			return new EnergyCapabilityProvider(stack, nbt, EnergyUnits.FORGE_ENERGY);
+			return new EnergyCapabilityProvider(stack, nbt, EnergyUnit.FORGE_ENERGY);
 		return new EnergyCapabilityProvider(stack, 0, this.capacity, this.maxReceive,
-				this.maxExtract, EnergyUnits.FORGE_ENERGY);
+				this.maxExtract, EnergyUnit.FORGE_ENERGY);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergy
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getMaxCharge(ItemStack stack) {
-		return EnergyUtils.getCapacity(stack, null, EnergyUnits.ENERGY_UNIT);
+		return EnergyUtils.getCapacity(stack, null, EnergyUnit.ENERGY_UNIT);
 	}
 
 	/**
