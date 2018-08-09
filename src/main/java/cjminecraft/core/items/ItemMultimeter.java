@@ -60,10 +60,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemMultimeter extends Item {
 
 	/**
-	 * Initialize the item with its unlocalized name and registry name
-	 * 
-	 * @param unlocalizedName
-	 *            The unlocalized name of the item
+	 * Initialize the item
 	 */
 	public ItemMultimeter() {
 		this.setMaxStackSize(1);

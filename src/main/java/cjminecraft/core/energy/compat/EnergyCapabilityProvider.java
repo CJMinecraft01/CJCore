@@ -30,19 +30,6 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 * 
 	 * @param stack
 	 *            The stack which will have the {@link EnergyStorage}
-	 * @param unit
-	 *            The {@link EnergyUnit} the energy is in
-	 */
-	public EnergyCapabilityProvider(ItemStack stack, EnergyUnit unit) {
-		this(stack, stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("Capacity"),
-				stack.getTagCompound().getInteger("MaxReceive"), stack.getTagCompound().getInteger("MaxExtract"), unit);
-	}
-
-	/**
-	 * Create a new {@link EnergyStorage} for an {@link ItemStack}
-	 * 
-	 * @param stack
-	 *            The stack which will have the {@link EnergyStorage}
 	 * @param energy
 	 *            The energy of the {@link EnergyStorage}
 	 * @param capacity
@@ -162,6 +149,8 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 
 				long energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(),
 						Math.min(getMaxReceive(), maxReceive));
+				if (!stack.hasTagCompound())
+					stack.setTagCompound(new NBTTagCompound());
 				if (!simulate)
 					stack.getTagCompound().setLong("Energy", getEnergyStored() + energyReceived);
 				return energyReceived;
@@ -172,11 +161,16 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 				if (!canExtract())
 					return 0;
 				long energyExtracted = Math.min(getEnergyStored(), Math.min(getMaxExtract(), maxExtract));
+				if (!stack.hasTagCompound())
+					stack.setTagCompound(new NBTTagCompound());
 				if (!simulate)
 					stack.getTagCompound().setLong("Energy", getEnergyStored() - energyExtracted);
 				return energyExtracted;
 			}
 		};
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.storage.writeToNBT(nbt);
+		stack.setTagCompound(nbt);
 	}
 
 	/**

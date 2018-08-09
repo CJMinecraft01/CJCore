@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
  * @author CJMinecraft
  *
  */
-public abstract class GuiBase extends GuiCore {
+public class GuiBase extends GuiCore {
 
 	protected boolean drawTitle = true;
 	protected boolean centerTitle = true;

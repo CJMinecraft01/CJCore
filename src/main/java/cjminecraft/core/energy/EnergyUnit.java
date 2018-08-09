@@ -187,7 +187,6 @@ public enum EnergyUnit implements IStringSerializable {
 	 * 
 	 * @param unlocalizedName
 	 *            The unit's unlocalized name
-	 * @return 
 	 * @return The {@link EnergyUnit}
 	 */
 	public static EnergyUnit byUnlocalizedName(String unlocalizedName) {
