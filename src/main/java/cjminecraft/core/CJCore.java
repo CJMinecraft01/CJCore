@@ -14,6 +14,7 @@ import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.inventory.InventoryUtils;
 import cjminecraft.core.items.ItemMultimeter;
 import cjminecraft.core.proxy.CommonProxy;
+import cjminecraft.core.util.registries.AutomaticRegistrar;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.common.ForgeVersion;
@@ -40,7 +41,7 @@ import net.minecraftforge.fml.common.versioning.ArtifactVersion;
  * @author CJMinecraft
  *
  */
-@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, useMetadata = true, updateJSON = CJCore.UPDATE_URL)
+@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, useMetadata = true, updateJSON = CJCore.UPDATE_URL, dependencies = "after:")
 public class CJCore {
 
 	public static final String NAME = "CJCore";
@@ -67,10 +68,10 @@ public class CJCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		CJCoreItems.init();
-		CJCoreItems.register();
+		AutomaticRegistrar.addRegistryClasses(event.getAsmData());
 		EnergyUtils.preInit();
 		proxy.preInit();
+
 	}
 
 	@EventHandler
@@ -99,9 +100,9 @@ public class CJCore {
 		for (IMCMessage message : event.getMessages()) {
 			if (message.isResourceLocationMessage() && message.key == "multimeterBlacklist") {
 				ItemMultimeter.MultimeterOverlay.blacklistBlocksEnergy.add(message.getResourceLocationValue());
-				logger.info(String.format("Blacklisting block: %s:%s",
-						message.getResourceLocationValue().getNamespace(),
-						message.getResourceLocationValue().getPath()));
+				logger.info(
+						String.format("Blacklisting block: %s:%s", message.getResourceLocationValue().getNamespace(),
+								message.getResourceLocationValue().getPath()));
 			}
 		}
 	}
