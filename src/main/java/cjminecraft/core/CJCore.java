@@ -41,12 +41,13 @@ import net.minecraftforge.fml.common.versioning.ArtifactVersion;
  * @author CJMinecraft
  *
  */
-@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, useMetadata = true, updateJSON = CJCore.UPDATE_URL, dependencies = "after:")
+@Mod(name = CJCore.NAME, version = CJCore.VERSION, modid = CJCore.MODID, acceptedMinecraftVersions = CJCore.ACCEPTED_MC_VERSIONS, updateJSON = CJCore.UPDATE_URL, dependencies = CJCore.DEPENDENCIES)
 public class CJCore {
 
 	public static final String NAME = "CJCore";
 	public static final String MODID = "cjcore";
 	public static final String VERSION = "${version}";
+	public static final String DEPENDENCIES = "after:tesla;after:redstoneflux;after:ic2;after:buildcraftlib";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.12,1.12.2]";
 	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
 	public static final String SERVER_PROXY_CLASS = "cjminecraft.core.proxy.ServerProxy";
