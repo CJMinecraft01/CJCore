@@ -85,8 +85,11 @@ public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergy
 		if (nbt != null && nbt.hasKey("Energy") && nbt.hasKey("Capacity") && nbt.hasKey("MaxReceive")
 				&& nbt.hasKey("MaxExtract"))
 			return new EnergyCapabilityProvider(stack, nbt, EnergyUnit.FORGE_ENERGY);
-		return new EnergyCapabilityProvider(stack, 0, this.capacity, this.maxReceive,
-				this.maxExtract, EnergyUnit.FORGE_ENERGY);
+		NBTTagCompound newNBT = new NBTTagCompound();
+		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract, 0);
+		storage.writeToNBT(newNBT);
+		stack.setTagCompound(newNBT);
+		return new EnergyCapabilityProvider(stack, newNBT, EnergyUnit.FORGE_ENERGY);
 	}
 
 	/**
@@ -197,14 +200,6 @@ public class ItemBlockEnergy extends ItemBlock implements IElectricItem, IEnergy
 	@Optional.Method(modid = "redstoneflux")
 	public int getMaxEnergyStored(ItemStack container) {
 		return (int) this.capacity;
-	}
-
-	@Override
-	public ItemStack getDefaultInstance() {
-		NBTTagCompound nbt = new ItemStack(this).serializeNBT();
-		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract, 0);
-		storage.writeToNBT(nbt);
-		return new ItemStack(nbt);
 	}
 
 }
