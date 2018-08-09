@@ -83,14 +83,12 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-		if (nbt != null && nbt.hasKey("Energy") && nbt.hasKey("Capacity") && nbt.hasKey("MaxReceive")
-				&& nbt.hasKey("MaxExtract"))
-			return new EnergyCapabilityProvider(stack, nbt, EnergyUnit.FORGE_ENERGY);
-		NBTTagCompound newNBT = new NBTTagCompound();
-		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract, 0);
-		storage.writeToNBT(newNBT);
-		stack.setTagCompound(newNBT);
-		return new EnergyCapabilityProvider(stack, newNBT, EnergyUnit.FORGE_ENERGY);
+		if (stack.getTagCompound() == null) {
+			NBTTagCompound newNBT = new NBTTagCompound();
+			new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract, 0).writeToNBT(newNBT);
+			stack.setTagCompound(newNBT);
+		}
+		return new EnergyCapabilityProvider(stack, EnergyUnit.FORGE_ENERGY);
 	}
 
 	/**

@@ -30,16 +30,12 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 * 
 	 * @param stack
 	 *            The stack which will have the {@link EnergyStorage}
-	 * @param nbt
-	 *            The {@link NBTTagCompound} with the data about energy (can be
-	 *            got from any {@link TileEntity} which has a
-	 *            {@link EnergyStorage}
 	 * @param unit
 	 *            The {@link EnergyUnit} the energy is in
 	 */
-	public EnergyCapabilityProvider(ItemStack stack, NBTTagCompound nbt, EnergyUnit unit) {
-		this(stack, nbt.getInteger("Energy"), nbt.getInteger("Capacity"), nbt.getInteger("MaxReceive"),
-				nbt.getInteger("MaxExtract"), unit);
+	public EnergyCapabilityProvider(ItemStack stack, EnergyUnit unit) {
+		this(stack, stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("Capacity"),
+				stack.getTagCompound().getInteger("MaxReceive"), stack.getTagCompound().getInteger("MaxExtract"), unit);
 	}
 
 	/**
@@ -52,8 +48,8 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 * @param capacity
 	 *            The capacity of the {@link EnergyStorage}
 	 * @param maxReceive
-	 *            The maximum amount of energy the
-	 *            {@link EnergyStorage} can receive
+	 *            The maximum amount of energy the {@link EnergyStorage} can
+	 *            receive
 	 * @param maxExtract
 	 *            The maximum amount of energy that can be extracted from the
 	 *            {@link EnergyStorage}
@@ -62,8 +58,7 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 */
 	public EnergyCapabilityProvider(ItemStack stack, long energy, long capacity, long maxReceive, long maxExtract,
 			EnergyUnit unit) {
-		this.storage = new EnergyStorage(
-				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, capacity),
+		this.storage = new EnergyStorage(EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, capacity),
 				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, maxReceive),
 				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, maxExtract),
 				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, energy)) {
@@ -198,7 +193,7 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY) {
-			if(this.forgeWrapper == null)
+			if (this.forgeWrapper == null)
 				this.forgeWrapper = new ForgeEnergyWrapper(this.storage);
 			return (T) this.forgeWrapper;
 		}
