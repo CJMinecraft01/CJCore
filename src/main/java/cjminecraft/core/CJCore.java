@@ -72,6 +72,8 @@ public class CJCore {
 	public void preInit(FMLPreInitializationEvent event) {
 		AutomaticRegistrar.addRegistryClasses(event.getAsmData());
 		EnergyUtils.preInit();
+		AutomaticRegistrar.registerBlocks();
+		AutomaticRegistrar.registerItems();
 		proxy.preInit();
 	}
 

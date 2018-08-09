@@ -14,3 +14,4 @@ http://www.youtube.com/cjminecraft
 
 Just use this link to get all you need: https://jitpack.io/#CJMinecraft01/CJCore/
 Use the branch button and select the correct minecraft version. Then you can add what the website says. Where the website says "implementation", use "compile"
+*Note: In 1.11 and 1.10, users must make their mod load before CJCore by using `dependencies = "before:cjcore"` in the `@Mod` annotation in the main class. This will ensure all items using the automated registry system will be added

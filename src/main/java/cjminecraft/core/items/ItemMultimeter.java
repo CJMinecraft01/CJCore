@@ -64,9 +64,7 @@ public class ItemMultimeter extends Item {
 	 * @param unlocalizedName
 	 *            The unlocalized name of the item
 	 */
-	public ItemMultimeter(String unlocalizedName) {
-		this.setUnlocalizedName(unlocalizedName);
-		this.setRegistryName(new ResourceLocation(CJCore.MODID, unlocalizedName));
+	public ItemMultimeter() {
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
 		this.setCreativeTab(CreativeTabs.REDSTONE);

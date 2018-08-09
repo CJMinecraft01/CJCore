@@ -11,6 +11,8 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
@@ -43,7 +45,6 @@ import java.util.Map.Entry;
  * @author CJMinecraft
  *
  */
-@Mod.EventBusSubscriber(modid = CJCore.MODID)
 public class AutomaticRegistrar {
 
 	/**
@@ -72,8 +73,7 @@ public class AutomaticRegistrar {
 		}
 	}
 
-	@SubscribeEvent
-	public static void onItemRegister(RegistryEvent.Register<Item> event) {
+	public static void registerItems() {
 		CJCore.logger.info("Searching for items to register");
 		int registeredItems = 0;
 		for (Entry<String, Class> entry : registryClasses.entrySet()) {
@@ -105,7 +105,7 @@ public class AutomaticRegistrar {
 							else
 								item.setUnlocalizedName(details.registryName());
 						}
-						event.getRegistry().register(item);
+						ForgeRegistries.ITEMS.register(item);
 						registeredItems++;
 					} catch (Exception e) {
 						CJCore.logger.error(
@@ -142,7 +142,7 @@ public class AutomaticRegistrar {
 							else
 								item.setUnlocalizedName(details.registryName());
 						}
-						event.getRegistry().register(item);
+						ForgeRegistries.ITEMS.register(item);
 						registeredItems++;
 					} catch (Exception e) {
 						CJCore.logger.error("Unable to register item block: " + field.getName()
@@ -155,8 +155,7 @@ public class AutomaticRegistrar {
 		CJCore.logger.info("Successfully registered " + registeredItems + " items!");
 	}
 
-	@SubscribeEvent
-	public static void onBlockRegister(RegistryEvent.Register<Block> event) {
+	public static void registerBlocks() {
 		CJCore.logger.info("Searching for blocks and tiles to register");
 		int registeredBlocks = 0;
 		int registeredTiles = 0;
@@ -190,7 +189,7 @@ public class AutomaticRegistrar {
 							else
 								block.setUnlocalizedName(details.registryName());
 						}
-						event.getRegistry().register(block);
+						ForgeRegistries.BLOCKS.register(block);
 						registeredBlocks++;
 					} catch (Exception e) {
 						CJCore.logger.error(
@@ -217,8 +216,7 @@ public class AutomaticRegistrar {
 	}
 
 	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public static void onModelRegister(ModelRegistryEvent event) {
+	public static void registerModels() {
 		CJCore.logger.info("Searching for items to register renders for");
 		int registeredItems = 0;
 		int registeredBlocks = 0;
