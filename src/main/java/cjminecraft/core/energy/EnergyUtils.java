@@ -1832,7 +1832,6 @@ public class EnergyUtils {
 	 */
 	public static void addEnergyInformation(ItemStack stack, List<String> tooltip) {
 		if (hasSupport(stack, null)) {
-			CJCore.logger.info(CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
 			if (CJCoreConfig.ENERGY.ENERGY_BAR_SIMPLIFY_ENERGY) {
 				tooltip.add(getEnergyAsString(getEnergyStored(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT),
 						CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT)
