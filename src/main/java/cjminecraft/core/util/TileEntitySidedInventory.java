@@ -200,6 +200,38 @@ public class TileEntitySidedInventory extends TileEntity {
 		}
 		
 		@Override
+		protected void onLoad() {
+			for (int slot = 0; slot < this.getSlots(); slot++) {
+				for (int i = 0; i < slotsForFace.length; i++) {
+					for (int j = 0; j < slotsForFace[i].length; j++) {
+						if (slot == slotsForFace[i][j]) {
+							switch (i) {
+							case 0:
+								downHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
+								break;
+							case 1:
+								upHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
+								break;
+							case 2:
+								northHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
+								break;
+							case 3:
+								southHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
+								break;
+							case 4:
+								westHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
+								break;
+							case 5:
+								eastHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		@Override
 		protected void onContentsChanged(int slot) {
 			for (int i = 0; i < slotsForFace.length; i++) {
 				for (int j = 0; j < slotsForFace[i].length; j++) {
@@ -227,6 +259,7 @@ public class TileEntitySidedInventory extends TileEntity {
 					}
 				}
 			}
+			markDirty();
 		}
 	}
 
