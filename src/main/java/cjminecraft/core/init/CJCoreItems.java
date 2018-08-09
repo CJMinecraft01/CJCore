@@ -20,8 +20,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @Register(modid = CJCore.MODID)
 public class CJCoreItems {
 
-	@Register.RegisterItem(registryName = "multimeter")
+	@Register.RegisterItem(registryName = "multimeter", setUnlocalizedName = true, unlocalizedName = "multimeter")
 	@Register.RegisterRender(hasVariants = true, variants = { "multimeter_energy", "multimeter_item", "multimeter_fluid" })
-	public static Item multimeter;
+	public static ItemMultimeter multimeter;
 
 }

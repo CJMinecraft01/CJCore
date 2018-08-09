@@ -35,11 +35,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+/**
+ * An automatic registry system which utilises the {@link Register} annotation.
+ * Place the <code>@Register</code> annotation on a class which contains the
+ * objects you would like to register
+ * 
+ * @author CJMinecraft
+ *
+ */
 @Mod.EventBusSubscriber(modid = CJCore.MODID)
 public class AutomaticRegistrar {
 
+	/**
+	 * A list of all the classes with the <code>@Registry</code> annotation
+	 * present
+	 */
 	private static HashMap<String, Class> registryClasses = new HashMap<String, Class>();
 
+	/**
+	 * Uses the {@link ASMDataTable} to get all of the classes with the
+	 * <code>@Registry</code> annotation present. For use only in {@link CJCore}
+	 * 
+	 * @param dataTable
+	 *            The {@link ASMDataTable} to get the information from
+	 */
 	public static void addRegistryClasses(ASMDataTable dataTable) {
 		CJCore.logger.info("Searching for registrar classes");
 		for (ASMData data : dataTable.getAll(Register.class.getName())) {
@@ -80,10 +99,12 @@ public class AutomaticRegistrar {
 						}
 						if (item.getRegistryName() == null)
 							item.setRegistryName(new ResourceLocation(entry.getKey(), details.registryName()));
-						if (!details.unlocalizedName().isEmpty())
-							item.setTranslationKey(details.unlocalizedName());
-						else
-							item.setTranslationKey(details.registryName());
+						if (details.setUnlocalizedName()) {
+							if (!details.unlocalizedName().isEmpty())
+								item.setTranslationKey(details.unlocalizedName());
+							else
+								item.setTranslationKey(details.registryName());
+						}
 						event.getRegistry().register(item);
 						registeredItems++;
 					} catch (Exception e) {
@@ -112,13 +133,15 @@ public class AutomaticRegistrar {
 									"Tried to register custom item block but none was found! Please ensure the block is an instance of cjminecraft.industrialtech.utils.registries.ICustomItemBlock");
 							continue;
 						}
-						
+
 						if (item.getRegistryName() == null)
 							item.setRegistryName(new ResourceLocation(entry.getKey(), details.registryName()));
-						if (!details.unlocalizedName().isEmpty())
-							item.setTranslationKey(details.unlocalizedName());
-						else
-							item.setTranslationKey(details.registryName());
+						if (details.setUnlocalizedName()) {
+							if (!details.unlocalizedName().isEmpty())
+								item.setTranslationKey(details.unlocalizedName());
+							else
+								item.setTranslationKey(details.registryName());
+						}
 						event.getRegistry().register(item);
 						registeredItems++;
 					} catch (Exception e) {
@@ -158,13 +181,15 @@ public class AutomaticRegistrar {
 							block = (Block) field.getType().newInstance();
 							field.set(null, block);
 						}
-						
+
 						if (block.getRegistryName() == null)
 							block.setRegistryName(new ResourceLocation(entry.getKey(), details.registryName()));
-						if (!details.unlocalizedName().isEmpty())
-							block.setTranslationKey(details.unlocalizedName());
-						else
-							block.setTranslationKey(details.registryName());
+						if (details.setUnlocalizedName()) {
+							if (!details.unlocalizedName().isEmpty())
+								block.setTranslationKey(details.unlocalizedName());
+							else
+								block.setTranslationKey(details.registryName());
+						}
 						event.getRegistry().register(block);
 						registeredBlocks++;
 					} catch (Exception e) {
@@ -179,8 +204,8 @@ public class AutomaticRegistrar {
 						TileEntity.register(details.key(), details.tileEntityClass());
 						registeredTiles++;
 					} catch (Exception e) {
-						CJCore.logger.error(
-								"Unable to register tile entity: " + field.getName() + "! The following error was thrown:");
+						CJCore.logger.error("Unable to register tile entity: " + field.getName()
+								+ "! The following error was thrown:");
 						CJCore.logger.catching(Level.ERROR, e);
 					}
 				}
@@ -217,7 +242,9 @@ public class AutomaticRegistrar {
 									}
 								} else
 									ModelLoader.setCustomModelResourceLocation(item, 0,
-											new ModelResourceLocation(new ResourceLocation(entry.getKey(), item.getTranslationKey()), "inventory"));
+											new ModelResourceLocation(
+													new ResourceLocation(entry.getKey(), item.getTranslationKey()),
+													"inventory"));
 								registeredItems++;
 							} else {
 								CJCore.logger.error("Unable to register renders for item: " + field.getName()
@@ -238,7 +265,9 @@ public class AutomaticRegistrar {
 									}
 								} else
 									ModelLoader.setCustomModelResourceLocation(item, 0,
-											new ModelResourceLocation(new ResourceLocation(entry.getKey(), item.getTranslationKey()), "inventory"));
+											new ModelResourceLocation(
+													new ResourceLocation(entry.getKey(), item.getTranslationKey()),
+													"inventory"));
 								registeredBlocks++;
 							} else {
 								CJCore.logger.error("Unable to register renders for block: " + field.getName()
