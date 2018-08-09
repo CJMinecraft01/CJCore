@@ -5,8 +5,7 @@ import buildcraft.api.mj.IMjReadable;
 import buildcraft.api.mj.IMjReceiver;
 import buildcraft.api.mj.MjAPI;
 import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -68,7 +67,7 @@ public class BuildCraftSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.MINECRAFT_JOULES;
+			return EnergyUnit.MINECRAFT_JOULES;
 		}
 
 		@Override
@@ -132,7 +131,7 @@ public class BuildCraftSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.MINECRAFT_JOULES;
+			return EnergyUnit.MINECRAFT_JOULES;
 		}
 
 		@Override
@@ -196,7 +195,7 @@ public class BuildCraftSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.MINECRAFT_JOULES;
+			return EnergyUnit.MINECRAFT_JOULES;
 		}
 
 		@Override

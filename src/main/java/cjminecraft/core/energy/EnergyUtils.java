@@ -16,7 +16,7 @@ import buildcraft.api.mj.IMjReadable;
 import buildcraft.api.mj.IMjReceiver;
 import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.support.BuildCraftSupport;
 import cjminecraft.core.energy.support.CoFHSupport;
 import cjminecraft.core.energy.support.ForgeEnergySupport;
@@ -438,14 +438,14 @@ public class EnergyUtils {
 	 * @return The formatted energy string
 	 */
 	public static String getFormattedEnergy(long energy, long capacity) {
-		if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY)
-			return EnergyUtils.getEnergyAsString(energy, CJCoreConfig.DEFAULT_ENERGY_UNIT)
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
-							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig.DEFAULT_ENERGY_UNIT) : "");
+		if (CJCoreConfig.ENERGY.ENERGY_BAR_SIMPLIFY_ENERGY)
+			return EnergyUtils.getEnergyAsString(energy, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT)
+					+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY
+							? " / " + EnergyUtils.getEnergyAsString(capacity, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT) : "");
 		else
-			return NumberFormat.getInstance().format(energy) + " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(capacity) + " "
-							+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : "");
+			return NumberFormat.getInstance().format(energy) + " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()
+					+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY ? " / " + NumberFormat.getInstance().format(capacity) + " "
+							+ CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix() : "");
 	}
 
 	/**
@@ -457,11 +457,11 @@ public class EnergyUtils {
 	 *            The side of the {@link TileEntity} for use with
 	 *            {@link Capability}
 	 * @return The amount of energy stored in the {@link TileEntity} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit} {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long getEnergyStored(@Nullable TileEntity te, @Nullable EnumFacing from) {
-		return getEnergyStored(te, from, EnergyUnits.MINECRAFT_JOULES);
+		return getEnergyStored(te, from, EnergyUnit.MINECRAFT_JOULES);
 	}
 
 	/**
@@ -473,11 +473,11 @@ public class EnergyUtils {
 	 *            The side of the {@link ItemStack} for use with
 	 *            {@link Capability}
 	 * @return The amount of energy stored in the {@link ItemStack} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit} {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long getEnergyStored(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		return getEnergyStored(stack, from, EnergyUnits.MINECRAFT_JOULES);
+		return getEnergyStored(stack, from, EnergyUnit.MINECRAFT_JOULES);
 	}
 
 	/**
@@ -531,11 +531,11 @@ public class EnergyUtils {
 	 *            The side of the {@link TileEntity} for use with
 	 *            {@link Capability}
 	 * @return The maximum amount of energy in the {@link TileEntity} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit} {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long getCapacity(@Nullable TileEntity te, @Nullable EnumFacing from) {
-		return getCapacity(te, from, EnergyUnits.MINECRAFT_JOULES);
+		return getCapacity(te, from, EnergyUnit.MINECRAFT_JOULES);
 	}
 
 	/**
@@ -547,11 +547,11 @@ public class EnergyUtils {
 	 *            The side of the {@link ItemStack} for use with
 	 *            {@link Capability}
 	 * @return The maximum amount of energy in the {@link ItemStack} in the
-	 *         {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit} {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long getCapacity(@Nullable ItemStack stack, @Nullable EnumFacing from) {
-		return getCapacity(stack, from, EnergyUnits.MINECRAFT_JOULES);
+		return getCapacity(stack, from, EnergyUnit.MINECRAFT_JOULES);
 	}
 
 	/**
@@ -603,7 +603,7 @@ public class EnergyUtils {
 	 *            The {@link TileEntity} which will receive energy
 	 * @param energy
 	 *            The energy to be given in the
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} unit
+	 *            {@link EnergyUnit#MINECRAFT_JOULES} unit
 	 * @param simulate
 	 *            Whether or not it is a simulation. If so, no energy is
 	 *            actually given
@@ -612,11 +612,11 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return The amount of energy which was given (or would have been given if
 	 *         it is simulated) in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long giveEnergy(TileEntity te, long energy, boolean simulate, EnumFacing from) {
-		return giveEnergy(te, energy, EnergyUnits.MINECRAFT_JOULES, simulate, from);
+		return giveEnergy(te, energy, EnergyUnit.MINECRAFT_JOULES, simulate, from);
 	}
 
 	/**
@@ -626,7 +626,7 @@ public class EnergyUtils {
 	 *            The {@link ItemStack} which will receive energy
 	 * @param energy
 	 *            The energy to be given in the
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} unit
+	 *            {@link EnergyUnit#MINECRAFT_JOULES} unit
 	 * @param simulate
 	 *            Whether or not it is a simulation. If so, no energy is
 	 *            actually given
@@ -635,11 +635,11 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return The amount of energy which was given (or would have been given if
 	 *         it is simulated) in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long giveEnergy(ItemStack stack, long energy, boolean simulate, EnumFacing from) {
-		return giveEnergy(stack, energy, EnergyUnits.MINECRAFT_JOULES, simulate, from);
+		return giveEnergy(stack, energy, EnergyUnit.MINECRAFT_JOULES, simulate, from);
 	}
 
 	/**
@@ -706,7 +706,7 @@ public class EnergyUtils {
 	 *            The {@link TileEntity} which will have extracted from
 	 * @param energy
 	 *            The energy to be taken in the
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} unit
+	 *            {@link EnergyUnit#MINECRAFT_JOULES} unit
 	 * @param simulate
 	 *            Whether or not it is a simulation. If so, no energy is
 	 *            actually taken
@@ -715,11 +715,11 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return The amount of energy which was taken (or would have been taken if
 	 *         it is simulated) in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long takeEnergy(TileEntity te, long energy, boolean simulate, EnumFacing from) {
-		return takeEnergy(te, energy, EnergyUnits.MINECRAFT_JOULES, simulate, from);
+		return takeEnergy(te, energy, EnergyUnit.MINECRAFT_JOULES, simulate, from);
 	}
 
 	/**
@@ -729,7 +729,7 @@ public class EnergyUtils {
 	 *            The {@link ItemStack} which will have extracted from
 	 * @param energy
 	 *            The energy to be taken in the
-	 *            {@link EnergyUnits#MINECRAFT_JOULES} unit
+	 *            {@link EnergyUnit#MINECRAFT_JOULES} unit
 	 * @param simulate
 	 *            Whether or not it is a simulation. If so, no energy is
 	 *            actually taken
@@ -738,11 +738,11 @@ public class EnergyUtils {
 	 *            {@link Capability}
 	 * @return The amount of energy which was taken (or would have been taken if
 	 *         it is simulated) in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long takeEnergy(ItemStack stack, long energy, boolean simulate, EnumFacing from) {
-		return takeEnergy(stack, energy, EnergyUnits.MINECRAFT_JOULES, simulate, from);
+		return takeEnergy(stack, energy, EnergyUnit.MINECRAFT_JOULES, simulate, from);
 	}
 
 	/**
@@ -806,17 +806,17 @@ public class EnergyUtils {
 	 * @param te
 	 *            The {@link TileEntity} which holds energy
 	 * @param energy
-	 *            The energy to set in the {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            The energy to set in the {@link EnergyUnit#MINECRAFT_JOULES}
 	 *            unit
 	 * @param from
 	 *            The side of the {@link TileEntity} for use with
 	 *            {@link Capability} {@link Capability}
 	 * @return The energy which was set in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long setEnergy(TileEntity te, long energy, EnumFacing from) {
-		return setEnergy(te, energy, EnergyUnits.MINECRAFT_JOULES, from);
+		return setEnergy(te, energy, EnergyUnit.MINECRAFT_JOULES, from);
 	}
 
 	/**
@@ -825,17 +825,17 @@ public class EnergyUtils {
 	 * @param stack
 	 *            The {@link ItemStack} which holds energy
 	 * @param energy
-	 *            The energy to set in the {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            The energy to set in the {@link EnergyUnit#MINECRAFT_JOULES}
 	 *            unit
 	 * @param from
 	 *            The side of the {@link ItemStack} for use with
 	 *            {@link Capability}
 	 * @return The energy which was set in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long setEnergy(ItemStack stack, long energy, EnumFacing from) {
-		return setEnergy(stack, energy, EnergyUnits.MINECRAFT_JOULES, from);
+		return setEnergy(stack, energy, EnergyUnit.MINECRAFT_JOULES, from);
 	}
 
 	/**
@@ -967,16 +967,16 @@ public class EnergyUtils {
 	 * @param energy
 	 *            The energy to take altogether. Will be distributed evenly
 	 *            between the {@link TileEntity}s. Needs to be in the
-	 *            {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            {@link EnergyUnit} {@link EnergyUnit#MINECRAFT_JOULES}
 	 * @param simulate
 	 *            Whether it is a simulation or not. If so, the energy won't
 	 *            actually be taken
 	 * @return The amount of energy taken in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long takeEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, boolean simulate) {
-		return takeEnergyAllFaces(world, pos, energy, EnergyUnits.MINECRAFT_JOULES, simulate);
+		return takeEnergyAllFaces(world, pos, energy, EnergyUnit.MINECRAFT_JOULES, simulate);
 	}
 
 	/**
@@ -990,16 +990,16 @@ public class EnergyUtils {
 	 * @param energy
 	 *            The energy to give altogether. Will be distributed evenly
 	 *            between the {@link TileEntity}s. Needs to be in the
-	 *            {@link EnergyUnit} {@link EnergyUnits#MINECRAFT_JOULES}
+	 *            {@link EnergyUnit} {@link EnergyUnit#MINECRAFT_JOULES}
 	 * @param simulate
 	 *            Whether it is a simulation or not. If so, the energy won't
 	 *            actually be given
 	 * @return The amount of energy given in the {@link EnergyUnit}
-	 *         {@link EnergyUnits#MINECRAFT_JOULES}
+	 *         {@link EnergyUnit#MINECRAFT_JOULES}
 	 */
 	@Deprecated
 	public static long giveEnergyAllFaces(@Nonnull World world, BlockPos pos, long energy, boolean simulate) {
-		return giveEnergyAllFaces(world, pos, energy, EnergyUnits.MINECRAFT_JOULES, simulate);
+		return giveEnergyAllFaces(world, pos, energy, EnergyUnit.MINECRAFT_JOULES, simulate);
 	}
 
 	/**
@@ -1244,7 +1244,7 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergy(BlockPos pos, @Nullable EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnit.MINECRAFT_JOULES, pos, side, false, modid,
 				new Exception().getStackTrace()[1].getClassName()));
 	}
 
@@ -1268,7 +1268,7 @@ public class EnergyUtils {
 	@Deprecated
 	public static void syncEnergy(BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
 		PacketHandler.INSTANCE
-				.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
+				.sendToServer(new PacketGetEnergy(EnergyUnit.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
 
 	/**
@@ -1288,7 +1288,7 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncCapacity(BlockPos pos, @Nullable EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid,
+		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnit.MINECRAFT_JOULES, pos, side, false, modid,
 				new Exception().getStackTrace()[1].getClassName()));
 	}
 
@@ -1312,7 +1312,7 @@ public class EnergyUtils {
 	@Deprecated
 	public static void syncCapacity(BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
 		PacketHandler.INSTANCE
-				.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
+				.sendToServer(new PacketGetCapacity(EnergyUnit.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
 
 	/**
@@ -1331,7 +1331,7 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergyData(BlockPos pos, @Nullable EnumFacing side, String modid) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false,
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnit.MINECRAFT_JOULES, pos, side, false,
 				modid, new Exception().getStackTrace()[1].getClassName()));
 	}
 
@@ -1355,7 +1355,7 @@ public class EnergyUtils {
 	@Deprecated
 	public static void syncEnergyData(BlockPos pos, @Nullable EnumFacing side, String modid, String className) {
 		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, false, modid, className));
+				new PacketGetEnergyData(EnergyUnit.MINECRAFT_JOULES, pos, side, false, modid, className));
 	}
 
 	/**
@@ -1374,7 +1374,7 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncEnergyField(BlockPos pos, @Nullable EnumFacing side, String energyFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergy(EnergyUnit.MINECRAFT_JOULES, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), energyFieldName));
 	}
 
@@ -1398,7 +1398,7 @@ public class EnergyUtils {
 	public static void syncEnergyField(BlockPos pos, @Nullable EnumFacing side, String className,
 			String energyFieldName) {
 		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetEnergy(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, energyFieldName));
+				new PacketGetEnergy(EnergyUnit.MINECRAFT_JOULES, pos, side, true, className, energyFieldName));
 	}
 
 	/**
@@ -1417,7 +1417,7 @@ public class EnergyUtils {
 	 */
 	@Deprecated
 	public static void syncCapacityField(BlockPos pos, @Nullable EnumFacing side, String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
+		PacketHandler.INSTANCE.sendToServer(new PacketGetCapacity(EnergyUnit.MINECRAFT_JOULES, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), capacityFieldName));
 	}
 
@@ -1441,7 +1441,7 @@ public class EnergyUtils {
 	public static void syncCapacityField(BlockPos pos, @Nullable EnumFacing side, String className,
 			String capacityFieldName) {
 		PacketHandler.INSTANCE.sendToServer(
-				new PacketGetCapacity(EnergyUnits.MINECRAFT_JOULES, pos, side, true, className, capacityFieldName));
+				new PacketGetCapacity(EnergyUnit.MINECRAFT_JOULES, pos, side, true, className, capacityFieldName));
 	}
 
 	/**
@@ -1464,7 +1464,7 @@ public class EnergyUtils {
 	@Deprecated
 	public static void syncEnergyDataFields(BlockPos pos, @Nullable EnumFacing side, String energyFieldName,
 			String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnit.MINECRAFT_JOULES, pos, side, true,
 				new Exception().getStackTrace()[1].getClassName(), energyFieldName, capacityFieldName));
 	}
 
@@ -1490,7 +1490,7 @@ public class EnergyUtils {
 	@Deprecated
 	public static void syncEnergyDataFields(BlockPos pos, @Nullable EnumFacing side, String className,
 			String energyFieldName, String capacityFieldName) {
-		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnits.MINECRAFT_JOULES, pos, side, true,
+		PacketHandler.INSTANCE.sendToServer(new PacketGetEnergyData(EnergyUnit.MINECRAFT_JOULES, pos, side, true,
 				className, energyFieldName, capacityFieldName));
 	}
 
@@ -1798,8 +1798,8 @@ public class EnergyUtils {
 	 */
 	public static double getEnergyDurabilityForDisplay(ItemStack stack) {
 		if (hasSupport(stack, null)) {
-			double capacity = getCapacity(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT);
-			double energyDiff = capacity - getEnergyStored(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT);
+			double capacity = getCapacity(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
+			double energyDiff = capacity - getEnergyStored(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
 			return energyDiff / capacity;
 		}
 		return 0;
@@ -1814,7 +1814,7 @@ public class EnergyUtils {
 	 * @return The RGB colour of the durability bar
 	 */
 	public static int getEnergyRGBDurabilityForDisplay(ItemStack stack) {
-		float[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
+		float[] colour = CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getColour();
 		return MathHelper.rgb(colour[0], colour[1], colour[2]);
 	}
 
@@ -1828,23 +1828,23 @@ public class EnergyUtils {
 	 */
 	public static void addEnergyInformation(ItemStack stack, List<String> tooltip) {
 		if (hasSupport(stack, null)) {
-			if (CJCoreConfig.ENERGY_BAR_SIMPLIFY_ENERGY) {
-				tooltip.add(getEnergyAsString(getEnergyStored(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT),
-						CJCoreConfig.DEFAULT_ENERGY_UNIT)
-						+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
-								? " / " + getEnergyAsString(getCapacity(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT),
-										CJCoreConfig.DEFAULT_ENERGY_UNIT)
+			if (CJCoreConfig.ENERGY.ENERGY_BAR_SIMPLIFY_ENERGY) {
+				tooltip.add(getEnergyAsString(getEnergyStored(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT),
+						CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT)
+						+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY
+								? " / " + getEnergyAsString(getCapacity(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT),
+										CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT)
 								: ""));
 			} else {
 				tooltip.add(
 						NumberFormat.getInstance()
 								.format(getEnergyStored(stack, null,
-										CJCoreConfig.DEFAULT_ENERGY_UNIT))
-								+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
-								+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? " / "
+										CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT))
+								+ " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()
+								+ (CJCoreConfig.ENERGY.ENERGY_BAR_SHOW_CAPACITY ? " / "
 										+ NumberFormat.getInstance()
-												.format(getCapacity(stack, null, CJCoreConfig.DEFAULT_ENERGY_UNIT))
-										+ " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
+												.format(getCapacity(stack, null, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT))
+										+ " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix() : ""));
 			}
 		}
 	}

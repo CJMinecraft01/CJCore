@@ -1,7 +1,7 @@
 package cjminecraft.core.network.energy;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.network.PacketHandler;
 import cjminecraft.core.util.NetworkUtils;

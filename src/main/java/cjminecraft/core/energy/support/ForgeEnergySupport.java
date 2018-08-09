@@ -1,8 +1,6 @@
 package cjminecraft.core.energy.support;
 
-import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -68,7 +66,7 @@ public class ForgeEnergySupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.FORGE_ENERGY;
+			return EnergyUnit.FORGE_ENERGY;
 		}
 
 		@Override
@@ -134,7 +132,7 @@ public class ForgeEnergySupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.FORGE_ENERGY;
+			return EnergyUnit.FORGE_ENERGY;
 		}
 
 		@Override
@@ -199,7 +197,7 @@ public class ForgeEnergySupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.FORGE_ENERGY;
+			return EnergyUnit.FORGE_ENERGY;
 		}
 
 		@Override

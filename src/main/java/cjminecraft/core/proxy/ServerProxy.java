@@ -1,6 +1,5 @@
 package cjminecraft.core.proxy;
 
-import cjminecraft.core.energy.EnergyUnits;
 
 /**
  * For all things server

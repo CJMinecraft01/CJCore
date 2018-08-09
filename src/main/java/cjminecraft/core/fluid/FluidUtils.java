@@ -89,15 +89,15 @@ public class FluidUtils {
 	public static String getFluidTankInfoToString(@Nullable FluidTankInfo fluidTankInfo) {
 		if (fluidTankInfo == null || fluidTankInfo.fluid == null)
 			return I18n.format("fluid.empty");
-		if (CJCoreConfig.FLUID_BAR_SIMPLIFY_FLUIDS)
-			return getFluidAsString(fluidTankInfo.fluid.amount, (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY ? ""
+		if (CJCoreConfig.FLUIDS.FLUID_BAR_SIMPLIFY_FLUIDS)
+			return getFluidAsString(fluidTankInfo.fluid.amount, (CJCoreConfig.FLUIDS.FLUID_BAR_SHOW_CAPACITY ? ""
 					: fluidTankInfo.fluid.getLocalizedName())
-					+ (CJCoreConfig.ENERGY_BAR_SHOW_CAPACITY
+					+ (CJCoreConfig.FLUIDS.FLUID_BAR_SHOW_CAPACITY
 							? " / " + getFluidAsString(fluidTankInfo.capacity, fluidTankInfo.fluid.getLocalizedName())
 							: ""));
 		else
 			return NumberFormat.getInstance().format(fluidTankInfo.fluid.amount) + " mb "
-					+ (CJCoreConfig.FLUID_BAR_SHOW_CAPACITY
+					+ (CJCoreConfig.FLUIDS.FLUID_BAR_SHOW_CAPACITY
 							? " / " + NumberFormat.getInstance().format(fluidTankInfo.capacity) + " mb "
 									+ fluidTankInfo.fluid.getLocalizedName()
 							: fluidTankInfo.fluid.getLocalizedName());

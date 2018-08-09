@@ -64,21 +64,21 @@ public class OverlayInventory extends OverlayBase {
 			setVisible(true);
 			this.inventory = inventory;
 			this.itemSlots.clear();
-			this.rows = inventory.size() / CJCoreConfig.MULTIMETER_ITEM_MAX_COLUMNS;
-			if (inventory.size() <= CJCoreConfig.MULTIMETER_ITEM_MAX_COLUMNS) {
+			this.rows = inventory.size() / CJCoreConfig.MULTIMETER.MULTIMETER_ITEM_MAX_COLUMNS;
+			if (inventory.size() <= CJCoreConfig.MULTIMETER.MULTIMETER_ITEM_MAX_COLUMNS) {
 				this.rows = 1;
 				this.columns = inventory.size();
 			} else {
-				this.columns = CJCoreConfig.MULTIMETER_ITEM_MAX_COLUMNS;
+				this.columns = CJCoreConfig.MULTIMETER.MULTIMETER_ITEM_MAX_COLUMNS;
 			}
 			this.excessColumns = inventory.size() - (this.rows * this.columns);
 			for (int row = 0; row < this.rows; row++)
 				for (int column = 0; column < this.columns; column++)
 					this.itemSlots.add((new ElementItemSlot(this.gui, column * 18, row * 18)
-							.setStack(inventory.get(Math.min(row * CJCoreConfig.MULTIMETER_ITEM_MAX_COLUMNS + column, inventory.size() - 1)))));
+							.setStack(inventory.get(Math.min(row * CJCoreConfig.MULTIMETER.MULTIMETER_ITEM_MAX_COLUMNS + column, inventory.size() - 1)))));
 			for(int column = 0; column < this.excessColumns; column++)
 				this.itemSlots.add((new ElementItemSlot(this.gui, column * 18, this.rows * 18)
-						.setStack(inventory.get(Math.min(this.rows * CJCoreConfig.MULTIMETER_ITEM_MAX_COLUMNS + column, inventory.size() - 1)))));
+						.setStack(inventory.get(Math.min(this.rows * CJCoreConfig.MULTIMETER.MULTIMETER_ITEM_MAX_COLUMNS + column, inventory.size() - 1)))));
 		} else {
 			setVisible(false);
 		}

@@ -1,8 +1,7 @@
 package cjminecraft.core.energy.compat;
 
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUtils;
+import cjminecraft.core.energy.EnergyUnit;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyStorage;
 import ic2.api.energy.tile.IEnergyAcceptor;
@@ -186,7 +185,7 @@ public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergy
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getOfferedEnergy() {
-		return EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.ENERGY_UNIT,
+		return EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.ENERGY_UNIT,
 				this.storage.getMaxExtract());
 	}
 
@@ -203,7 +202,7 @@ public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergy
 	@Optional.Method(modid = "ic2")
 	public void drawEnergy(double amount) {
 		this.storage.extractEnergy(
-				(int) EnergyUtils.convertEnergy(EnergyUnits.ENERGY_UNIT, EnergyUnits.FORGE_ENERGY, amount), false);
+				(int) EnergyUtils.convertEnergy(EnergyUnit.ENERGY_UNIT, EnergyUnit.FORGE_ENERGY, amount), false);
 	}
 
 	/**
@@ -233,7 +232,7 @@ public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergy
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getDemandedEnergy() {
-		return EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.ENERGY_UNIT,
+		return EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.ENERGY_UNIT,
 				this.storage.getMaxReceive());
 	}
 
@@ -270,9 +269,9 @@ public class TileEntityEnergyStorage extends TileEntityEnergy implements IEnergy
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-		return Math.abs(EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.ENERGY_UNIT,
+		return Math.abs(EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.ENERGY_UNIT,
 				this.storage.receiveEnergy(
-						(int) EnergyUtils.convertEnergy(EnergyUnits.ENERGY_UNIT, EnergyUnits.FORGE_ENERGY, amount),
+						(int) EnergyUtils.convertEnergy(EnergyUnit.ENERGY_UNIT, EnergyUnit.FORGE_ENERGY, amount),
 						false))
 				- amount);
 	}

@@ -2,25 +2,27 @@ package cjminecraft.core.energy.compat;
 
 import java.util.List;
 
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.CJCore;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.ItemEnergyContainer;
 import ic2.api.item.IElectricItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
 
-@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2"), })
+@Optional.InterfaceList(value = { @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2") })
 public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerItem {
 
 	protected long capacity;
 	protected long maxReceive;
 	protected long maxExtract;
+	private long energy = 0L;
 
 	public ItemEnergy(long capacity) {
 		this(capacity, capacity, capacity);
@@ -56,22 +58,22 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 		this.maxExtract = maxExtract;
 		return this;
 	}
-
+	
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean flag) {
 		EnergyUtils.addEnergyInformation(stack, tooltip);
 	}
-	
+
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
 		return EnergyUtils.hasSupport(stack, null);
 	}
-	
+
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		return EnergyUtils.getEnergyDurabilityForDisplay(stack);
 	}
-	
+
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack) {
 		return EnergyUtils.getEnergyRGBDurabilityForDisplay(stack);
@@ -79,11 +81,12 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-		if (nbt != null && nbt.hasKey("Energy") && nbt.hasKey("Capacity") && nbt.hasKey("MaxReceive")
-				&& nbt.hasKey("MaxExtract"))
-			return new EnergyCapabilityProvider(stack, nbt, EnergyUnits.FORGE_ENERGY);
-		return new EnergyCapabilityProvider(stack, 0, this.capacity, this.maxReceive,
-				this.maxExtract, EnergyUnits.FORGE_ENERGY);
+		if (stack.getTagCompound() == null) {
+			NBTTagCompound newNBT = new NBTTagCompound();
+			new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract, 0).writeToNBT(newNBT);
+			stack.setTagCompound(newNBT);
+		}
+		return new EnergyCapabilityProvider(stack, EnergyUnit.FORGE_ENERGY);
 	}
 
 	/**
@@ -112,7 +115,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getMaxCharge(ItemStack stack) {
-		return EnergyUtils.getCapacity(stack, null, EnergyUnits.ENERGY_UNIT);
+		return EnergyUtils.getCapacity(stack, null, EnergyUnit.ENERGY_UNIT);
 	}
 
 	/**
@@ -130,8 +133,8 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	@Optional.Method(modid = "ic2")
 	public int getTier(ItemStack stack) {
 		if (stack.hasCapability(CapabilityEnergy.ENERGY, null))
-			return ((int) (Math.log(
-					((EnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
+			return ((int) (Math
+					.log(((EnergyStorage) stack.getCapability(CapabilityEnergy.ENERGY, null)).getMaxTransfer())
 					/ Math.log(2)) - 3) / 2;
 		return 0;
 	}
@@ -153,6 +156,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 		if (!container.hasTagCompound())
 			container.setTagCompound(new NBTTagCompound());
@@ -167,6 +171,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
@@ -181,6 +186,7 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int getEnergyStored(ItemStack container) {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy"))
 			return 0;
@@ -188,17 +194,9 @@ public class ItemEnergy extends Item implements IElectricItem, IEnergyContainerI
 	}
 
 	@Override
+	@Optional.Method(modid = "redstoneflux")
 	public int getMaxEnergyStored(ItemStack container) {
 		return (int) this.capacity;
 	}
-
-	@Override
-	public ItemStack getDefaultInstance() {
-		NBTTagCompound nbt = new ItemStack(this).serializeNBT();
-		EnergyStorage storage = new EnergyStorage(this.capacity, this.maxReceive, this.maxExtract,
-				0);
-		storage.writeToNBT(nbt);
-		return new ItemStack(nbt);
-	}
-
+	
 }

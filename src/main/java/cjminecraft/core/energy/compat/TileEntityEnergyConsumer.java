@@ -1,6 +1,6 @@
 package cjminecraft.core.energy.compat;
 
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cofh.api.energy.IEnergyReceiver;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -163,7 +163,7 @@ public class TileEntityEnergyConsumer extends TileEntityEnergy implements IEnerg
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double getDemandedEnergy() {
-		return EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.ENERGY_UNIT,
+		return EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.ENERGY_UNIT,
 				this.storage.getMaxReceive());
 	}
 
@@ -200,9 +200,9 @@ public class TileEntityEnergyConsumer extends TileEntityEnergy implements IEnerg
 	@Override
 	@Optional.Method(modid = "ic2")
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-		return Math.abs(EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.ENERGY_UNIT,
+		return Math.abs(EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.ENERGY_UNIT,
 				this.storage.receiveEnergy(
-						(int) EnergyUtils.convertEnergy(EnergyUnits.ENERGY_UNIT, EnergyUnits.FORGE_ENERGY, amount),
+						(int) EnergyUtils.convertEnergy(EnergyUnit.ENERGY_UNIT, EnergyUnit.FORGE_ENERGY, amount),
 						false))
 				- amount);
 	}

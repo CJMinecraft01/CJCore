@@ -1,9 +1,8 @@
 package cjminecraft.core.energy.compat;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,7 +14,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 
 /**
  * Used in {@link Item#initCapabilities(ItemStack, NBTTagCompound)}. This
- * capability provider allows support for build craft and tesla
+ * capability provider allows support for tesla
  * 
  * @author CJMinecraft
  *
@@ -24,24 +23,19 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 
 	private EnergyStorage storage;
 	private Object teslaWrapper;
-	private Object buildCraftWrapper;
 	private Object forgeWrapper;
-	
+
 	/**
 	 * Create a new {@link EnergyStorage} for an {@link ItemStack}
 	 * 
 	 * @param stack
 	 *            The stack which will have the {@link EnergyStorage}
-	 * @param nbt
-	 *            The {@link NBTTagCompound} with the data about energy (can be
-	 *            got from any {@link TileEntity} which has a
-	 *            {@link EnergyStorage}
 	 * @param unit
 	 *            The {@link EnergyUnit} the energy is in
 	 */
-	public EnergyCapabilityProvider(ItemStack stack, NBTTagCompound nbt, EnergyUnit unit) {
-		this(stack, nbt.getLong("Energy"), nbt.getLong("Capacity"), nbt.getLong("MaxReceive"),
-				nbt.getLong("MaxExtract"), unit);
+	public EnergyCapabilityProvider(ItemStack stack, EnergyUnit unit) {
+		this(stack, stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("Capacity"),
+				stack.getTagCompound().getInteger("MaxReceive"), stack.getTagCompound().getInteger("MaxExtract"), unit);
 	}
 
 	/**
@@ -54,8 +48,8 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 * @param capacity
 	 *            The capacity of the {@link EnergyStorage}
 	 * @param maxReceive
-	 *            The maximum amount of energy the
-	 *            {@link EnergyStorage} can receive
+	 *            The maximum amount of energy the {@link EnergyStorage} can
+	 *            receive
 	 * @param maxExtract
 	 *            The maximum amount of energy that can be extracted from the
 	 *            {@link EnergyStorage}
@@ -64,11 +58,10 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	 */
 	public EnergyCapabilityProvider(ItemStack stack, long energy, long capacity, long maxReceive, long maxExtract,
 			EnergyUnit unit) {
-		this.storage = new EnergyStorage(
-				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, capacity),
-				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxReceive),
-				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, maxExtract),
-				(long) EnergyUtils.convertEnergy(unit, EnergyUnits.FORGE_ENERGY, energy)) {
+		this.storage = new EnergyStorage(EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, capacity),
+				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, maxReceive),
+				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, maxExtract),
+				EnergyUtils.convertEnergy(unit, EnergyUnit.FORGE_ENERGY, energy)) {
 			@Override
 			public long getEnergyStored() {
 				if (stack.hasTagCompound())
@@ -200,7 +193,7 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY) {
-			if(this.forgeWrapper == null)
+			if (this.forgeWrapper == null)
 				this.forgeWrapper = new ForgeEnergyWrapper(this.storage);
 			return (T) this.forgeWrapper;
 		}
@@ -209,13 +202,6 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 			if (this.teslaWrapper == null)
 				this.teslaWrapper = new TeslaWrapper(this.storage);
 			return (T) this.teslaWrapper;
-		}
-		if (EnergyUtils.BUILDCRAFT_LOADED
-				&& (capability == EnergyUtils.BUILDCRAFT_READABLE || capability == EnergyUtils.BUILDCRAFT_RECEIVER
-						|| capability == EnergyUtils.BUILDCRAFT_PASSIVE_PROVIDER)) {
-			if (this.buildCraftWrapper == null)
-				this.buildCraftWrapper = new BuildCraftWrapper(this.storage);
-			return (T) this.buildCraftWrapper;
 		}
 		return null;
 	}

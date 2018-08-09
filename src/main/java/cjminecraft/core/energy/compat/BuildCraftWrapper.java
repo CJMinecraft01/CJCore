@@ -5,7 +5,7 @@ import buildcraft.api.mj.IMjPassiveProvider;
 import buildcraft.api.mj.IMjReadable;
 import buildcraft.api.mj.IMjReceiver;
 import buildcraft.api.mj.MjAPI;
-import cjminecraft.core.energy.EnergyUnits;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 
 /**
@@ -36,27 +36,27 @@ class BuildCraftWrapper implements IMjReceiver, IMjReadable, IMjPassiveProvider 
 
 	@Override
 	public long extractPower(long min, long max, boolean simulate) {
-		return this.storage.extractEnergy((int) EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES, EnergyUnits.FORGE_ENERGY, Math.max(min, max) / MjAPI.ONE_MINECRAFT_JOULE), simulate);
+		return this.storage.extractEnergy((int) EnergyUtils.convertEnergy(EnergyUnit.MINECRAFT_JOULES, EnergyUnit.FORGE_ENERGY, Math.max(min, max) / MjAPI.ONE_MINECRAFT_JOULE), simulate);
 	}
 
 	@Override
 	public long getCapacity() {
-		return EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.MINECRAFT_JOULES, this.storage.getMaxEnergyStored()) * MjAPI.ONE_MINECRAFT_JOULE;
+		return EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.MINECRAFT_JOULES, this.storage.getMaxEnergyStored()) * MjAPI.ONE_MINECRAFT_JOULE;
 	}
 
 	@Override
 	public long getStored() {
-		return EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.MINECRAFT_JOULES, this.storage.getEnergyStored()) * MjAPI.ONE_MINECRAFT_JOULE;
+		return EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.MINECRAFT_JOULES, this.storage.getEnergyStored()) * MjAPI.ONE_MINECRAFT_JOULE;
 	}
 
 	@Override
 	public long getPowerRequested() {
-		return EnergyUtils.convertEnergy(EnergyUnits.FORGE_ENERGY, EnergyUnits.MINECRAFT_JOULES, this.storage.getMaxReceive()) * MjAPI.ONE_MINECRAFT_JOULE;
+		return EnergyUtils.convertEnergy(EnergyUnit.FORGE_ENERGY, EnergyUnit.MINECRAFT_JOULES, this.storage.getMaxReceive()) * MjAPI.ONE_MINECRAFT_JOULE;
 	}
 
 	@Override
 	public long receivePower(long microJoules, boolean simulate) {
-		return this.storage.receiveEnergy((int) (EnergyUtils.convertEnergy(EnergyUnits.MINECRAFT_JOULES, EnergyUnits.FORGE_ENERGY, microJoules) / MjAPI.ONE_MINECRAFT_JOULE), simulate);
+		return this.storage.receiveEnergy((int) (EnergyUtils.convertEnergy(EnergyUnit.MINECRAFT_JOULES, EnergyUnit.FORGE_ENERGY, microJoules) / MjAPI.ONE_MINECRAFT_JOULE), simulate);
 	}
 
 }
