@@ -25,18 +25,6 @@ public class EnergyCapabilityProvider implements ICapabilityProvider {
 	private Object teslaWrapper;
 	private Object forgeWrapper;
 
-	/**
-	 * Create a new {@link EnergyStorage} for an {@link ItemStack}
-	 * 
-	 * @param stack
-	 *            The stack which will have the {@link EnergyStorage}
-	 * @param unit
-	 *            The {@link EnergyUnit} the energy is in
-	 */
-	public EnergyCapabilityProvider(ItemStack stack, EnergyUnit unit) {
-		this(stack, stack.getTagCompound().getInteger("Energy"), stack.getTagCompound().getInteger("Capacity"),
-				stack.getTagCompound().getInteger("MaxReceive"), stack.getTagCompound().getInteger("MaxExtract"), unit);
-	}
 
 	/**
 	 * Create a new {@link EnergyStorage} for an {@link ItemStack}

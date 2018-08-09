@@ -177,7 +177,7 @@ public interface IEnergySupport<I> {
 	 * The default {@link EnergyUnit} for the container
 	 * 
 	 * @return The default {@link EnergyUnit} for the container. See
-	 *         {@link EnergyUnits} for how to add your own unit or get a pre
+	 *         {@link EnergyUnit} for how to add your own unit or get a pre
 	 *         made one
 	 */
 	EnergyUnit defaultEnergyUnit();
