@@ -20,7 +20,7 @@ import net.minecraftforge.items.ItemStackHandler;
  *
  * @author CJMinecraft
  */
-public class TileEntitySidedInventory extends TileEntity {
+public class TileEntitySidedInventory extends TileEntityBase {
 
 	/**
 	 * The holder of all the item stacks
@@ -29,7 +29,7 @@ public class TileEntitySidedInventory extends TileEntity {
 	/**
 	 * All of the handlers for each side
 	 */
-	private SidedItemStackHandler northHandler, southHandler, eastHandler, westHandler, upHandler, downHandler;
+	private SidedItemStackHandler[] sideHandlers = new SidedItemStackHandler[6];
 	/**
 	 * The slots each side will represent
 	 */
@@ -56,12 +56,12 @@ public class TileEntitySidedInventory extends TileEntity {
 			int[] slotsWest, int[] slotsEast) {
 		this.slotsForFace = new int[][] { slotsDown, slotsUp, slotsNorth, slotsSouth, slotsWest, slotsEast };
 		this.handler = new SidedItemStackMainHandler(calculateSizeOfMainHandler());
-		this.downHandler = new SidedItemStackHandler(slotsDown.length, EnumFacing.DOWN);
-		this.upHandler = new SidedItemStackHandler(slotsUp.length, EnumFacing.UP);
-		this.northHandler = new SidedItemStackHandler(slotsNorth.length, EnumFacing.NORTH);
-		this.southHandler = new SidedItemStackHandler(slotsSouth.length, EnumFacing.SOUTH);
-		this.westHandler = new SidedItemStackHandler(slotsWest.length, EnumFacing.WEST);
-		this.eastHandler = new SidedItemStackHandler(slotsEast.length, EnumFacing.EAST);
+		this.sideHandlers[0] = new SidedItemStackHandler(slotsDown.length, EnumFacing.DOWN);
+		this.sideHandlers[1] = new SidedItemStackHandler(slotsUp.length, EnumFacing.UP);
+		this.sideHandlers[2] = new SidedItemStackHandler(slotsNorth.length, EnumFacing.NORTH);
+		this.sideHandlers[3] = new SidedItemStackHandler(slotsSouth.length, EnumFacing.SOUTH);
+		this.sideHandlers[4] = new SidedItemStackHandler(slotsWest.length, EnumFacing.WEST);
+		this.sideHandlers[5] = new SidedItemStackHandler(slotsEast.length, EnumFacing.EAST);
 	}
 
 	/**
@@ -78,34 +78,6 @@ public class TileEntitySidedInventory extends TileEntity {
 			}
 		}
 		return lastSlot + 1;
-	}
-
-	/**
-	 * Get the correct handler for the given face
-	 *
-	 * @param side
-	 *            The side to get the handler of
-	 * @return the correct handler for the given face
-	 */
-	private ItemStackHandler getHandlerForFace(@Nullable EnumFacing side) {
-		if (side == null)
-			return this.handler;
-		switch (side) {
-		case DOWN:
-			return this.downHandler;
-		case UP:
-			return this.upHandler;
-		case NORTH:
-			return this.northHandler;
-		case SOUTH:
-			return this.southHandler;
-		case WEST:
-			return this.westHandler;
-		case EAST:
-			return this.eastHandler;
-		default:
-			return this.handler;
-		}
 	}
 	
 	/**
@@ -131,7 +103,7 @@ public class TileEntitySidedInventory extends TileEntity {
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return (T) getHandlerForFace(facing);
+			return (T) (facing == null ? this.handler : this.sideHandlers[facing.getIndex()]);
 		return super.getCapability(capability, facing);
 	}
 
@@ -201,64 +173,19 @@ public class TileEntitySidedInventory extends TileEntity {
 		
 		@Override
 		protected void onLoad() {
-			for (int slot = 0; slot < this.getSlots(); slot++) {
-				for (int i = 0; i < slotsForFace.length; i++) {
-					for (int j = 0; j < slotsForFace[i].length; j++) {
-						if (slot == slotsForFace[i][j]) {
-							switch (i) {
-							case 0:
-								downHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-								break;
-							case 1:
-								upHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-								break;
-							case 2:
-								northHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-								break;
-							case 3:
-								southHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-								break;
-							case 4:
-								westHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-								break;
-							case 5:
-								eastHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-								break;
-							}
-						}
-					}
-				}
-			}
+			for (int slot = 0; slot < this.getSlots(); slot++)
+				for (int i = 0; i < slotsForFace.length; i++)
+					for (int j = 0; j < slotsForFace[i].length; j++)
+						if (slot == slotsForFace[i][j])
+							sideHandlers[i].setStackInSlotInternal(j, handler.getStackInSlot(slot));
 		}
 		
 		@Override
 		protected void onContentsChanged(int slot) {
-			for (int i = 0; i < slotsForFace.length; i++) {
-				for (int j = 0; j < slotsForFace[i].length; j++) {
-					if (slot == slotsForFace[i][j]) {
-						switch (i) {
-						case 0:
-							downHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-							break;
-						case 1:
-							upHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-							break;
-						case 2:
-							northHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-							break;
-						case 3:
-							southHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-							break;
-						case 4:
-							westHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-							break;
-						case 5:
-							eastHandler.setStackInSlotInternal(j, handler.getStackInSlot(slot));
-							break;
-						}
-					}
-				}
-			}
+			for (int i = 0; i < slotsForFace.length; i++)
+				for (int j = 0; j < slotsForFace[i].length; j++)
+					if (slot == slotsForFace[i][j])
+						sideHandlers[i].setStackInSlotInternal(j, handler.getStackInSlot(slot));
 			markDirty();
 		}
 	}
