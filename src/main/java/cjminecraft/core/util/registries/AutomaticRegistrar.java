@@ -15,6 +15,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -132,8 +134,9 @@ public class AutomaticRegistrar {
 
 	@SubscribeEvent
 	public static void onBlockRegister(RegistryEvent.Register<Block> event) {
-		CJCore.logger.info("Searching for blocks to register");
+		CJCore.logger.info("Searching for blocks and tiles to register");
 		int registeredBlocks = 0;
+		int registeredTiles = 0;
 		for (Entry<String, Class> entry : registryClasses.entrySet()) {
 			for (Method method : entry.getValue().getDeclaredMethods()) {
 				if (method.isAnnotationPresent(RegisterBlockInit.class)) {
@@ -170,10 +173,22 @@ public class AutomaticRegistrar {
 						CJCore.logger.catching(Level.ERROR, e);
 					}
 				}
+				if (field.isAnnotationPresent(RegisterTileEntity.class)) {
+					try {
+						RegisterTileEntity details = field.getAnnotation(RegisterTileEntity.class);
+						TileEntity.register(details.key(), details.tileEntityClass());
+						registeredTiles++;
+					} catch (Exception e) {
+						CJCore.logger.error(
+								"Unable to register tile entity: " + field.getName() + "! The following error was thrown:");
+						CJCore.logger.catching(Level.ERROR, e);
+					}
+				}
 			}
 		}
 
 		CJCore.logger.info("Successfully registered " + registeredBlocks + " blocks!");
+		CJCore.logger.info("Successfully registered " + registeredTiles + " tiles!");
 	}
 
 	@SideOnly(Side.CLIENT)

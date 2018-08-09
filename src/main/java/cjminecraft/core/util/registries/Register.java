@@ -54,6 +54,15 @@ public @interface Register {
 	
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.FIELD})
+	public static @interface RegisterTileEntity {
+
+	    Class tileEntityClass();
+	    String key();
+
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD})
 	public static @interface RegisterRender {
 
 	    boolean hasVariants() default false;
