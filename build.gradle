@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
 
-version = "0.0.3.2"
+version = "0.0.4.0"
 group = "cjminecraft.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cjcore-1.10"
 
@@ -23,6 +23,7 @@ compileJava {
 allprojects {
     tasks.withType(Javadoc) {
         options.addStringOption('Xdoclint:none', '-quiet')
+		options.addStringOption('-Xlint:unchecked')
     }
 }
 
@@ -52,11 +53,10 @@ minecraft {
     version = "1.10.2-12.18.3.2511"
     runDir = "run"
 	replace '${version}', project.version
-    mappings = "stable_29"
+    mappings = "snapshot_20161117"
 }
 
 repositories {
-
     maven {
 		name "Tesla"
         url 'http://maven.mcmoddev.com'
@@ -69,11 +69,8 @@ repositories {
 }
 
 dependencies {
-
 	compile "net.darkhax.tesla:Tesla:1.10.2-1.2.1.50"
-	
 	compile 'net.industrial-craft:industrialcraft-2:2.6.252-ex110:api'
-
 }
 
 processResources {
@@ -92,20 +89,5 @@ processResources {
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-    }
-
-}
-
-publishing {
-    publications {
-        all(MavenPublication) {
-            artifact jar
-            // artifact deobfJar
-            artifact srcJar
-            artifactId = archivesBaseName
-        }
-    }
-	repositories {
-        mavenLocal()
     }
 }
