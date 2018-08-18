@@ -93,6 +93,16 @@ public class TileEntitySidedInventory extends TileEntityBase {
 		return true;
 	}
 	
+	/**
+	 * Called when a slot in the main handler has changed
+	 * 
+	 * @param slot
+	 *            The index of the slot in the main handler which was changed
+	 */
+	protected void onSlotChanged(int slot) {
+
+	}
+	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -187,6 +197,7 @@ public class TileEntitySidedInventory extends TileEntityBase {
 					if (slot == slotsForFace[i][j])
 						sideHandlers[i].setStackInSlotInternal(j, handler.getStackInSlot(slot));
 			markDirty();
+			onSlotChanged(slot);
 		}
 	}
 
