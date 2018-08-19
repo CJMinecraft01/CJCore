@@ -192,13 +192,93 @@ public class TileEntitySidedInventory extends TileEntityBase {
 		
 		@Override
 		protected void onContentsChanged(int slot) {
+			onContentsChangedInternal(slot);
+			onSlotChanged(slot);
+		}
+		
+		private void onContentsChangedInternal(int slot) {
 			for (int i = 0; i < slotsForFace.length; i++)
 				for (int j = 0; j < slotsForFace[i].length; j++)
 					if (slot == slotsForFace[i][j])
 						sideHandlers[i].setStackInSlotInternal(j, handler.getStackInSlot(slot));
-			onSlotChanged(slot);
 			markDirty();
 		}
+		
+		@Nonnull
+		public ItemStack insertItemInternal(int slot, @Nonnull ItemStack stack, boolean simulate) {
+			if (stack.isEmpty())
+				return ItemStack.EMPTY;
+
+			validateSlotIndex(slot);
+
+			ItemStack existing = this.stacks.get(slot);
+
+			int limit = getStackLimit(slot, stack);
+
+			if (!existing.isEmpty()) {
+				if (!ItemHandlerHelper.canItemStacksStack(stack, existing))
+					return stack;
+
+				limit -= existing.getCount();
+			}
+
+			if (limit <= 0)
+				return stack;
+
+			boolean reachedLimit = stack.getCount() > limit;
+
+			if (!simulate) {
+				if (existing.isEmpty()) {
+					this.stacks.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
+				} else {
+					existing.grow(reachedLimit ? limit : stack.getCount());
+				}
+				onContentsChangedInternal(slot);
+			}
+
+			return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit)
+					: ItemStack.EMPTY;
+		}
+
+		@Nonnull
+		public ItemStack extractItemInternal(int slot, int amount, boolean simulate) {
+			if (amount == 0)
+				return ItemStack.EMPTY;
+
+			validateSlotIndex(slot);
+
+			ItemStack existing = this.stacks.get(slot);
+
+			if (existing.isEmpty())
+				return ItemStack.EMPTY;
+
+			int toExtract = Math.min(amount, existing.getMaxStackSize());
+
+			if (existing.getCount() <= toExtract) {
+				if (!simulate) {
+					this.stacks.set(slot, ItemStack.EMPTY);
+					onContentsChangedInternal(slot);
+				}
+				return existing;
+			} else {
+				if (!simulate) {
+					this.stacks.set(slot,
+							ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
+					onContentsChangedInternal(slot);
+				}
+
+				return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
+			}
+		}
+		
+		public void setStackInSlotInternal(int slot, @Nonnull ItemStack stack) {
+			validateSlotIndex(slot);
+			if (ItemStack.areItemStacksEqual(this.stacks.get(slot), stack))
+				return;
+			this.stacks.set(slot, stack);
+			onContentsChangedInternal(slot);
+		}
+		
 	}
 
 	private class SidedItemStackHandler extends ItemStackHandler {
