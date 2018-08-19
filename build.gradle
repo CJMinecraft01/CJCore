@@ -108,17 +108,3 @@ processResources {
         exclude 'mcmod.info'
     }
 }
-
-publishing {
-    publications {
-        all(MavenPublication) {
-            artifact jar
-            // artifact deobfJar
-            artifact srcJar
-            artifactId = archivesBaseName
-        }
-    }
-	repositories {
-        mavenLocal()
-    }
-}
