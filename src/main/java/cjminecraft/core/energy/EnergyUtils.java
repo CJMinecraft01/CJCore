@@ -410,9 +410,9 @@ public class EnergyUtils {
 	 * Displays any energy and capacity in the same way a energy bar would
 	 * 
 	 * @param energy
-	 *            The energy in the {@link CJCoreConfig#DEFAULT_ENERGY_UNIT}
+	 *            The energy in the {@link CJCoreConfig.Energy#DEFAULT_ENERGY_UNIT}
 	 * @param capacity
-	 *            The capacity in the {@link CJCoreConfig#DEFAULT_ENERGY_UNIT}
+	 *            The capacity in the {@link CJCoreConfig.Energy#DEFAULT_ENERGY_UNIT}
 	 * @return The formatted energy string
 	 */
 	public static String getFormattedEnergy(long energy, long capacity) {
