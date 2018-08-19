@@ -61,7 +61,7 @@ public class GuiOverlay extends GuiCore {
 	public void drawOverlay(RenderGameOverlayEvent.Post event) {
 		if (Minecraft.getMinecraft().currentScreen != null)
 			return;
-		this.player = Minecraft.getMinecraft().player;
+		this.player = Minecraft.getMinecraft().thePlayer;
 		if (this.player == null)
 			return;
 		this.width = event.getResolution().getScaledWidth();

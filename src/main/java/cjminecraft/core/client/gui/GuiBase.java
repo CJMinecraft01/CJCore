@@ -82,7 +82,7 @@ public abstract class GuiBase extends GuiCore {
 
 		super.drawScreen(x, y, partialTicks);
 
-		if (this.tooltips && this.mc.player.inventory.getItemStack() == null) {
+		if (this.tooltips && this.mc.thePlayer.inventory.getItemStack() == null) {
 			addTooltips(this.tooltip);
 			drawTooltip(this.tooltip);
 		}

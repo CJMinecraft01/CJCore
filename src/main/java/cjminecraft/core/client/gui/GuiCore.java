@@ -93,7 +93,7 @@ public abstract class GuiCore extends GuiContainer {
 	 * @return Whether the player is hovering over the selected {@link Slot}
 	 */
 	public boolean isMouseOverSlot(Slot slot, int xCoord, int yCoord) {
-		return this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, xCoord, yCoord);
+		return this.isPointInRegion(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, xCoord, yCoord);
 	}
 
 	/**

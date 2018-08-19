@@ -11,7 +11,7 @@ import cjminecraft.core.client.gui.GuiCore;
 import cjminecraft.core.client.gui.ISpecialOverlayElement;
 import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.energy.EnergyData;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.compat.forge.CustomForgeEnergyStorage;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.util.RenderUtils;
@@ -26,6 +26,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.config.Config.Type;
+import net.minecraftforge.common.config.ConfigManager;
 
 /**
  * A simple yet effective energy bar which helps show energy. Can be synced with
@@ -95,8 +97,8 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	 * @return The updated element
 	 */
 	public ElementEnergyBar setEnergy(long energy, long capacity, EnergyUnit unit) {
-		this.energy = EnergyUtils.convertEnergy(unit, CJCoreConfig.DEFAULT_ENERGY_UNIT, energy);
-		this.capacity = EnergyUtils.convertEnergy(unit, CJCoreConfig.DEFAULT_ENERGY_UNIT, capacity);
+		this.energy = EnergyUtils.convertEnergy(unit, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT, energy);
+		this.capacity = EnergyUtils.convertEnergy(unit, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT, capacity);
 		return this;
 	}
 
@@ -113,7 +115,7 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	public ElementEnergyBar setEnergy(EnergyData data) {
 		if (data == null)
 			return this;
-		return setEnergy(data.getEnergy(), data.getCapacity(), CJCoreConfig.DEFAULT_ENERGY_UNIT);
+		return setEnergy(data.getEnergy(), data.getCapacity(), CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
 	}
 
 	/**
@@ -163,7 +165,7 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	public void drawBackground(int mouseX, int mouseY, float gameTicks) {
 		// Actual energy bar
 		this.gui.bindTexture(this.texture);
-		float[] colour = CJCoreConfig.DEFAULT_ENERGY_UNIT.getColour();
+		float[] colour = CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getColour();
 		GlStateManager.color(colour[0], colour[1], colour[2]);
 		drawSizedTexturedModalRectWithBorder(this.posX, this.posY,
 				this.textureU + (Math.abs(DEFAULT_WIDTH - this.width) / 2), this.textureV, this.width, this.height,
@@ -194,7 +196,7 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 			this.sync++;
 			this.sync %= 10;
 			if (this.sync == 0)
-				EnergyUtils.syncEnergyData(CJCoreConfig.DEFAULT_ENERGY_UNIT, this.pos, this.side, CJCore.MODID);
+				EnergyUtils.syncEnergyData(CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT, this.pos, this.side, CJCore.MODID);
 		}
 	}
 
@@ -202,11 +204,11 @@ public class ElementEnergyBar extends ElementTexture implements ISpecialOverlayE
 	public boolean onMousePressed(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if (intersectsWith(mouseX, mouseY)) {
 			GuiCore.playClickSound(1.0F, 1.0F);
-			EnergyUnit toBe = CJCoreConfig.DEFAULT_ENERGY_UNIT.cycleUnit();
-			this.energy = EnergyUtils.convertEnergy(CJCoreConfig.DEFAULT_ENERGY_UNIT, toBe, energy);
-			this.capacity = EnergyUtils.convertEnergy(CJCoreConfig.DEFAULT_ENERGY_UNIT, toBe, capacity);
-			CJCoreConfig.DEFAULT_ENERGY_UNIT = toBe;
-			CJCoreConfig.syncFromFields();
+			EnergyUnit toBe = CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.cycleUnit();
+			this.energy = EnergyUtils.convertEnergy(CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT, toBe, energy);
+			this.capacity = EnergyUtils.convertEnergy(CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT, toBe, capacity);
+			CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT = toBe;
+			ConfigManager.load(CJCore.MODID, Type.INSTANCE);
 			return true;
 		}
 		return false;

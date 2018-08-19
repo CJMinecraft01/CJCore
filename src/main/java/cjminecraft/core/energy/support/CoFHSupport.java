@@ -1,7 +1,6 @@
 package cjminecraft.core.energy.support;
 
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -67,7 +66,7 @@ public class CoFHSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.REDSTONE_FLUX;
+			return EnergyUnit.REDSTONE_FLUX;
 		}
 
 		@Override
@@ -132,7 +131,7 @@ public class CoFHSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.REDSTONE_FLUX;
+			return EnergyUnit.REDSTONE_FLUX;
 		}
 
 		@Override
@@ -197,7 +196,7 @@ public class CoFHSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.REDSTONE_FLUX;
+			return EnergyUnit.REDSTONE_FLUX;
 		}
 
 		@Override

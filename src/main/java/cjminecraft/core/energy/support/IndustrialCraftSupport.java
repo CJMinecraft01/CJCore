@@ -3,8 +3,7 @@ package cjminecraft.core.energy.support;
 import java.lang.reflect.Field;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import ic2.api.energy.EnergyNet;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
@@ -110,7 +109,7 @@ public class IndustrialCraftSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.ENERGY_UNIT;
+			return EnergyUnit.ENERGY_UNIT;
 		}
 
 	}
@@ -201,7 +200,7 @@ public class IndustrialCraftSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.ENERGY_UNIT;
+			return EnergyUnit.ENERGY_UNIT;
 		}
 
 	}
@@ -293,7 +292,7 @@ public class IndustrialCraftSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.ENERGY_UNIT;
+			return EnergyUnit.ENERGY_UNIT;
 		}
 
 	}

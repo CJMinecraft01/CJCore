@@ -1,7 +1,6 @@
 package cjminecraft.core.energy.support;
 
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
@@ -68,7 +67,7 @@ public class TeslaSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.TESLA;
+			return EnergyUnit.TESLA;
 		}
 
 		@Override
@@ -133,7 +132,7 @@ public class TeslaSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.TESLA;
+			return EnergyUnit.TESLA;
 		}
 
 		@Override
@@ -198,7 +197,7 @@ public class TeslaSupport {
 
 		@Override
 		public EnergyUnit defaultEnergyUnit() {
-			return EnergyUnits.TESLA;
+			return EnergyUnit.TESLA;
 		}
 
 		@Override

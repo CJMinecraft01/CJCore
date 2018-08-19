@@ -3,8 +3,7 @@ package cjminecraft.core.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -89,7 +88,7 @@ public class NetworkUtils {
 	 */
 	@Nonnull
 	public static EnergyUnit readEnergyUnit(ByteBuf buf) {
-		return EnergyUnits.byUnlocalizedName(ByteBufUtils.readUTF8String(buf));
+		return EnergyUnit.byUnlocalizedName(ByteBufUtils.readUTF8String(buf));
 	}
 
 }

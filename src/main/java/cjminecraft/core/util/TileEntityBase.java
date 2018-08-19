@@ -98,7 +98,7 @@ public class TileEntityBase extends TileEntity {
 	 * @return If the player can interact with the block
 	 */
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.world.getTileEntity(this.getPos()) == this
+		return this.worldObj.getTileEntity(this.getPos()) == this
 				&& player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
 	}
 

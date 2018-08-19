@@ -1302,7 +1302,7 @@ public class InventoryUtils {
 			int fromSlot, int toSlot, @Nullable EnumFacing side) {
 		ImmutableList<ItemStack> inventory = getInventory(te, fromSlot, toSlot, side);
 		inventory.forEach(stack -> {
-			world.spawnEntity(new EntityItem(world, x, y, z, stack));
+			world.spawnEntityInWorld(new EntityItem(world, x, y, z, stack));
 		});
 	}
 
@@ -1435,7 +1435,7 @@ public class InventoryUtils {
 			@Nullable ItemStack inventory, int fromSlot, int toSlot, @Nullable EnumFacing side) {
 		ImmutableList<ItemStack> inv = getInventory(inventory, fromSlot, toSlot, side);
 		inv.forEach(stack -> {
-			world.spawnEntity(new EntityItem(world, x, y, z, stack));
+			world.spawnEntityInWorld(new EntityItem(world, x, y, z, stack));
 		});
 	}
 
@@ -2027,4 +2027,11 @@ public class InventoryUtils {
 				new Exception().getStackTrace()[1].getClassName(), inventoryFieldName));
 	}
 
+	/**
+	 * Clear all the cached inventory data
+	 */
+	public static void clearCache() {
+		cachedInventoryData.clear();
+	}
+	
 }

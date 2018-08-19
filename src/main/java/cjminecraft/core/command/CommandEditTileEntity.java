@@ -11,8 +11,7 @@ import com.google.common.collect.Lists;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.config.CJCoreConfig;
-import cjminecraft.core.energy.EnergyUnits;
-import cjminecraft.core.energy.EnergyUnits.EnergyUnit;
+import cjminecraft.core.energy.EnergyUnit;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
 import cjminecraft.core.inventory.InventoryUtils;
@@ -50,7 +49,7 @@ public class CommandEditTileEntity extends CommandBase {
 	 * Initialize the different energy units and faces
 	 */
 	public CommandEditTileEntity() {
-		EnergyUnits.getEnergyUnits().forEach((unit) -> {
+		EnergyUnit.VALUES.forEach((unit) -> {
 			energyUnits.add(unit.getUnlocalizedName());
 		});
 		Lists.newArrayList(EnumFacing.VALUES).forEach((face) -> {
@@ -62,7 +61,7 @@ public class CommandEditTileEntity extends CommandBase {
 	 * The name of the command
 	 */
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return "tileentity";
 	}
 
@@ -70,7 +69,7 @@ public class CommandEditTileEntity extends CommandBase {
 	 * The usage of the command
 	 */
 	@Override
-	public String getUsage(ICommandSender sender) {
+	public String getCommandUsage(ICommandSender sender) {
 		return "command.tileentity.usage";
 	}
 
@@ -78,7 +77,7 @@ public class CommandEditTileEntity extends CommandBase {
 	 * The shortened version of the command
 	 */
 	@Override
-	public List<String> getAliases() {
+	public List<String> getCommandAliases() {
 		return Arrays.asList("tileentity", "te");
 	}
 
@@ -86,7 +85,7 @@ public class CommandEditTileEntity extends CommandBase {
 	 * Allows the tab completions to be done
 	 */
 	@Override
-	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args,
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args,
 			BlockPos targetPos) {
 		return args.length >= 0 && args.length < 4 ? getTabCompletionCoordinate(args, 0, targetPos)
 				: args.length > 3 && args.length < 5
@@ -251,27 +250,27 @@ public class CommandEditTileEntity extends CommandBase {
 			if (args.length < 7)
 				throw new CommandException("command.tileentity.usage");
 			long energy = Long.valueOf(args[5]);
-			EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
+			EnergyUnit unit = EnergyUnit.MINECRAFT_JOULES;
 			if (!args[6].isEmpty())
-				unit = EnergyUnits.byUnlocalizedName(args[6]);
+				unit = EnergyUnit.byUnlocalizedName(args[6]);
 			if (EnergyUtils.setEnergy(te, energy, unit, side) == 0)
 				throw new CommandException("command.tileentity.noset");
 		}
 		if (args[4].equalsIgnoreCase("get")) {
-			long energy = EnergyUtils.getEnergyStored(te, side, CJCoreConfig.DEFAULT_ENERGY_UNIT);
-			long capacity = EnergyUtils.getCapacity(te, side, CJCoreConfig.DEFAULT_ENERGY_UNIT);
-			sender.sendMessage(new TextComponentString(
-					NumberFormat.getNumberInstance().format(energy) + " " + CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()
+			long energy = EnergyUtils.getEnergyStored(te, side, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
+			long capacity = EnergyUtils.getCapacity(te, side, CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT);
+			sender.addChatMessage(new TextComponentString(
+					NumberFormat.getNumberInstance().format(energy) + " " + CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()
 							+ " / " + NumberFormat.getNumberInstance().format(capacity) + " "
-							+ CJCoreConfig.DEFAULT_ENERGY_UNIT.getSuffix()));
+							+ CJCoreConfig.ENERGY.DEFAULT_ENERGY_UNIT.getSuffix()));
 		}
 		if (args[4].equalsIgnoreCase("give")) {
 			if (args.length < 7)
 				throw new CommandException("command.tileentity.usage");
 			long energy = Long.valueOf(args[5]);
-			EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
+			EnergyUnit unit = EnergyUnit.MINECRAFT_JOULES;
 			if (!args[6].isEmpty())
-				unit = EnergyUnits.byUnlocalizedName(args[6]);
+				unit = EnergyUnit.byUnlocalizedName(args[6]);
 			if (EnergyUtils.giveEnergy(te, energy, unit, false, side) == 0)
 				throw new CommandException("command.tileentity.nogive");
 		}
@@ -279,9 +278,9 @@ public class CommandEditTileEntity extends CommandBase {
 			if (args.length < 7)
 				throw new CommandException("command.tileentity.usage");
 			long energy = Long.valueOf(args[5]);
-			EnergyUnit unit = EnergyUnits.MINECRAFT_JOULES;
+			EnergyUnit unit = EnergyUnit.MINECRAFT_JOULES;
 			if (!args[6].isEmpty())
-				unit = EnergyUnits.byUnlocalizedName(args[6]);
+				unit = EnergyUnit.byUnlocalizedName(args[6]);
 			if (EnergyUtils.takeEnergy(te, energy, unit, false, side) == 0)
 				throw new CommandException("command.tileentity.notake");
 		}
@@ -313,7 +312,7 @@ public class CommandEditTileEntity extends CommandBase {
 			ImmutableList<ItemStack> inv = InventoryUtils.getInventoryStacked(te, side);
 			for (ItemStack stack : inv)
 				if (stack.stackSize > 0)
-					sender.sendMessage(new TextComponentString(InventoryUtils.stackToString(stack)));
+					sender.addChatMessage(new TextComponentString(InventoryUtils.stackToString(stack)));
 			return;
 		}
 		if (args.length <= 5)
@@ -376,7 +375,7 @@ public class CommandEditTileEntity extends CommandBase {
 			for (int i = 0; i < FluidUtils.getNumberOfTanks(te, side); i++) {
 				FluidTankInfo info = new FluidTankInfo(FluidUtils.getFluidStack(te, side, i),
 						FluidUtils.getCapacity(te, side, i));
-				sender.sendMessage(new TextComponentString(FluidUtils.getFluidTankInfoToString(info)));
+				sender.addChatMessage(new TextComponentString(FluidUtils.getFluidTankInfoToString(info)));
 			}
 			return;
 		}

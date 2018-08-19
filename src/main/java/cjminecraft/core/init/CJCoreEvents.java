@@ -1,15 +1,19 @@
 package cjminecraft.core.init;
 
 import cjminecraft.core.CJCore;
-import cjminecraft.core.util.VersionChecker;
+import net.minecraftforge.common.config.Config.Type;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
+@Mod.EventBusSubscriber()
 public class CJCoreEvents {
 	
 	@SubscribeEvent
-	public void onPlayerLogIn(PlayerLoggedInEvent event) {
-		VersionChecker.checkForUpdate(VersionChecker.cjcoreURL, CJCore.MODID, CJCore.VERSION, event.player);
+	public static void onConfigChanged(ConfigChangedEvent event) {
+		if (event.getModID().equals(CJCore.MODID))
+			ConfigManager.load(CJCore.MODID, Type.INSTANCE);
 	}
 
 }
