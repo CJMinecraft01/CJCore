@@ -245,11 +245,10 @@ public class AutomaticRegistrar {
 									}
 								} else
 									ModelLoader.setCustomModelResourceLocation(item, 0,
-											new ModelResourceLocation(
-													new ResourceLocation(entry.getKey(), item.getTranslationKey()),
-													"inventory"));
+											new ModelResourceLocation(item.getRegistryName(), "inventory"));
 								if (item instanceof IItemColor)
-									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) item, item);
+									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) item,
+											item);
 								registeredItems++;
 							} else {
 								CJCore.logger.error("Unable to register renders for item: " + field.getName()
@@ -270,15 +269,16 @@ public class AutomaticRegistrar {
 									}
 								} else
 									ModelLoader.setCustomModelResourceLocation(item, 0,
-											new ModelResourceLocation(
-													new ResourceLocation(entry.getKey(), item.getTranslationKey()),
-													"inventory"));
+											new ModelResourceLocation(item.getRegistryName(), "inventory"));
 								if (block instanceof IItemColor)
-									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) block, block);
+									Minecraft.getMinecraft().getItemColors()
+											.registerItemColorHandler((IItemColor) block, block);
 								if (item instanceof IItemColor)
-									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) item, block);
+									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) item,
+											block);
 								if (block instanceof IBlockColor)
-									Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor) block, block);
+									Minecraft.getMinecraft().getBlockColors()
+											.registerBlockColorHandler((IBlockColor) block, block);
 								registeredBlocks++;
 							} else {
 								CJCore.logger.error("Unable to register renders for block: " + field.getName()
