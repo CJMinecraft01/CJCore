@@ -20,7 +20,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author CJMinecraft
  *
  */
-public class RecipeItemColour implements IRecipe {
+public class RecipeItemColor implements IRecipe {
 
 	/**
 	 * Use if you want to see if the item stack is a dye {@link #getCraftingResult(InventoryCrafting)}
@@ -39,7 +39,7 @@ public class RecipeItemColour implements IRecipe {
 	/**
 	 * Default constructor for registering the recipe {@link CraftingHandler#registerCraftingRecipes()}
 	 */
-	public RecipeItemColour() {
+	public RecipeItemColor() {
 		this.targetItemStack = new ItemStack(Blocks.AIR);
 	}
 	
@@ -47,7 +47,7 @@ public class RecipeItemColour implements IRecipe {
 	 * Creates a new recipe to colour your item
 	 * @param targetItemStack The item you want to colour
 	 */
-	public RecipeItemColour(ItemStack targetItemStack) {
+	public RecipeItemColor(ItemStack targetItemStack) {
 		this.targetItemStack = targetItemStack;
 	}
 

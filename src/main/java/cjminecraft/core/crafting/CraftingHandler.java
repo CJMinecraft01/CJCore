@@ -22,8 +22,8 @@ public class CraftingHandler {
 	 * Registers the crafting recipes. Used only by {@link CJCore}
 	 */
 	public static void registerCraftingRecipes() {
-		RecipeSorter.register("clearColour", RecipeClearColour.class, Category.SHAPELESS, "after:minecraft:shapeless");
-		RecipeSorter.register("itemColour", RecipeItemColour.class, Category.SHAPELESS, "after:minecraft:shapeless");
+		RecipeSorter.register("clearColour", RecipeClearColor.class, Category.SHAPELESS, "after:minecraft:shapeless");
+		RecipeSorter.register("itemColour", RecipeItemColor.class, Category.SHAPELESS, "after:minecraft:shapeless");
 
 		GameRegistry.addRecipe(new ItemStack(CJCoreItems.multimeter, 1, 0),
 				new Object[] { " G ", "GRG", " G ", 'G', Items.GOLD_INGOT, 'R', Blocks.REDSTONE_BLOCK });

@@ -1,7 +1,10 @@
 package cjminecraft.core.util.registries;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -243,6 +246,8 @@ public class AutomaticRegistrar {
 											new ModelResourceLocation(
 													new ResourceLocation(entry.getKey(), item.getUnlocalizedName()),
 													"inventory"));
+								if (item instanceof IItemColor)
+									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) item, item);
 								registeredItems++;
 							} else {
 								CJCore.logger.error("Unable to register renders for item: " + field.getName()
@@ -266,6 +271,12 @@ public class AutomaticRegistrar {
 											new ModelResourceLocation(
 													new ResourceLocation(entry.getKey(), item.getUnlocalizedName()),
 													"inventory"));
+								if (block instanceof IItemColor)
+									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) block, block);
+								if (item instanceof IItemColor)
+									Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor) item, block);
+								if (block instanceof IBlockColor)
+									Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor) block, block);
 								registeredBlocks++;
 							} else {
 								CJCore.logger.error("Unable to register renders for block: " + field.getName()

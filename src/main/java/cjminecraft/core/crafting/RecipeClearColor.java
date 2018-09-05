@@ -15,7 +15,7 @@ import net.minecraft.world.World;
  * @author CJMinecraft
  *
  */
-public class RecipeClearColour implements IRecipe {
+public class RecipeClearColor implements IRecipe {
 
 	/**
 	 * The {@link ItemStack} to target
@@ -26,7 +26,7 @@ public class RecipeClearColour implements IRecipe {
 	 * Create a recipe which can clear the colour of an {@link ItemStack}
 	 * @param targetItemStack The {@link ItemStack} to target
 	 */
-	public RecipeClearColour(ItemStack targetItemStack) {
+	public RecipeClearColor(ItemStack targetItemStack) {
 		this.targetItemStack = targetItemStack;
 	}
 	
