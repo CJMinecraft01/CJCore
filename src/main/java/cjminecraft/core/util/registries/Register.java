@@ -7,6 +7,8 @@ import java.lang.annotation.Target;
 
 import com.jcraft.jorbis.Block;
 
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -163,8 +165,8 @@ public @interface Register {
 	}
 
 	/**
-	 * States that the given method is where items will be initialised. Will
-	 * get called before the items are registered
+	 * States that the given method is where items will be initialised. Will get
+	 * called before the items are registered
 	 * 
 	 * @author CJMinecraft
 	 *

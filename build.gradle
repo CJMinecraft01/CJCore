@@ -12,7 +12,7 @@ apply plugin: 'maven-publish'
 
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = "0.0.4.0"
+version = "0.0.4.1"
 group = "cjminecraft.core" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "cjcore-1.12"
 
@@ -67,10 +67,6 @@ repositories {
         url = "http://maven.ic2.player.to/"
     }
 	
-	maven { 
-		url 'https://jitpack.io' 
-	}
-	
 	maven {
         name "BuildCraft"
         url = "https://mod-buildcraft.com/maven"
@@ -114,6 +110,7 @@ publishing {
         all(MavenPublication) {
             artifact jar
             // artifact deobfJar
+            artifact javadocJar
             artifact srcJar
             artifactId = archivesBaseName
         }
