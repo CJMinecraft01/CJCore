@@ -53,7 +53,7 @@ public class CJCore {
 	public static final String ACCEPTED_MC_VERSION = ForgeVersion.mcVersion;
 	public static final String SERVER_PROXY_CLASS = "cjminecraft.core.proxy.ServerProxy";
 	public static final String CLIENT_PROXY_CLASS = "cjminecraft.core.proxy.ClientProxy";
-	public static final String UPDATE_URL = "https://github.com/CJMinecraft01/CJCore/raw/1.11/update.json";
+	public static final String UPDATE_URL = "https://github.com/CJMinecraft01/CJCore/raw/1.12/update.json";
 	public static final Logger logger = LogManager.getFormatterLogger(NAME);
 
 	/**
