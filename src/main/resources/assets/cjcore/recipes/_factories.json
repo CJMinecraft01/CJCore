@@ -1,0 +1,6 @@
+{
+    "recipes": {
+        "clear_color": "cjminecraft.core.crafting.RecipeClearColor",
+        "item_color": "cjminecraft.core.crafting.RecipeItemColor"
+    }
+}
