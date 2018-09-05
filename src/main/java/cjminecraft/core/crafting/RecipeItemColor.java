@@ -3,6 +3,8 @@ package cjminecraft.core.crafting;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
@@ -10,9 +12,12 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -21,7 +26,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
  * @author CJMinecraft
  *
  */
-public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeItemColor extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	/**
 	 * Use if you want to see if the item stack is a dye {@link #getCraftingResult(InventoryCrafting)}
@@ -40,7 +45,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	/**
 	 * Default constructor for registering the recipe {@link CraftingHandler#registerCraftingRecipes()}
 	 */
-	public RecipeItemColour() {
+	public RecipeItemColor() {
 		this(ItemStack.EMPTY);
 	}
 	
@@ -48,7 +53,7 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	 * Creates a new recipe to colour your item
 	 * @param targetItemStack The item you want to colour
 	 */
-	public RecipeItemColour(ItemStack targetItemStack) {
+	public RecipeItemColor(ItemStack targetItemStack) {
 		this.targetItemStack = targetItemStack;
 	}
 
@@ -183,6 +188,11 @@ public class RecipeItemColour extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	@Override
 	public boolean canFit(int width, int height) {
 		return width * height >= 2;
+	}
+	
+	public static RecipeItemColor factory(JsonContext context, JsonObject json) {
+		ItemStack item = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "item"), context);
+		return new RecipeItemColor(item);
 	}
 
 }

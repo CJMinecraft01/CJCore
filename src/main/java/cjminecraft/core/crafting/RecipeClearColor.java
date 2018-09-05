@@ -1,12 +1,19 @@
 package cjminecraft.core.crafting;
 
+import com.google.gson.JsonObject;
+
+import cjminecraft.core.CJCore;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
@@ -15,14 +22,14 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
  * @author CJMinecraft
  *
  */
-public class RecipeClearColour extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	/**
 	 * The {@link ItemStack} to target
 	 */
 	private ItemStack targetItemStack;
 
-	public RecipeClearColour() {
+	public RecipeClearColor() {
 		this(ItemStack.EMPTY);
 	}
 	
@@ -32,7 +39,7 @@ public class RecipeClearColour extends IForgeRegistryEntry.Impl<IRecipe> impleme
 	 * @param targetItemStack
 	 *            The {@link ItemStack} to target
 	 */
-	public RecipeClearColour(ItemStack targetItemStack) {
+	public RecipeClearColor(ItemStack targetItemStack) {
 		this.targetItemStack = targetItemStack;
 	}
 
@@ -94,6 +101,11 @@ public class RecipeClearColour extends IForgeRegistryEntry.Impl<IRecipe> impleme
 	@Override
 	public boolean canFit(int width, int height) {
 		return width * height >= 1;
+	}
+	
+	public static RecipeClearColor factory(JsonContext context, JsonObject json) {
+		ItemStack item = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "item"), context);
+		return new RecipeClearColor(item);
 	}
 
 }

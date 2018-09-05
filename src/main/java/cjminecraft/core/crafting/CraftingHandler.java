@@ -24,8 +24,8 @@ public class CraftingHandler {
 	 * Registers the crafting recipes. Used only by {@link CJCore}
 	 */
 	public static void registerCraftingRecipes() {
-//		ForgeRegistries.RECIPES.register(new RecipeClearColour().setRegistryName(CJCore.MODID, "clearColor"));
-//		ForgeRegistries.RECIPES.register(new RecipeItemColour().setRegistryName(CJCore.MODID, "itemColor"));
+		CraftingHelper.register(new ResourceLocation(CJCore.MODID, "clear_color"), RecipeClearColor::factory);
+		CraftingHelper.register(new ResourceLocation(CJCore.MODID, "item_color"), RecipeItemColor::factory);
 
 		registerCraftingRecipe("multimeter_energy");
 		registerCraftingRecipe("multimeter_item");
