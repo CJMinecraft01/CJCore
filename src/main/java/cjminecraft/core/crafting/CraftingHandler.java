@@ -26,15 +26,6 @@ public class CraftingHandler {
 	public static void registerCraftingRecipes() {
 		CraftingHelper.register(new ResourceLocation(CJCore.MODID, "clear_color"), RecipeClearColor::factory);
 		CraftingHelper.register(new ResourceLocation(CJCore.MODID, "item_color"), RecipeItemColor::factory);
-
-		registerCraftingRecipe("multimeter_energy");
-		registerCraftingRecipe("multimeter_item");
-		registerCraftingRecipe("multimeter_fluid");
-	}
-	
-	private static void registerCraftingRecipe(String recipePath) {
-		CraftingHelper.register(new ResourceLocation(CJCore.MODID, "recipes/" + recipePath),
-				(IRecipeFactory) (context, json) -> CraftingHelper.getRecipe(json, context));
 	}
 
 }

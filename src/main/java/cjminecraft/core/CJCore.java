@@ -70,6 +70,7 @@ public class CJCore {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		AutomaticRegistrar.addRegistryClasses(event.getAsmData());
+		CraftingHandler.registerCraftingRecipes();
 		EnergyUtils.preInit();
 		proxy.preInit();
 
@@ -77,7 +78,6 @@ public class CJCore {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		CraftingHandler.registerCraftingRecipes();
 		ConfigManager.sync(MODID, Type.INSTANCE);
 		proxy.init();
 	}
