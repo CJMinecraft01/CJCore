@@ -162,7 +162,7 @@ public class RecipeItemColor implements IRecipe {
 	 */
 	@Override
 	public ItemStack getRecipeOutput() {
-		return new ItemStack(Blocks.AIR);
+		return this.targetItemStack.copy();
 	}
 	
 	/**

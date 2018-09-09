@@ -82,7 +82,7 @@ public class RecipeClearColor implements IRecipe {
 	 */
 	@Override
 	public ItemStack getRecipeOutput() {
-		return null;
+		return this.targetItemStack.copy();
 	}
 
 	/**
