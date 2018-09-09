@@ -17,6 +17,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IRecipeFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -26,7 +27,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
  * @author CJMinecraft
  *
  */
-public class RecipeItemColor extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeItemColor extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IRecipeFactory {
 
 	/**
 	 * Use if you want to see if the item stack is a dye {@link #getCraftingResult(InventoryCrafting)}
@@ -189,8 +190,9 @@ public class RecipeItemColor extends IForgeRegistryEntry.Impl<IRecipe> implement
 	public boolean canFit(int width, int height) {
 		return width * height >= 2;
 	}
-	
-	public static RecipeItemColor factory(JsonContext context, JsonObject json) {
+
+	@Override
+	public IRecipe parse(JsonContext context, JsonObject json) {
 		ItemStack item = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "item"), context);
 		return new RecipeItemColor(item);
 	}

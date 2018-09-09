@@ -13,6 +13,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IRecipeFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -22,7 +23,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
  * @author CJMinecraft
  *
  */
-public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IRecipeFactory {
 
 	/**
 	 * The {@link ItemStack} to target
@@ -103,7 +104,8 @@ public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implemen
 		return width * height >= 1;
 	}
 	
-	public static RecipeClearColor factory(JsonContext context, JsonObject json) {
+	@Override
+	public IRecipe parse(JsonContext context, JsonObject json) {
 		ItemStack item = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "item"), context);
 		return new RecipeClearColor(item);
 	}
