@@ -166,7 +166,7 @@ public class RecipeItemColor extends IForgeRegistryEntry.Impl<IRecipe> implement
 	 */
 	@Override
 	public ItemStack getRecipeOutput() {
-		return ItemStack.EMPTY;
+		return this.targetItemStack.copy();
 	}
 	
 	/**

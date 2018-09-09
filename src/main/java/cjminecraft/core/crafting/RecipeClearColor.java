@@ -82,7 +82,7 @@ public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	 */
 	@Override
 	public ItemStack getRecipeOutput() {
-		return ItemStack.EMPTY;
+		return this.targetItemStack.copy();
 	}
 
 	/**
