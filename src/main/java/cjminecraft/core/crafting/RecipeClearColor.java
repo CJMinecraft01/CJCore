@@ -1,15 +1,22 @@
 package cjminecraft.core.crafting;
 
+import com.google.gson.JsonObject;
+
+import cjminecraft.core.CJCore;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
  * Allows the colour tag to be cleared from coloured {@link ItemStack}s
+ * 
  * @author CJMinecraft
  *
  */
@@ -19,15 +26,21 @@ public class RecipeClearColor implements IRecipe {
 	 * The {@link ItemStack} to target
 	 */
 	private ItemStack targetItemStack;
+
+	public RecipeClearColor() {
+		this(ItemStack.EMPTY);
+	}
 	
 	/**
 	 * Create a recipe which can clear the colour of an {@link ItemStack}
-	 * @param targetItemStack The {@link ItemStack} to target
+	 * 
+	 * @param targetItemStack
+	 *            The {@link ItemStack} to target
 	 */
 	public RecipeClearColor(ItemStack targetItemStack) {
 		this.targetItemStack = targetItemStack;
 	}
-	
+
 	/**
 	 * States whether the current crafting formation is valid
 	 */
@@ -35,11 +48,11 @@ public class RecipeClearColor implements IRecipe {
 	public boolean matches(InventoryCrafting inv, World world) {
 		boolean randomItemDetected = false;
 		boolean stackFound = false;
-		for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
-			if(inv.getStackInSlot(slot).getItem() == targetItemStack.getItem())
-				if(inv.getStackInSlot(slot).hasTagCompound() && (inv.getStackInSlot(slot).getTagCompound().hasKey("colour") || inv.getStackInSlot(slot).getTagCompound().hasKey("color")))
-					stackFound = true;
-			if(inv.getStackInSlot(slot).getItem() != Item.getItemFromBlock(Blocks.AIR) && inv.getStackInSlot(slot).getItem() != targetItemStack.getItem())
+		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
+			ItemStack stack = inv.getStackInSlot(slot);
+			if (stack.getItem() == this.targetItemStack.getItem())
+				stackFound = true;
+			if (!stack.isEmpty())
 				randomItemDetected = true;
 		}
 		return stackFound && !randomItemDetected;
@@ -51,23 +64,13 @@ public class RecipeClearColor implements IRecipe {
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv) {
 		ItemStack toClear = ItemStack.EMPTY;
-		for(int slot = 0; slot < inv.getSizeInventory(); slot++)
-			if(inv.getStackInSlot(slot).getItem() == targetItemStack.getItem())
-				if(inv.getStackInSlot(slot).hasTagCompound() && (inv.getStackInSlot(slot).getTagCompound().hasKey("colour") || inv.getStackInSlot(slot).getTagCompound().hasKey("color")))
-					toClear = inv.getStackInSlot(slot).copy();
-		if(toClear.getTagCompound().hasKey("colour"))
-			toClear.getTagCompound().setInteger("colour", 0xFFFFFF);
-		if(toClear.getTagCompound().hasKey("color"))
-			toClear.getTagCompound().setInteger("color", 0xFFFFFF);
+		for (int slot = 0; slot < inv.getSizeInventory(); slot++)
+			if (inv.getStackInSlot(slot).getItem() == this.targetItemStack.getItem())
+				toClear = inv.getStackInSlot(slot).copy();
+		if (!toClear.hasTagCompound())
+			toClear.setTagCompound(new NBTTagCompound());
+		toClear.getTagCompound().setInteger("color", 0xFFFFFF);
 		return toClear;
-	}
-
-	/**
-	 * How many slots are required. 10 because 9 for the crafting bench, 1 for the output
-	 */
-	@Override
-	public int getRecipeSize() {
-		return 10;
 	}
 
 	/**
@@ -84,6 +87,14 @@ public class RecipeClearColor implements IRecipe {
 	@Override
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
 		return NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+	}
+
+	/**
+	 * The size of the recipe area
+	 */
+	@Override
+	public int getRecipeSize() {
+		return 4;
 	}
 
 }
