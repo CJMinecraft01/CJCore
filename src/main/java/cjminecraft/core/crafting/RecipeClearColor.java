@@ -8,6 +8,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -52,13 +53,10 @@ public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implemen
 		boolean randomItemDetected = false;
 		boolean stackFound = false;
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
-			if (inv.getStackInSlot(slot).getItem() == targetItemStack.getItem())
-				if (inv.getStackInSlot(slot).hasTagCompound()
-						&& (inv.getStackInSlot(slot).getTagCompound().hasKey("colour")
-								|| inv.getStackInSlot(slot).getTagCompound().hasKey("color")))
-					stackFound = true;
-			if (inv.getStackInSlot(slot).getItem() != Item.getItemFromBlock(Blocks.AIR)
-					&& inv.getStackInSlot(slot).getItem() != targetItemStack.getItem())
+			ItemStack stack = inv.getStackInSlot(slot);
+			if (stack.getItem() == this.targetItemStack.getItem())
+				stackFound = true;
+			if (!stack.isEmpty())
 				randomItemDetected = true;
 		}
 		return stackFound && !randomItemDetected;
@@ -71,15 +69,11 @@ public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implemen
 	public ItemStack getCraftingResult(InventoryCrafting inv) {
 		ItemStack toClear = ItemStack.EMPTY;
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++)
-			if (inv.getStackInSlot(slot).getItem() == targetItemStack.getItem())
-				if (inv.getStackInSlot(slot).hasTagCompound()
-						&& (inv.getStackInSlot(slot).getTagCompound().hasKey("colour")
-								|| inv.getStackInSlot(slot).getTagCompound().hasKey("color")))
-					toClear = inv.getStackInSlot(slot).copy();
-		if (toClear.getTagCompound().hasKey("colour"))
-			toClear.getTagCompound().setInteger("colour", 0xFFFFFF);
-		if (toClear.getTagCompound().hasKey("color"))
-			toClear.getTagCompound().setInteger("color", 0xFFFFFF);
+			if (inv.getStackInSlot(slot).getItem() == this.targetItemStack.getItem())
+				toClear = inv.getStackInSlot(slot).copy();
+		if (!toClear.hasTagCompound())
+			toClear.setTagCompound(new NBTTagCompound());
+		toClear.getTagCompound().setInteger("color", 0xFFFFFF);
 		return toClear;
 	}
 
