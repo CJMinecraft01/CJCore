@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 import cjminecraft.core.inventory.InventoryUtils;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
@@ -11,6 +13,8 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.JsonUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
@@ -40,7 +44,7 @@ public class RecipeItemColor implements IRecipe {
 	 * Default constructor for registering the recipe {@link CraftingHandler#registerCraftingRecipes()}
 	 */
 	public RecipeItemColor() {
-		this.targetItemStack = new ItemStack(Blocks.AIR);
+		this(new ItemStack(Blocks.AIR));
 	}
 	
 	/**
@@ -63,10 +67,13 @@ public class RecipeItemColor implements IRecipe {
 			ItemStack stackInSlot = inv.getStackInSlot(slot);
 
 			if (stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR)) {
-				if (stackInSlot.hasTagCompound() && stackInSlot.getItem() == targetItemStack.getItem()) {
-					if (stackInSlot.getTagCompound().hasKey("colour") || stackInSlot.getTagCompound().hasKey("color")) {
-						itemColour = stackInSlot;
+				if (stackInSlot.getItem() == this.targetItemStack.getItem()) {
+					if (!stackInSlot.hasTagCompound()) {
+						NBTTagCompound nbt = new NBTTagCompound();
+						nbt.setInteger("color", 0xFFFFFF);
+						stackInSlot.setTagCompound(nbt);
 					}
+					itemColour = stackInSlot;
 				}
 				boolean cont = false;
 				for (int id : OreDictionary.getOreIDs(stackInSlot)) {
@@ -75,11 +82,11 @@ public class RecipeItemColor implements IRecipe {
 					}
 				}
 				if(cont) continue;
-				else if(stackInSlot.getItem() != targetItemStack.getItem() && stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR))
+				else if(stackInSlot.getItem() != this.targetItemStack.getItem() && stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR))
 					randomItemDetected = true;
 			}
 		}
-		return itemColour.getItem() != Item.getItemFromBlock(Blocks.AIR) && itemColour.getItem() == targetItemStack.getItem() && !randomItemDetected; //As long as there is a item there and the item is the item we want
+		return itemColour.getItem() != Item.getItemFromBlock(Blocks.AIR) && itemColour.getItem() == this.targetItemStack.getItem() && !randomItemDetected; //As long as there is a item there and the item is the item we want
 	}
 
 	/**
@@ -91,7 +98,6 @@ public class RecipeItemColor implements IRecipe {
 		int[] colour = new int[3]; //RGB values
 		int i = 0; //Tracker variables
 		int j = 0;
-		String tagName = "colour";
 		boolean hasDye = false;
 		
 		for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
@@ -99,14 +105,8 @@ public class RecipeItemColor implements IRecipe {
 
 			if (stackInSlot.getItem() != Item.getItemFromBlock(Blocks.AIR)) {
 				if (stackInSlot.hasTagCompound()) {
-					if (stackInSlot.getTagCompound().hasKey("colour") || stackInSlot.getTagCompound().hasKey("color")) {
-						int currentColour = 0xFFFFFF;
-						if (stackInSlot.getTagCompound().hasKey("colour"))
-							currentColour = stackInSlot.getTagCompound().getInteger("colour");
-						else {
-							currentColour = stackInSlot.getTagCompound().getInteger("color");
-							tagName = "color";
-						}
+					if (stackInSlot.getTagCompound().hasKey("color")) {
+						int currentColour = stackInSlot.getTagCompound().getInteger("color");
 						stack = stackInSlot.copy();
 						stack.stackSize = 1;
 
@@ -138,7 +138,7 @@ public class RecipeItemColor implements IRecipe {
 				j++;
 			}
 		}
-		if (stack.getItem() != targetItemStack.getItem())
+		if (stack.getItem() != this.targetItemStack.getItem())
 			return new ItemStack(Blocks.AIR);
 		else {
 			int r = colour[0] / j;
@@ -152,17 +152,9 @@ public class RecipeItemColor implements IRecipe {
 			int finalColour = (r << 8) + g;
 			finalColour = (finalColour << 8) + b;
 			if(!hasDye) finalColour = 0xFFFFFF; //If there is no dye, reset the item colour to white
-			stack.getTagCompound().setInteger(tagName, finalColour);
+			stack.getTagCompound().setInteger("color", finalColour);
 			return stack;
 		}
-	}
-	
-	/**
-	 * How many slots required (10 because 9 in the table and 1 for output)
-	 */
-	@Override
-	public int getRecipeSize() {
-		return 10;
 	}
 	
 	/**
@@ -185,6 +177,14 @@ public class RecipeItemColor implements IRecipe {
 			remaining.set(slot, ForgeHooks.getContainerItem(stackInSlot));
 		}
 		return (ItemStack[]) remaining.toArray();
+	}
+
+	/**
+	 * The size of the recipe area
+	 */
+	@Override
+	public int getRecipeSize() {
+		return 4;
 	}
 
 }
