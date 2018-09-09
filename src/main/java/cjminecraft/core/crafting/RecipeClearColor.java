@@ -56,7 +56,7 @@ public class RecipeClearColor extends IForgeRegistryEntry.Impl<IRecipe> implemen
 			ItemStack stack = inv.getStackInSlot(slot);
 			if (stack.getItem() == this.targetItemStack.getItem())
 				stackFound = true;
-			if (!stack.isEmpty())
+			else if (!stack.isEmpty())
 				randomItemDetected = true;
 		}
 		return stackFound && !randomItemDetected;
