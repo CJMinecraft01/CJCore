@@ -1,7 +1,6 @@
 package cjminecraft.core.proxy;
 
 import cjminecraft.core.energy.EnergyUnit;
-import cjminecraft.core.items.ItemMultimeter;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -19,7 +18,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init() {
 		super.init();
-		MinecraftForge.EVENT_BUS.register(new ItemMultimeter.MultimeterOverlay());
 	}
 	
 	@Override
