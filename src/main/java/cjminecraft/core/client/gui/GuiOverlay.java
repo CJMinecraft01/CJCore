@@ -142,7 +142,8 @@ public class GuiOverlay extends GuiCore {
 	protected void updateElementInformation() {
 		for (int i = this.overlays.size(); i-- > 0;) {
 			OverlayBase overlay = this.overlays.get(i);
-			overlay.updateElementInformation();
+			if (overlay.isEnabled())
+				overlay.updateElementInformation();
 		}
 	}
 

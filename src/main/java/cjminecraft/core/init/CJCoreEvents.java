@@ -19,31 +19,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber(modid = CJCore.MODID)
 public class CJCoreEvents {
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void onItemCraft(ItemCraftedEvent event) {
-		if (EnergyUtils.hasSupport(event.crafting, null))
-			event.player.unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_energy") });
-		if (InventoryUtils.hasSupport(event.crafting, null))
-			event.player.unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_item") });
-		if (FluidUtils.hasSupport(event.crafting, null))
-			event.player.unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_fluid") });
-	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void onBlockPlaced(PlaceEvent event) {
-		TileEntity te = event.getWorld().getTileEntity(event.getPos());
-		if(te == null)
-			return;
-		if(EnergyUtils.hasSupport(te, null)) 
-			event.getPlayer().unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_energy") });
-		if(InventoryUtils.hasSupport(te, null))
-			event.getPlayer().unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_item") });
-		if(FluidUtils.hasSupport(te, null))
-			event.getPlayer().unlockRecipes(new ResourceLocation[] { new ResourceLocation(CJCore.MODID, "multimeter_fluid") });
-	}
 	
 	@SubscribeEvent
 	public static void onConfigChanged(ConfigChangedEvent event) {
