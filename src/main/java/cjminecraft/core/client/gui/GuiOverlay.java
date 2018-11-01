@@ -35,13 +35,14 @@ public class GuiOverlay extends GuiCore {
 	 */
 	public GuiOverlay() {
 		super(new Container() {
-
 			@Override
 			public boolean canInteractWith(EntityPlayer player) {
 				return player != null;
 			}
 		});
-		setWorldAndResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+		this.mc = Minecraft.getMinecraft();
+		this.itemRender = this.mc.getRenderItem();
+		this.fontRenderer = this.mc.fontRenderer;
 	}
 
 	@Override
