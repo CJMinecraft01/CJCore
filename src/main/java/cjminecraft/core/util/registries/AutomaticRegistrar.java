@@ -317,7 +317,7 @@ public class AutomaticRegistrar {
 			}
 		}
 		CJCore.logger.info("Successfully registered renders for " + registeredItems + " items!");
-		CJCore.logger.info("Successfully registered renders for " + registeredBlocks + "  item blocks!");
+		CJCore.logger.info("Successfully registered renders for " + registeredBlocks + " item blocks!");
 		CJCore.logger.info("Successfully registered " + registeredTESRs + " TESRs!");
 	}
 

@@ -41,9 +41,7 @@ public class GuiOverlay extends GuiCore {
 				return player != null;
 			}
 		});
-		this.mc = Minecraft.getMinecraft();
-		this.itemRender = this.mc.getRenderItem();
-		this.fontRenderer = this.mc.fontRenderer;
+		setWorldAndResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 	}
 
 	@Override
