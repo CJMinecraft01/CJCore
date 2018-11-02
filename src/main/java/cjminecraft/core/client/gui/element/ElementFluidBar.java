@@ -160,7 +160,6 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 
 	@Override
 	public void update() {
-		this.height = 78;
 		if (this.shouldSync) {
 			setFluidTankInfo(FluidUtils.getCachedFluidData(CJCore.MODID, this.getClass().getName() + this.tankIndex));
 			this.sync++;
