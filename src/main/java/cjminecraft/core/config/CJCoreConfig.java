@@ -15,8 +15,6 @@ public class CJCoreConfig {
 	public static Energy ENERGY = new Energy();
 	@Config.LangKey("gui.config.category.fluid")
 	public static Fluids FLUIDS = new Fluids();
-	@Config.LangKey("gui.config.category.multimeter")
-	public static Multimeter MULTIMETER = new Multimeter();
 	
 	public static class Energy {
 		
@@ -63,73 +61,6 @@ public class CJCoreConfig {
 		@Config.Comment("Whether the energy bar should simplify the format of the fluid values")
 		@Config.LangKey("gui.config.fluid.fluid_bar_simplify_fluids.name")
 		public boolean FLUID_BAR_SIMPLIFY_FLUIDS = false;
-
-	}
-
-	public static class Multimeter {
-		
-		/**
-		 * The position of the multimeter on the X axis from the left hand side
-		 */
-		@Config.Name("MultimeterOffsetX")
-		@Config.Comment("The offset from the left hand side when using the multimeter")
-		@Config.LangKey("gui.config.multimeter.offset_x.name")
-		@Config.RangeInt(min = 0)
-		public int MULTIMETER_OFFSET_X = 6;
-
-		/**
-		 * The position of the multimeter on the Y axis from the bottom
-		 */
-		@Config.Name("MultimeterOffsetY")
-		@Config.Comment("The offset from the bottom of the screen when using the multimeter")
-		@Config.LangKey("gui.config.multimeter.offset_y.name")
-		@Config.RangeInt(min = 0)
-		public int MULTIMETER_OFFSET_Y = 7;
-
-		/**
-		 * The width of the energy multimeter
-		 */
-		@Config.Name("MultimeterEnergyWidth")
-		@Config.Comment("The width of the multimeter energy gui")
-		@Config.LangKey("gui.config.multimeter.energy_width.name")
-		@Config.RangeInt(min = 1, max = ElementEnergyBar.DEFAULT_WIDTH)
-		public int MULTIMETER_ENERGY_WIDTH = ElementEnergyBar.DEFAULT_WIDTH;
-
-		/**
-		 * The height of the energy multimeter
-		 */
-		@Config.Name("MultimeterEnergyHeight")
-		@Config.Comment("The height of the multimeter energy gui")
-		@Config.LangKey("gui.config.multimeter.energy_height.name")
-		@Config.RangeInt(min = 1, max = ElementEnergyBar.DEFAULT_HEIGHT)
-		public int MULTIMETER_ENERGY_HEIGHT = ElementEnergyBar.DEFAULT_HEIGHT;
-		
-		/**
-		 * The width of the fluid multimeter
-		 */
-		@Config.Name("MultimeterFluidWidth")
-		@Config.Comment("The width of the multimeter fluid gui")
-		@Config.LangKey("gui.config.multimeter.fluid_width.name")
-		@Config.RangeInt(min = 1, max = ElementFluidBar.DEFAULT_WIDTH)
-		public int MULTIMETER_FLUID_WIDTH = ElementFluidBar.DEFAULT_WIDTH;
-		
-		/**
-		 * The height of the fluid multimeter
-		 */
-		@Config.Name("MultimeterFluidHeight")
-		@Config.Comment("The height of the multimeter fluid gui")
-		@Config.LangKey("gui.config.multimeter.fluid_height.name")
-		@Config.RangeInt(min = 1, max = ElementFluidBar.DEFAULT_HEIGHT)
-		public int MULTIMETER_FLUID_HEIGHT = ElementFluidBar.DEFAULT_HEIGHT;
-		
-		/**
-		 * The maximum number of columns for the item multimeter
-		 */
-		@Config.Name("MultimeterItemMaxColumns")
-		@Config.Comment("The maximum amount of columns for the item multimeter")
-		@Config.LangKey("gui.config.multimeter.item_max_columns.name")
-		@Config.RangeInt(min = 1)
-		public int MULTIMETER_ITEM_MAX_COLUMNS = 9;
 
 	}
 
