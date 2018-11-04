@@ -10,14 +10,14 @@ import net.minecraftforge.common.config.Config;
 
 @Config(modid = CJCore.MODID, category = "")
 public class CJCoreConfig {
-	
+
 	@Config.LangKey("gui.config.category.energy")
 	public static Energy ENERGY = new Energy();
 	@Config.LangKey("gui.config.category.fluid")
 	public static Fluids FLUIDS = new Fluids();
-	
+
 	public static class Energy {
-		
+
 		/**
 		 * The default {@link EnergyUnit}
 		 */
@@ -43,9 +43,9 @@ public class CJCoreConfig {
 		public boolean ENERGY_BAR_SIMPLIFY_ENERGY = false;
 
 	}
-	
+
 	public static class Fluids {
-		
+
 		/**
 		 * Whether or not the fluid bar should show capacity
 		 */
