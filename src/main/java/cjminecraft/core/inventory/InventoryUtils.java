@@ -1086,20 +1086,22 @@ public class InventoryUtils {
 			if (slots.length == 0 || slots[0] > toSlot || fromSlot > toSlot || slots[slots.length - 1] < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot : slots)
-				if (slot <= toSlot && slot >= fromSlot)
+				if (slot <= toSlot && slot >= fromSlot && !inv.getStackInSlot(slot).isEmpty())
 					inventory.add(inv.getStackInSlot(slot));
 		} else if (te instanceof IInventory) {
 			IInventory inv = (IInventory) te;
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (!inv.getStackInSlot(slot).isEmpty())
+					inventory.add(inv.getStackInSlot(slot));
 		} else if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (!inv.getStackInSlot(slot).isEmpty())
+					inventory.add(inv.getStackInSlot(slot));
 		}
 		return ImmutableList.<ItemStack>copyOf(inventory);
 	}
