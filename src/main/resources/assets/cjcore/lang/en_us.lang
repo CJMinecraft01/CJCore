@@ -33,39 +33,13 @@ gui.config.main_title=CJCore Configuration
 gui.config.category.energy=Energy Configuration
 gui.config.category.energy.tooltip=Everything to do with energy
 gui.config.energy.default_energy_unit.name=Default Energy Unit
-gui.config.energy.default_energy_unit.comment=The energy unit that you will normally see
 gui.config.energy.energy_bar_show_capacity.name=Energy Bar Show Capacity
-gui.config.energy.energy_bar_show_capacity.comment=Whether or not the energy bar should show the capacity
 gui.config.energy.energy_bar_simplify_energy.name=Energy Bar Simplify Energy 
-gui.config.energy.energy_bar_simplify_energy.comment=Whether or not to simplify the way the energy is displayed when using an energy bar
 
 gui.config.category.fluid=Fluid Configuration
 gui.config.category.fluid.tooltip=Everything to do with fluids
 gui.config.fluid.fluid_bar_show_capacity.name=Fluid Bar Show Capacity
-gui.config.fluid.fluid_bar_simplify_fluids.comment=Whether or not the fluid bar should show the capacity
 gui.config.fluid.fluid_bar_simplify_fluids.name=Fluid Bar Simplify Fluids
-gui.config.fluid.fluid_bar_simplify_fluids.comment=Whether or not to simplify the way the fluids are displayed when using a fluid bar
-
-gui.config.category.update_checker=Update Checkers
-gui.config.category.update_checker.tooltip=Disable any of the update checkers which use CJCore
-gui.config.update_checker.enabled.comment=Whether this mod's update checker is disabled
-
-gui.config.category.multimeter=Multimeter Configuration
-gui.config.category.multimeter.tooltip=Everything to do with the multimeter
-gui.config.multimeter.offset_x.name=Multimeter Offset X
-gui.config.multimeter.offset_x.comment=The offset from the left hand side when using the Multimeter
-gui.config.multimeter.offset_y.name=Multimeter Offset Y
-gui.config.multimeter.offset_y.comment=The offset from the bottom when using the Multimeter
-gui.config.multimeter.energy_width.name=Multimeter Energy Width
-gui.config.multimeter.energy_width.comment=The width of the Multimeter energy gui
-gui.config.multimeter.energy_height.name=Multimeter Energy Height
-gui.config.multimeter.energy_height.comment=The height of the Multimeter energy gui
-gui.config.multimeter.fluid_width.name=Multimeter Fluid Width
-gui.config.multimeter.fluid_width.comment=The width of the Multimeter fluid gui
-gui.config.multimeter.fluid_height.name=Multimeter Fluid Height
-gui.config.multimeter.fluid_height.comment=The height of the Multimeter fluid gui
-gui.config.multimeter.item_max_columns.name=Multimeter Item Max Columns
-gui.config.multimeter.item_max_columns.comment=The maximum amount of columns for the item multimeter
 
 command.tileentity.usage=/tileenitty <x> <y> <z> <energy:inventory:fluid> get [side] or /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side] or /tileenitty <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] or /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] or /tileentity <x> <y> <z> fluid drain <amount> [side]
 command.tileentity.nosupport=There is no support for the tile entity at position %s %s %s
