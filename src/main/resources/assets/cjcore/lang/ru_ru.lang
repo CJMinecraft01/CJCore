@@ -1,12 +1,12 @@
-energy.utils.repeat_support=Поддержка энергии %s уже зарегистрирована - ПРОПУСК
-energy.utils.support_success=Успешно зарегистрирована поддержка энергии %s
+energy.utils.repeat_support=ÐŸÐ¾Ð´Ð´ÐµÑ€Ð¶ÐºÐ° Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸ %s ÑƒÐ¶Ðµ Ð·Ð°Ñ€ÐµÐ³Ð¸Ñ�Ñ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð° - ÐŸÐ ÐžÐŸÐ£Ð¡Ðš
+energy.utils.support_success=Ð£Ñ�Ð¿ÐµÑˆÐ½Ð¾ Ð·Ð°Ñ€ÐµÐ³Ð¸Ñ�Ñ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð° Ð¿Ð¾Ð´Ð´ÐµÑ€Ð¶ÐºÐ° Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸ %s
 
-energy.unit.repeat_registration=Единица энергии %s уже зарегистрирована - ПРОПУСК
-energy.unit.registration_success=Успешно зарегистрирована единица энергии %s
-energy.unit.name=Имя: %s
-energy.unit.suffix=Суффикс: %s
-energy.unit.multiplier=Множитель: %s
-energy.percentage=%s Зарядки
+energy.unit.repeat_registration=Ð•Ð´Ð¸Ð½Ð¸Ñ†Ð° Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸ %s ÑƒÐ¶Ðµ Ð·Ð°Ñ€ÐµÐ³Ð¸Ñ�Ñ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð° - ÐŸÐ ÐžÐŸÐ£Ð¡Ðš
+energy.unit.registration_success=Ð£Ñ�Ð¿ÐµÑˆÐ½Ð¾ Ð·Ð°Ñ€ÐµÐ³Ð¸Ñ�Ñ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð° ÐµÐ´Ð¸Ð½Ð¸Ñ†Ð° Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸ %s
+energy.unit.name=Ð˜Ð¼Ñ�: %s
+energy.unit.suffix=Ð¡ÑƒÑ„Ñ„Ð¸ÐºÑ�: %s
+energy.unit.multiplier=ÐœÐ½Ð¾Ð¶Ð¸Ñ‚ÐµÐ»ÑŒ: %s
+energy.percentage=%s Ð—Ð°Ñ€Ñ�Ð´ÐºÐ¸
 
 energy.unit.forge_energy.name=Forge Energy
 energy.unit.forge_energy.suffix=FE
@@ -21,68 +21,34 @@ energy.unit.minecraft_joules.suffix=MJ
 energy.unit.energy_unit.name=Energy Unit
 energy.unit.energy_unit.suffix=EU
 
-energy.container.energy=Энергия
-energy.container.capacity=Емкость
-energy.container.max_input=Макс Вход
-energy.container.max_output=Макс Выход
+energy.container.energy=Ð­Ð½ÐµÑ€Ð³Ð¸Ñ�
+energy.container.capacity=Ð•Ð¼ÐºÐ¾Ñ�Ñ‚ÑŒ
+energy.container.max_input=ÐœÐ°ÐºÑ� Ð’Ñ…Ð¾Ð´
+energy.container.max_output=ÐœÐ°ÐºÑ� Ð’Ñ‹Ñ…Ð¾Ð´
 
-fluid.empty=Пусто
+fluid.empty=ÐŸÑƒÑ�Ñ‚Ð¾
 
-gui.config.main_title=Конфигурация CJCore
+gui.config.main_title=ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ� CJCore
 
-gui.config.category.energy=Конфигурация Энергии
-gui.config.category.energy.tooltip=Все что связано с энергией
-gui.config.energy.default_energy_unit.name=Единица Энергии По Умолчанию
-gui.config.energy.default_energy_unit.comment=Единица энергии которую вы обычно видите
-gui.config.energy.energy_bar_show_capacity.name=Показать Емкость на Шкале Энергии 
-gui.config.energy.energy_bar_show_capacity.comment=Должна ли емкость отображаться на шкале энергии
-gui.config.energy.energy_bar_simplify_energy.name=Упростить Энергию на Шкале Энергии
-gui.config.energy.energy_bar_simplify_energy.comment=Должен ли способ отображения энергии на шкале быть упрощенным
+gui.config.category.energy=ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ� Ð­Ð½ÐµÑ€Ð³Ð¸Ð¸
+gui.config.category.energy.tooltip=Ð’Ñ�Ðµ Ñ‡Ñ‚Ð¾ Ñ�Ð²Ñ�Ð·Ð°Ð½Ð¾ Ñ� Ñ�Ð½ÐµÑ€Ð³Ð¸ÐµÐ¹
+gui.config.energy.default_energy_unit.name=Ð•Ð´Ð¸Ð½Ð¸Ñ†Ð° Ð­Ð½ÐµÑ€Ð³Ð¸Ð¸ ÐŸÐ¾ Ð£Ð¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ
+gui.config.energy.default_energy_unit.comment=Ð•Ð´Ð¸Ð½Ð¸Ñ†Ð° Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸ ÐºÐ¾Ñ‚Ð¾Ñ€ÑƒÑŽ Ð²Ñ‹ Ð¾Ð±Ñ‹Ñ‡Ð½Ð¾ Ð²Ð¸Ð´Ð¸Ñ‚Ðµ
+gui.config.energy.energy_bar_show_capacity.name=ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ Ð•Ð¼ÐºÐ¾Ñ�Ñ‚ÑŒ Ð½Ð° Ð¨ÐºÐ°Ð»Ðµ Ð­Ð½ÐµÑ€Ð³Ð¸Ð¸ 
+gui.config.energy.energy_bar_show_capacity.comment=Ð”Ð¾Ð»Ð¶Ð½Ð° Ð»Ð¸ ÐµÐ¼ÐºÐ¾Ñ�Ñ‚ÑŒ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶Ð°Ñ‚ÑŒÑ�Ñ� Ð½Ð° ÑˆÐºÐ°Ð»Ðµ Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸
+gui.config.energy.energy_bar_simplify_energy.name=Ð£Ð¿Ñ€Ð¾Ñ�Ñ‚Ð¸Ñ‚ÑŒ Ð­Ð½ÐµÑ€Ð³Ð¸ÑŽ Ð½Ð° Ð¨ÐºÐ°Ð»Ðµ Ð­Ð½ÐµÑ€Ð³Ð¸Ð¸
+gui.config.energy.energy_bar_simplify_energy.comment=Ð”Ð¾Ð»Ð¶ÐµÐ½ Ð»Ð¸ Ñ�Ð¿Ð¾Ñ�Ð¾Ð± Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ� Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸ Ð½Ð° ÑˆÐºÐ°Ð»Ðµ Ð±Ñ‹Ñ‚ÑŒ ÑƒÐ¿Ñ€Ð¾Ñ‰ÐµÐ½Ð½Ñ‹Ð¼
 
-gui.config.category.fluid=Конфигурация Жидкостей
-gui.config.category.fluid.tooltip=Все что связано с жидкостями
-gui.config.fluid.fluid_bar_show_capacity.name=Показать Емкость на Шкале Жидкости
-gui.config.fluid.fluid_bar_simplify_fluids.comment=Должна ли емкость отображаться на шкале жидкости
-gui.config.fluid.fluid_bar_simplify_fluids.name=Упростить Жидкости на Шкале Жидкости
-gui.config.fluid.fluid_bar_simplify_fluids.comment=Должен ли способ отображения жидкостей на шкале быть упрощенным
+gui.config.category.fluid=ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ� Ð–Ð¸Ð´ÐºÐ¾Ñ�Ñ‚ÐµÐ¹
+gui.config.category.fluid.tooltip=Ð’Ñ�Ðµ Ñ‡Ñ‚Ð¾ Ñ�Ð²Ñ�Ð·Ð°Ð½Ð¾ Ñ� Ð¶Ð¸Ð´ÐºÐ¾Ñ�Ñ‚Ñ�Ð¼Ð¸
+gui.config.fluid.fluid_bar_show_capacity.name=ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ Ð•Ð¼ÐºÐ¾Ñ�Ñ‚ÑŒ Ð½Ð° Ð¨ÐºÐ°Ð»Ðµ Ð–Ð¸Ð´ÐºÐ¾Ñ�Ñ‚Ð¸
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Ð”Ð¾Ð»Ð¶Ð½Ð° Ð»Ð¸ ÐµÐ¼ÐºÐ¾Ñ�Ñ‚ÑŒ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶Ð°Ñ‚ÑŒÑ�Ñ� Ð½Ð° ÑˆÐºÐ°Ð»Ðµ Ð¶Ð¸Ð´ÐºÐ¾Ñ�Ñ‚Ð¸
+gui.config.fluid.fluid_bar_simplify_fluids.name=Ð£Ð¿Ñ€Ð¾Ñ�Ñ‚Ð¸Ñ‚ÑŒ Ð–Ð¸Ð´ÐºÐ¾Ñ�Ñ‚Ð¸ Ð½Ð° Ð¨ÐºÐ°Ð»Ðµ Ð–Ð¸Ð´ÐºÐ¾Ñ�Ñ‚Ð¸
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Ð”Ð¾Ð»Ð¶ÐµÐ½ Ð»Ð¸ Ñ�Ð¿Ð¾Ñ�Ð¾Ð± Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ� Ð¶Ð¸Ð´ÐºÐ¾Ñ�Ñ‚ÐµÐ¹ Ð½Ð° ÑˆÐºÐ°Ð»Ðµ Ð±Ñ‹Ñ‚ÑŒ ÑƒÐ¿Ñ€Ð¾Ñ‰ÐµÐ½Ð½Ñ‹Ð¼
 
-gui.config.category.update_checker=Проверка Обновлений
-gui.config.category.update_checker.tooltip=Отключить проверку обновлений где используется CJCore
-gui.config.update_checker.enabled.comment=Отключена ли проверка обновлений у этого мода
-
-gui.config.category.multimeter=Конфигурация Мультиметра
-gui.config.category.multimeter.tooltip=Все что связано с мультиметром
-gui.config.multimeter.offset_x.name=Сдвиг мультиметра по оси X
-gui.config.multimeter.offset_x.comment=Сдвиг слева во время использования мультиметра
-gui.config.multimeter.offset_y.name=Сдвиг мультиметра по оси Y
-gui.config.multimeter.offset_y.comment=Сдвиг снизу во время использования мультиметра
-gui.config.multimeter.energy_width.name=Ширина энергии в мультиметре
-gui.config.multimeter.energy_width.comment=Ширина интерфейса энергии в мультиметре
-gui.config.multimeter.energy_height.name=Высота энергии в мультиметре
-gui.config.multimeter.energy_height.comment=Высота интерфейса энергии в мультиметре
-gui.config.multimeter.fluid_width.name=Ширина жидкости в мультиметре
-gui.config.multimeter.fluid_width.comment=Ширина интерфейса жидкости в мультиметре
-gui.config.multimeter.fluid_height.name=Высота жидкости в мультиметре
-gui.config.multimeter.fluid_height.comment=Высота интерфейса жидкости в мультиметре
-gui.config.multimeter.item_max_columns.name=Макс Столбцов Предметов в Мультиметре
-gui.config.multimeter.item_max_columns.comment=Макс число столбцов в мультиметре для множителя предметов
-
-item.multimeter.energy.name=Мультиметр (Энергия)
-item.multimeter.item.name=Мультиметр (Предмет)
-item.multimeter.fluid.name=Мультиметр (Жидкость)
-item.multimeter.tooltip.blockpos=Отмечаю блок %s на %s %s %s
-item.multimeter.tooltip.energy=Мультиметр позволяет пользователям видеть энергию внутри любого блока без открытия его интерфейса! Присядьте и нажмите правой кнопкой мыши на блоке чтобы мультиметр показывал энергию только того блока. Нажав ПКМ на воздух отмеченый блок будет сброшен
-item.multimeter.tooltip.item=Мультиметр позволяет пользователям видеть инвентарь внутри любого блока без открытия его интерфейса! Присядьте и нажмите правой кнопкой мыши на блоке чтобы мультиметр показывал инвентарь только того блока. Нажав ПКМ на воздух отмеченый блок будет сброшен
-item.multimeter.tooltip.fluid=Мультиметр позволяет пользователям видеть жидкости внутри любого блока без открытия его интерфейса! Присядьте и нажмите правой кнопкой мыши на блоке чтобы мультиметр показывал жидкости только того блока. Нажав ПКМ на воздух отмеченый блок будет сброшен
-
-update.ready=Доступно обновление для %s!
-update.version=Данная версия: %s, новая: %s
-update.download=Нажмите чтобы скачать
-update.changelog=Наведите для просмотра изменений
-
-command.tileentity.usage=/tileentity <x> <y> <z> <energy:inventory:fluid> get [side] или /tileentity <x> <y> <z> energy <set:give:take> <energy> <unit> [side] или /tileentity <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] или /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] или /tileentity <x> <y> <z> fluid drain <amount> [side]
-command.tileentity.nosupport=Для блока с данными на %s %s %s нет поддержки
-command.tileentity.notake=Этот блок с данными не позволяет забрать энергию
-command.tileentity.nogive=Этот блок с данными не позволяет давать энергию
-command.tileentity.noset=Этот блок с данными не позволяет назначать количество энергии
-command.tileentity.invalidFluid=Эта жидкость не существует!
+command.tileentity.usage=/tileentity <x> <y> <z> <energy:inventory:fluid> get [side] Ð¸Ð»Ð¸ /tileentity <x> <y> <z> energy <set:give:take> <energy> <unit> [side] Ð¸Ð»Ð¸ /tileentity <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] Ð¸Ð»Ð¸ /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] Ð¸Ð»Ð¸ /tileentity <x> <y> <z> fluid drain <amount> [side]
+command.tileentity.nosupport=Ð”Ð»Ñ� Ð±Ð»Ð¾ÐºÐ° Ñ� Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸ Ð½Ð° %s %s %s Ð½ÐµÑ‚ Ð¿Ð¾Ð´Ð´ÐµÑ€Ð¶ÐºÐ¸
+command.tileentity.notake=Ð­Ñ‚Ð¾Ñ‚ Ð±Ð»Ð¾Ðº Ñ� Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸ Ð½Ðµ Ð¿Ð¾Ð·Ð²Ð¾Ð»Ñ�ÐµÑ‚ Ð·Ð°Ð±Ñ€Ð°Ñ‚ÑŒ Ñ�Ð½ÐµÑ€Ð³Ð¸ÑŽ
+command.tileentity.nogive=Ð­Ñ‚Ð¾Ñ‚ Ð±Ð»Ð¾Ðº Ñ� Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸ Ð½Ðµ Ð¿Ð¾Ð·Ð²Ð¾Ð»Ñ�ÐµÑ‚ Ð´Ð°Ð²Ð°Ñ‚ÑŒ Ñ�Ð½ÐµÑ€Ð³Ð¸ÑŽ
+command.tileentity.noset=Ð­Ñ‚Ð¾Ñ‚ Ð±Ð»Ð¾Ðº Ñ� Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸ Ð½Ðµ Ð¿Ð¾Ð·Ð²Ð¾Ð»Ñ�ÐµÑ‚ Ð½Ð°Ð·Ð½Ð°Ñ‡Ð°Ñ‚ÑŒ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑ�Ñ‚Ð²Ð¾ Ñ�Ð½ÐµÑ€Ð³Ð¸Ð¸
+command.tileentity.invalidFluid=Ð­Ñ‚Ð° Ð¶Ð¸Ð´ÐºÐ¾Ñ�Ñ‚ÑŒ Ð½Ðµ Ñ�ÑƒÑ‰ÐµÑ�Ñ‚Ð²ÑƒÐµÑ‚!

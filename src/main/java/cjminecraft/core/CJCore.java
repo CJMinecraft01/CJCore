@@ -11,9 +11,7 @@ import cjminecraft.core.config.CJCoreConfig;
 import cjminecraft.core.crafting.CraftingHandler;
 import cjminecraft.core.energy.EnergyUtils;
 import cjminecraft.core.fluid.FluidUtils;
-import cjminecraft.core.init.CJCoreItems;
 import cjminecraft.core.inventory.InventoryUtils;
-import cjminecraft.core.items.ItemMultimeter;
 import cjminecraft.core.proxy.CommonProxy;
 import cjminecraft.core.util.registries.AutomaticRegistrar;
 import net.minecraft.command.ICommandManager;
@@ -96,18 +94,6 @@ public class CJCore {
 		EnergyUtils.clearCache();
 		InventoryUtils.clearCache();
 		FluidUtils.clearCache();
-	}
-
-	@EventHandler
-	public void imcEvent(IMCEvent event) {
-		for (IMCMessage message : event.getMessages()) {
-			if (message.isResourceLocationMessage() && message.key == "multimeterBlacklist") {
-				ItemMultimeter.MultimeterOverlay.blacklistBlocksEnergy.add(message.getResourceLocationValue());
-				logger.info(String.format("Blacklisting block: %s:%s",
-						message.getResourceLocationValue().getResourceDomain(),
-						message.getResourceLocationValue().getResourcePath()));
-			}
-		}
 	}
 
 }

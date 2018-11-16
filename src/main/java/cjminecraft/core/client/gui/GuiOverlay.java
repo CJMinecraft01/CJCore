@@ -66,9 +66,8 @@ public class GuiOverlay extends GuiCore {
 			return;
 		this.width = event.getResolution().getScaledWidth();
 		this.height = event.getResolution().getScaledHeight();
-		if (event.getType() == ElementType.ALL) {
+		if (event.getType() == ElementType.ALL)
 			drawScreen();
-		}
 	}
 
 	@Override
