@@ -45,7 +45,7 @@ public class RecipeItemColor extends IForgeRegistryEntry.Impl<IRecipe> implement
 	private ItemStack targetItemStack;
 	
 	/**
-	 * Default constructor for registering the recipe {@link CraftingHandler#registerCraftingRecipes()}
+	 * Default constructor for registering the recipe
 	 */
 	public RecipeItemColor() {
 		this(ItemStack.EMPTY);
