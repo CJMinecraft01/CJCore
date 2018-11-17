@@ -111,6 +111,8 @@ public abstract class GuiCore extends GuiContainer {
 	 *            The overlay text to draw with the item if enabled
 	 */
 	public void drawItemStack(ItemStack stack, int x, int y, boolean drawOverlay, @Nullable String overlayTxt) {
+		if (stack == null)
+			return;
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.enableDepth();
 		GlStateManager.enableLighting();

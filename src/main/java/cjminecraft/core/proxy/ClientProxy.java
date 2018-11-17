@@ -1,6 +1,5 @@
 package cjminecraft.core.proxy;
 
-import cjminecraft.core.items.ItemMultimeter;
 import cjminecraft.core.util.registries.AutomaticRegistrar;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -25,7 +24,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit() {
 		super.postInit();
-		MinecraftForge.EVENT_BUS.register(new ItemMultimeter.MultimeterOverlay());
 	}
 
 }

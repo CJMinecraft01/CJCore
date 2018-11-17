@@ -70,10 +70,7 @@ public class OverlayBase {
 	 * @return The {@link ElementBase} which was added
 	 */
 	public ElementBase addElement(ElementBase element) {
-		// Increase position to allow border to fit in
-		element.setPosition(element.getPosX(), element.getPosY());
 		this.elements.add(element);
-		calculateSize();
 		return element;
 	}
 

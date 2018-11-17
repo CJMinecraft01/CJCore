@@ -1,0 +1,54 @@
+energy.utils.repeat_support=Wsparcie energetyczne %s jest już zarejestrowane - POMIJAM
+energy.utils.support_success=Pomyślnie zarejestrowano wsparcie energetyczne %s
+
+energy.unit.repeat_registration=Jednostka energii %s jest już zarejestrowana - POMIJAM
+energy.unit.registration_success=Pomyślnie zarejestrowano jednostkę energii %s
+energy.unit.name=Nazwa: %s
+energy.unit.suffix=Sufiks: %s
+energy.unit.multiplier=Mnożnik: %s
+energy.percentage=%s Naładowania
+
+energy.unit.forge_energy.name=Forge Energy
+energy.unit.forge_energy.suffix=FE
+energy.unit.redstone_flux.name=Redstone Flux
+energy.unit.redstone_flux.suffix=RF
+energy.unit.tesla.name=Tesla
+energy.unit.tesla.suffix=T
+energy.unit.joules.name=Joules
+energy.unit.joules.suffix=J
+energy.unit.minecraft_joules.name=Minecraft Joules
+energy.unit.minecraft_joules.suffix=MJ
+energy.unit.energy_unit.name=Energy Unit
+energy.unit.energy_unit.suffix=EU
+
+energy.container.energy=Energia
+energy.container.capacity=Pojemność
+energy.container.max_input=Maks. Wejście
+energy.container.max_output=Maks. Wyjście
+
+fluid.empty=Pusty
+
+gui.config.main_title=Konfiguracja CJCore
+
+gui.config.category.energy=Konfiguracja Energii
+gui.config.category.energy.tooltip=Wszystko związane z energią
+gui.config.energy.default_energy_unit.name=Domyślna Jednostka Energii
+gui.config.energy.default_energy_unit.comment=Jednostka energii, którą będziesz widział
+gui.config.energy.energy_bar_show_capacity.name=Wyświetlanie Pojemności Paska Energii
+gui.config.energy.energy_bar_show_capacity.comment=Czy pasek energii powinien pokazywać pojemność
+gui.config.energy.energy_bar_simplify_energy.name=Uproszczenie Energii Paska Energii 
+gui.config.energy.energy_bar_simplify_energy.comment=Czy upraszczać sposób, w jaki energia jest wyświetlana używając paska energii
+
+gui.config.category.fluid=Konfiguracja Płynów
+gui.config.category.fluid.tooltip=Wszystko związane z płynami
+gui.config.fluid.fluid_bar_show_capacity.name=Wyświetlanie Pojemności Paska Płynów
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Czy pasek płynów powinien pokazywać pojemność
+gui.config.fluid.fluid_bar_simplify_fluids.name=Uproszczenie Płynów Paska Płynów 
+gui.config.fluid.fluid_bar_simplify_fluids.comment=Czy upraszczać sposób, w jaki płyny są wyświetlane używając paska płynów
+
+command.tileentity.usage=/tileenitty <x> <y> <z> <energy:inventory:fluid> get [side] lub /tileenitty <x> <y> <z> energy <set:give:take> <energy> <unit> [side] lub /tileenitty <x> <y> <z> inventory <insert:extract> <item> [amount] [data] [dataTag] [side] lub /tileentity <x> <y> <z> fluid <fill:drain> <fluid> <amount> [dataTag] [side] lub /tileentity <x> <y> <z> fluid drain <amount> [side]
+command.tileentity.nosupport=Blok z danymi w %s %s %s nie jest wspierany
+command.tileentity.notake=Ten blok z danymi nie pozwala na zabieranie energii 
+command.tileentity.nogive=Ten blok z danymi nie pozwala na dawanie energii
+command.tileentity.noset=Ten blok z danymi nie pozwala na ustawianie poziomu energii
+command.tileentity.invalidFluid=Ta ciecz nie istnieje!

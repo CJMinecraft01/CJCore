@@ -187,7 +187,7 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	 */
 	@Nullable
 	public BlockPos getPos() {
-		return pos;
+		return this.pos;
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	 */
 	@Nullable
 	public EnumFacing getSide() {
-		return side;
+		return this.side;
 	}
 
 	/**
@@ -206,11 +206,11 @@ public class ElementFluidBar extends ElementBase implements ISpecialOverlayEleme
 	}
 
 	public FluidTankInfo getFluidTank() {
-		return fluidTank;
+		return this.fluidTank;
 	}
 
 	public int getTankIndex() {
-		return tankIndex;
+		return this.tankIndex;
 	}
 
 }
