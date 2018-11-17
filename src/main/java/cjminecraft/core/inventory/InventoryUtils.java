@@ -1135,13 +1135,15 @@ public class InventoryUtils {
 			if (inv.getSizeInventory() - 1 < toSlot || fromSlot > toSlot || inv.getSizeInventory() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (!inv.getStackInSlot(slot).isEmpty())
+					inventory.add(inv.getStackInSlot(slot));
 		} else if (stack.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
 			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 			if (inv.getSlots() - 1 < toSlot || fromSlot > toSlot || inv.getSlots() - 1 < fromSlot)
 				return ImmutableList.<ItemStack>copyOf(inventory);
 			for (int slot = fromSlot; slot <= toSlot; slot++)
-				inventory.add(inv.getStackInSlot(slot));
+				if (!inv.getStackInSlot(slot).isEmpty())
+					inventory.add(inv.getStackInSlot(slot));
 		}
 		return ImmutableList.<ItemStack>copyOf(inventory);
 	}
