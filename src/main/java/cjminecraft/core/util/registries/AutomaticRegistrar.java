@@ -24,6 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 
 import cjminecraft.core.CJCore;
@@ -53,7 +54,15 @@ public class AutomaticRegistrar {
 	 * A list of all the classes with the <code>@Registry</code> annotation
 	 * present
 	 */
-	private static HashMap<String, List<Class>> registryClasses = new HashMap<String, List<Class>>();
+	private static HashMap<String, List<Class>> registryClasses = new HashMap<>();
+	/**
+	 * A list of all the {@link TileEntity}'s to register
+	 */
+	private static List<Pair<String, Class>> tiles = new ArrayList<>();
+	/**
+	 * A list of all the {@link TileEntitySpecialRenderer}'s to register
+	 */
+	private static List<Pair<Class, Class>> tesrs = new ArrayList<>();
 
 	/**
 	 * Uses the {@link ASMDataTable} to get all of the classes with the
@@ -73,6 +82,34 @@ public class AutomaticRegistrar {
 				CJCore.logger.info("Found registrar class: " + data.getClassName());
 			} catch (Exception e) {
 				CJCore.logger.error("Unable add registrar class: " + data.getClassName() + "! An error occurred:");
+				CJCore.logger.catching(Level.ERROR, e);
+			}
+		}
+		for (ASMData data : dataTable.getAll(RegisterTileEntity.class.getName())) {
+			try {
+				if (Class.forName(data.getClassName()).isInstance(TileEntity.class))
+					tiles.add(
+							Pair.of((String) data.getAnnotationInfo().get("key"), Class.forName(data.getClassName())));
+				else
+					CJCore.logger.warn("Found tile entity marker on non tile entity class: " + data.getClassName());
+			} catch (Exception e) {
+				CJCore.logger.error("Unable to add tile entity: " + data.getClassName()
+						+ " to the list of tile entities to register! An error occurred:");
+				CJCore.logger.catching(Level.ERROR, e);
+			}
+		}
+		for (ASMData data : dataTable.getAll(RegisterTESR.class.getName())) {
+			try {
+				if (Class.forName(data.getClassName()).isInstance(TileEntitySpecialRenderer.class))
+					tesrs.add(Pair.of((Class) data.getAnnotationInfo().get("tileEntityClass"),
+							Class.forName(data.getClassName())));
+				else
+					CJCore.logger
+							.warn("Found tile entity special renderer marker on non tile entity special renderer class: "
+									+ data.getClassName());
+			} catch (Exception e) {
+				CJCore.logger.error("Unable to add tile entity: " + data.getClassName()
+						+ " to the list of tile entities to register! An error occurred:");
 				CJCore.logger.catching(Level.ERROR, e);
 			}
 		}
@@ -120,6 +157,41 @@ public class AutomaticRegistrar {
 							CJCore.logger.catching(Level.ERROR, e);
 						}
 					}
+					if (field.isAnnotationPresent(RegisterBlock.class)) {
+						try {
+							RegisterBlock details = field.getAnnotation(RegisterBlock.class);
+							if (details.registerItemBlock()) {
+								Block block = (Block) field.get(null);
+								if (block == null) {
+									block = (Block) field.getType().newInstance();
+									field.set(null, block);
+								}
+
+								ItemBlock item = null;
+								if (block instanceof ICustomItemBlock) {
+									ICustomItemBlock customItemBlock = (ICustomItemBlock) block;
+									item = customItemBlock.getCustomItemBlock();
+								} else {
+									item = new ItemBlock(block);
+								}
+
+								if (item.getRegistryName() == null)
+									item.setRegistryName(new ResourceLocation(entry.getKey(), details.registryName()));
+								if (details.setUnlocalizedName()) {
+									if (!details.unlocalizedName().isEmpty())
+										item.setTranslationKey(details.unlocalizedName());
+									else
+										item.setTranslationKey(details.registryName());
+								}
+								event.getRegistry().register(item);
+								registeredItems++;
+							}
+						} catch (Exception e) {
+							CJCore.logger.error("Unable to register item block: " + field.getName()
+									+ "! The following error was thrown:");
+							CJCore.logger.catching(Level.ERROR, e);
+						}
+					}
 					if (field.isAnnotationPresent(RegisterItemBlock.class)) {
 						try {
 							RegisterItemBlock details = field.getAnnotation(RegisterItemBlock.class);
@@ -130,15 +202,11 @@ public class AutomaticRegistrar {
 							}
 
 							ItemBlock item = null;
-							if (!details.customItemBlock()) {
-								item = new ItemBlock(block);
-							} else if (block instanceof ICustomItemBlock) {
+							if (block instanceof ICustomItemBlock) {
 								ICustomItemBlock customItemBlock = (ICustomItemBlock) block;
 								item = customItemBlock.getCustomItemBlock();
 							} else {
-								CJCore.logger.error(
-										"Tried to register custom item block but none was found! Please ensure the block is an instance of cjminecraft.industrialtech.utils.registries.ICustomItemBlock");
-								continue;
+								item = new ItemBlock(block);
 							}
 
 							if (item.getRegistryName() == null)
@@ -208,18 +276,17 @@ public class AutomaticRegistrar {
 							CJCore.logger.catching(Level.ERROR, e);
 						}
 					}
-					if (field.isAnnotationPresent(RegisterTileEntity.class)) {
-						try {
-							RegisterTileEntity details = field.getAnnotation(RegisterTileEntity.class);
-							TileEntity.register(details.key(), details.tileEntityClass());
-							registeredTiles++;
-						} catch (Exception e) {
-							CJCore.logger.error("Unable to register tile entity: " + field.getName()
-									+ "! The following error was thrown:");
-							CJCore.logger.catching(Level.ERROR, e);
-						}
-					}
 				}
+			}
+		}
+		for (Pair<String, Class> tileData : tiles) {
+			try {
+				TileEntity.register(tileData.getLeft(), tileData.getRight());
+				registeredTiles++;
+			} catch (Exception e) {
+				CJCore.logger.error(
+						"Unable to register tile entity: " + tileData.getLeft() + "! The following error was thrown:");
+				CJCore.logger.catching(Level.ERROR, e);
 			}
 		}
 
@@ -243,7 +310,7 @@ public class AutomaticRegistrar {
 							if (field.get(null) instanceof Item) {
 								Item item = (Item) field.get(null);
 								if (item != null) {
-									if (details.hasVariants()) {
+									if (details.variants().length != 0) {
 										ResourceLocation[] names = new ResourceLocation[details.variants().length];
 										for (int i = 0; i < details.variants().length; i++)
 											names[i] = new ResourceLocation(entry.getKey(), details.variants()[i]);
@@ -267,7 +334,7 @@ public class AutomaticRegistrar {
 								Block block = (Block) field.get(null);
 								if (block != null) {
 									Item item = Item.getItemFromBlock(block);
-									if (details.hasVariants()) {
+									if (details.variants().length != 0) {
 										ResourceLocation[] names = new ResourceLocation[details.variants().length];
 										for (int i = 0; i < details.variants().length; i++)
 											names[i] = new ResourceLocation(entry.getKey(), details.variants()[i]);
@@ -300,22 +367,21 @@ public class AutomaticRegistrar {
 							CJCore.logger.catching(Level.ERROR, e);
 						}
 					}
-					if (field.isAnnotationPresent(RegisterTESR.class)) {
-						try {
-							RegisterTESR details = field.getAnnotation(RegisterTESR.class);
-							ClientRegistry.bindTileEntitySpecialRenderer(details.tileEntityClass(),
-									(TileEntitySpecialRenderer<? super TileEntity>) details.renderClass()
-											.newInstance());
-							registeredTESRs++;
-						} catch (Exception e) {
-							CJCore.logger.error("Unable to register TESR for block: " + field.getName()
-									+ "! The following error was thrown:");
-							CJCore.logger.catching(Level.ERROR, e);
-						}
-					}
 				}
 			}
 		}
+		for (Pair<Class, Class> tesrData : tesrs) {
+			try {
+				ClientRegistry.bindTileEntitySpecialRenderer(tesrData.getLeft(),
+						(TileEntitySpecialRenderer<? super TileEntity>) tesrData.getRight().newInstance());
+				registeredTESRs++;
+			} catch (Exception e) {
+				CJCore.logger.error("Unable to register TESR: " + tesrData.getRight().getName()
+						+ "! The following error was thrown:");
+				CJCore.logger.catching(Level.ERROR, e);
+			}
+		}
+
 		CJCore.logger.info("Successfully registered renders for " + registeredItems + " items!");
 		CJCore.logger.info("Successfully registered renders for " + registeredBlocks + " item blocks!");
 		CJCore.logger.info("Successfully registered " + registeredTESRs + " TESRs!");
