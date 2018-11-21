@@ -9,11 +9,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
@@ -23,11 +25,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 
 import cjminecraft.core.CJCore;
+import cjminecraft.core.util.EnumUtils;
 import cjminecraft.core.util.registries.Register;
 import cjminecraft.core.util.registries.Register.*;
 
@@ -120,6 +122,7 @@ public class AutomaticRegistrar {
 		CJCore.logger.info("Searching for items to register");
 		int registeredItems = 0;
 		for (Entry<String, List<Class>> entry : registryClasses.entrySet()) {
+			Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(entry.getKey()));
 			for (Class clazz : entry.getValue()) {
 				for (Method method : clazz.getMethods()) {
 					if (method.isAnnotationPresent(RegisterItemInit.class)) {
@@ -230,6 +233,7 @@ public class AutomaticRegistrar {
 
 		}
 		CJCore.logger.info("Successfully registered " + registeredItems + " items!");
+		Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(CJCore.MODID));
 	}
 
 	@SubscribeEvent
@@ -238,6 +242,7 @@ public class AutomaticRegistrar {
 		int registeredBlocks = 0;
 		int registeredTiles = 0;
 		for (Entry<String, List<Class>> entry : registryClasses.entrySet()) {
+			Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(entry.getKey()));
 			for (Class clazz : entry.getValue()) {
 				for (Method method : clazz.getDeclaredMethods()) {
 					if (method.isAnnotationPresent(RegisterBlockInit.class)) {
@@ -292,6 +297,7 @@ public class AutomaticRegistrar {
 
 		CJCore.logger.info("Successfully registered " + registeredBlocks + " blocks!");
 		CJCore.logger.info("Successfully registered " + registeredTiles + " tiles!");
+		Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(CJCore.MODID));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -385,6 +391,25 @@ public class AutomaticRegistrar {
 		CJCore.logger.info("Successfully registered renders for " + registeredItems + " items!");
 		CJCore.logger.info("Successfully registered renders for " + registeredBlocks + " item blocks!");
 		CJCore.logger.info("Successfully registered " + registeredTESRs + " TESRs!");
+	}
+
+	/**
+	 * Generates an array of strings which can be used in {@link RegisterRender}
+	 * 
+	 * @param prefix
+	 *            The prefix of the variant
+	 * @param suffix
+	 *            The suffix of the variant
+	 * @param enumClass
+	 *            The enum class containing all of the variants
+	 * @return the array of strings which can be used in {@link RegisterRender}
+	 */
+	public static <E extends Enum<E> & IStringSerializable> String[] generateModelVariantStrings(String prefix,
+			String suffix, Class<E> enumClass) {
+		List<String> variants = new ArrayList<>();
+		for (IStringSerializable variant : EnumUtils.getEnumValues(enumClass))
+			variants.add(prefix + variant.getName() + suffix);
+		return variants.toArray(new String[0]);
 	}
 
 }
