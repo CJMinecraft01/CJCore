@@ -327,7 +327,9 @@ public class AutomaticRegistrar {
 													new ModelResourceLocation(names[meta], "inventory"));
 										}
 									} else if (details.variantEnum() != Class.class) {
-										ResourceLocation[] names = generateModelVariants(entry.getKey(), details.variantPrefix(), details.variantSuffix(), details.variantEnum());
+										ResourceLocation[] names = generateModelVariants(entry.getKey(),
+												details.variantPrefix(), details.variantSuffix(),
+												details.variantEnum());
 										ModelLoader.registerItemVariants(item, names);
 										for (int meta = 0; meta < names.length; meta++) {
 											ModelLoader.setCustomModelResourceLocation(item, meta,
@@ -352,6 +354,15 @@ public class AutomaticRegistrar {
 										ResourceLocation[] names = new ResourceLocation[details.variants().length];
 										for (int i = 0; i < details.variants().length; i++)
 											names[i] = new ResourceLocation(entry.getKey(), details.variants()[i]);
+										ModelLoader.registerItemVariants(item, names);
+										for (int meta = 0; meta < names.length; meta++) {
+											ModelLoader.setCustomModelResourceLocation(item, meta,
+													new ModelResourceLocation(names[meta], "inventory"));
+										}
+									} else if (details.variantEnum() != Class.class) {
+										ResourceLocation[] names = generateModelVariants(entry.getKey(),
+												details.variantPrefix(), details.variantSuffix(),
+												details.variantEnum());
 										ModelLoader.registerItemVariants(item, names);
 										for (int meta = 0; meta < names.length; meta++) {
 											ModelLoader.setCustomModelResourceLocation(item, meta,
