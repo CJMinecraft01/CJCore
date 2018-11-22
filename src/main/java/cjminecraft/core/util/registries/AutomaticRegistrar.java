@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -325,6 +326,13 @@ public class AutomaticRegistrar {
 											ModelLoader.setCustomModelResourceLocation(item, meta,
 													new ModelResourceLocation(names[meta], "inventory"));
 										}
+									} else if (details.variantEnum() != Class.class) {
+										ResourceLocation[] names = generateModelVariants(entry.getKey(), details.variantPrefix(), details.variantSuffix(), details.variantEnum());
+										ModelLoader.registerItemVariants(item, names);
+										for (int meta = 0; meta < names.length; meta++) {
+											ModelLoader.setCustomModelResourceLocation(item, meta,
+													new ModelResourceLocation(names[meta], "inventory"));
+										}
 									} else
 										ModelLoader.setCustomModelResourceLocation(item, 0,
 												new ModelResourceLocation(item.getRegistryName(), "inventory"));
@@ -394,22 +402,26 @@ public class AutomaticRegistrar {
 	}
 
 	/**
-	 * Generates an array of strings which can be used in {@link RegisterRender}
+	 * Generates an array of {@link ResourceLocation}s which is used by the
+	 * {@link AutomaticRegistrar}
 	 * 
+	 * @param modid
+	 *            The modid of the model
 	 * @param prefix
 	 *            The prefix of the variant
 	 * @param suffix
 	 *            The suffix of the variant
 	 * @param enumClass
 	 *            The enum class containing all of the variants
-	 * @return the array of strings which can be used in {@link RegisterRender}
+	 * @return the array of {@link ResourceLocation}s used by the
+	 *         {@link AutomaticRegistrar}
 	 */
-	public static <E extends Enum<E> & IStringSerializable> String[] generateModelVariantStrings(String prefix,
-			String suffix, Class<E> enumClass) {
-		List<String> variants = new ArrayList<>();
+	public static <E extends Enum<E> & IStringSerializable> ResourceLocation[] generateModelVariants(String modid,
+			String prefix, String suffix, Class<E> enumClass) {
+		List<ResourceLocation> variants = new ArrayList<>();
 		for (IStringSerializable variant : EnumUtils.getEnumValues(enumClass))
-			variants.add(prefix + variant.getName() + suffix);
-		return variants.toArray(new String[0]);
+			variants.add(new ResourceLocation(modid, prefix + variant.getName() + suffix));
+		return variants.toArray(new ResourceLocation[0]);
 	}
 
 }

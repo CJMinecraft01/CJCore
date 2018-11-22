@@ -10,7 +10,9 @@ import com.jcraft.jorbis.Block;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IStringSerializable;
 
 /**
  * When applied to a class it will mark the class as one which utilises the
@@ -149,6 +151,16 @@ public @interface Register {
 	@Target({ ElementType.FIELD })
 	public static @interface RegisterRender {
 		String[] variants() default {};
+
+		String variantPrefix() default "";
+
+		String variantSuffix() default "";
+
+		/**
+		 * The class must be an instance of {@link IStringSerializable}
+		 * @return the variant which the item uses (for all the different variants, e.g. {@link EnumDyeColor})
+		 */
+		Class variantEnum() default Class.class;
 	}
 
 	/**
