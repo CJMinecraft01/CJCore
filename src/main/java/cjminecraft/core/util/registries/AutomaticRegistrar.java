@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -26,9 +27,11 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 
 import cjminecraft.core.CJCore;
+import cjminecraft.core.util.EnumUtils;
 import cjminecraft.core.util.registries.Register;
 import cjminecraft.core.util.registries.Register.*;
 
@@ -55,6 +58,14 @@ public class AutomaticRegistrar {
 	 * present
 	 */
 	private static HashMap<String, List<Class>> registryClasses = new HashMap<String, List<Class>>();
+	/**
+	 * A list of all the {@link TileEntity}'s to register
+	 */
+	private static List<Pair<String, Class>> tiles = new ArrayList<>();
+	/**
+	 * A list of all the {@link TileEntitySpecialRenderer}'s to register
+	 */
+	private static List<Pair<Class, Class>> tesrs = new ArrayList<>();
 
 	/**
 	 * Uses the {@link ASMDataTable} to get all of the classes with the
@@ -77,12 +88,41 @@ public class AutomaticRegistrar {
 				CJCore.logger.catching(Level.ERROR, e);
 			}
 		}
+		for (ASMData data : dataTable.getAll(RegisterTileEntity.class.getName())) {
+			try {
+				if (Class.forName(data.getClassName()).isInstance(TileEntity.class))
+					tiles.add(
+							Pair.of((String) data.getAnnotationInfo().get("key"), Class.forName(data.getClassName())));
+				else
+					CJCore.logger.warn("Found tile entity marker on non tile entity class: " + data.getClassName());
+			} catch (Exception e) {
+				CJCore.logger.error("Unable to add tile entity: " + data.getClassName()
+						+ " to the list of tile entities to register! An error occurred:");
+				CJCore.logger.catching(Level.ERROR, e);
+			}
+		}
+		for (ASMData data : dataTable.getAll(RegisterTESR.class.getName())) {
+			try {
+				if (Class.forName(data.getClassName()).isInstance(TileEntitySpecialRenderer.class))
+					tesrs.add(Pair.of((Class) data.getAnnotationInfo().get("tileEntityClass"),
+							Class.forName(data.getClassName())));
+				else
+					CJCore.logger
+							.warn("Found tile entity special renderer marker on non tile entity special renderer class: "
+									+ data.getClassName());
+			} catch (Exception e) {
+				CJCore.logger.error("Unable to add tile entity: " + data.getClassName()
+						+ " to the list of tile entities to register! An error occurred:");
+				CJCore.logger.catching(Level.ERROR, e);
+			}
+		}
 	}
 
 	public static void registerItems() {
 		CJCore.logger.info("Searching for items to register");
 		int registeredItems = 0;
 		for (Entry<String, List<Class>> entry : registryClasses.entrySet()) {
+			Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(entry.getKey()));
 			for (Class clazz : entry.getValue()) {
 				for (Method method : clazz.getMethods()) {
 					if (method.isAnnotationPresent(RegisterItemInit.class)) {
@@ -120,6 +160,41 @@ public class AutomaticRegistrar {
 							CJCore.logger.catching(Level.ERROR, e);
 						}
 					}
+					if (field.isAnnotationPresent(RegisterBlock.class)) {
+						try {
+							RegisterBlock details = field.getAnnotation(RegisterBlock.class);
+							if (details.registerItemBlock()) {
+								Block block = (Block) field.get(null);
+								if (block == null) {
+									block = (Block) field.getType().newInstance();
+									field.set(null, block);
+								}
+
+								ItemBlock item = null;
+								if (block instanceof ICustomItemBlock) {
+									ICustomItemBlock customItemBlock = (ICustomItemBlock) block;
+									item = customItemBlock.getCustomItemBlock();
+								} else {
+									item = new ItemBlock(block);
+								}
+
+								if (item.getRegistryName() == null)
+									item.setRegistryName(new ResourceLocation(entry.getKey(), details.registryName()));
+								if (details.setUnlocalizedName()) {
+									if (!details.unlocalizedName().isEmpty())
+										item.setUnlocalizedName(details.unlocalizedName());
+									else
+										item.setUnlocalizedName(details.registryName());
+								}
+								ForgeRegistries.ITEMS.register(item);
+								registeredItems++;
+							}
+						} catch (Exception e) {
+							CJCore.logger.error("Unable to register item block: " + field.getName()
+									+ "! The following error was thrown:");
+							CJCore.logger.catching(Level.ERROR, e);
+						}
+					}
 					if (field.isAnnotationPresent(RegisterItemBlock.class)) {
 						try {
 							RegisterItemBlock details = field.getAnnotation(RegisterItemBlock.class);
@@ -130,15 +205,11 @@ public class AutomaticRegistrar {
 							}
 
 							ItemBlock item = null;
-							if (!details.customItemBlock()) {
-								item = new ItemBlock(block);
-							} else if (block instanceof ICustomItemBlock) {
+							if (block instanceof ICustomItemBlock) {
 								ICustomItemBlock customItemBlock = (ICustomItemBlock) block;
 								item = customItemBlock.getCustomItemBlock();
 							} else {
-								CJCore.logger.error(
-										"Tried to register custom item block but none was found! Please ensure the block is an instance of cjminecraft.industrialtech.utils.registries.ICustomItemBlock");
-								continue;
+								item = new ItemBlock(block);
 							}
 
 							if (item.getRegistryName() == null)
@@ -161,6 +232,7 @@ public class AutomaticRegistrar {
 			}
 		}
 		CJCore.logger.info("Successfully registered " + registeredItems + " items!");
+		Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(CJCore.MODID));
 	}
 
 	public static void registerBlocks() {
@@ -168,6 +240,7 @@ public class AutomaticRegistrar {
 		int registeredBlocks = 0;
 		int registeredTiles = 0;
 		for (Entry<String, List<Class>> entry : registryClasses.entrySet()) {
+			Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(entry.getKey()));
 			for (Class clazz : entry.getValue()) {
 				for (Method method : clazz.getDeclaredMethods()) {
 					if (method.isAnnotationPresent(RegisterBlockInit.class)) {
@@ -206,23 +279,24 @@ public class AutomaticRegistrar {
 							CJCore.logger.catching(Level.ERROR, e);
 						}
 					}
-					if (field.isAnnotationPresent(RegisterTileEntity.class)) {
-						try {
-							RegisterTileEntity details = field.getAnnotation(RegisterTileEntity.class);
-							GameRegistry.registerTileEntity(details.tileEntityClass(), details.key());
-							registeredTiles++;
-						} catch (Exception e) {
-							CJCore.logger.error("Unable to register tile entity: " + field.getName()
-									+ "! The following error was thrown:");
-							CJCore.logger.catching(Level.ERROR, e);
-						}
-					}
 				}
+			}
+		}
+
+		for (Pair<String, Class> tileData : tiles) {
+			try {
+				GameRegistry.registerTileEntity(tileData.getRight(), tileData.getLeft());
+				registeredTiles++;
+			} catch (Exception e) {
+				CJCore.logger.error(
+						"Unable to register tile entity: " + tileData.getLeft() + "! The following error was thrown:");
+				CJCore.logger.catching(Level.ERROR, e);
 			}
 		}
 
 		CJCore.logger.info("Successfully registered " + registeredBlocks + " blocks!");
 		CJCore.logger.info("Successfully registered " + registeredTiles + " tiles!");
+		Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(CJCore.MODID));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -240,10 +314,19 @@ public class AutomaticRegistrar {
 							if (field.get(null) instanceof Item) {
 								Item item = (Item) field.get(null);
 								if (item != null) {
-									if (details.hasVariants()) {
+									if (details.variants().length != 0) {
 										ResourceLocation[] names = new ResourceLocation[details.variants().length];
 										for (int i = 0; i < details.variants().length; i++)
 											names[i] = new ResourceLocation(entry.getKey(), details.variants()[i]);
+										ModelLoader.registerItemVariants(item, names);
+										for (int meta = 0; meta < names.length; meta++) {
+											ModelLoader.setCustomModelResourceLocation(item, meta,
+													new ModelResourceLocation(names[meta], "inventory"));
+										}
+									} else if (details.variantEnum() != Class.class) {
+										ResourceLocation[] names = generateModelVariants(entry.getKey(),
+												details.variantPrefix(), details.variantSuffix(),
+												details.variantEnum());
 										ModelLoader.registerItemVariants(item, names);
 										for (int meta = 0; meta < names.length; meta++) {
 											ModelLoader.setCustomModelResourceLocation(item, meta,
@@ -264,10 +347,19 @@ public class AutomaticRegistrar {
 								Block block = (Block) field.get(null);
 								if (block != null) {
 									Item item = Item.getItemFromBlock(block);
-									if (details.hasVariants()) {
+									if (details.variants().length != 0) {
 										ResourceLocation[] names = new ResourceLocation[details.variants().length];
 										for (int i = 0; i < details.variants().length; i++)
 											names[i] = new ResourceLocation(entry.getKey(), details.variants()[i]);
+										ModelLoader.registerItemVariants(item, names);
+										for (int meta = 0; meta < names.length; meta++) {
+											ModelLoader.setCustomModelResourceLocation(item, meta,
+													new ModelResourceLocation(names[meta], "inventory"));
+										}
+									} else if (details.variantEnum() != Class.class) {
+										ResourceLocation[] names = generateModelVariants(entry.getKey(),
+												details.variantPrefix(), details.variantSuffix(),
+												details.variantEnum());
 										ModelLoader.registerItemVariants(item, names);
 										for (int meta = 0; meta < names.length; meta++) {
 											ModelLoader.setCustomModelResourceLocation(item, meta,
@@ -297,25 +389,48 @@ public class AutomaticRegistrar {
 							CJCore.logger.catching(Level.ERROR, e);
 						}
 					}
-					if (field.isAnnotationPresent(RegisterTESR.class)) {
-						try {
-							RegisterTESR details = field.getAnnotation(RegisterTESR.class);
-							ClientRegistry.bindTileEntitySpecialRenderer(details.tileEntityClass(),
-									(TileEntitySpecialRenderer<? super TileEntity>) details.renderClass()
-											.newInstance());
-							registeredTESRs++;
-						} catch (Exception e) {
-							CJCore.logger.error("Unable to register TESR for block: " + field.getName()
-									+ "! The following error was thrown:");
-							CJCore.logger.catching(Level.ERROR, e);
-						}
-					}
 				}
 			}
 		}
+		
+		for (Pair<Class, Class> tesrData : tesrs) {
+			try {
+				ClientRegistry.bindTileEntitySpecialRenderer(tesrData.getLeft(),
+						(TileEntitySpecialRenderer<? super TileEntity>) tesrData.getRight().newInstance());
+				registeredTESRs++;
+			} catch (Exception e) {
+				CJCore.logger.error("Unable to register TESR: " + tesrData.getRight().getName()
+						+ "! The following error was thrown:");
+				CJCore.logger.catching(Level.ERROR, e);
+			}
+		}
+		
 		CJCore.logger.info("Successfully registered renders for " + registeredItems + " items!");
 		CJCore.logger.info("Successfully registered renders for " + registeredBlocks + " item blocks!");
 		CJCore.logger.info("Successfully registered " + registeredTESRs + " TESRs!");
+	}
+	
+	/**
+	 * Generates an array of {@link ResourceLocation}s which is used by the
+	 * {@link AutomaticRegistrar}
+	 * 
+	 * @param modid
+	 *            The modid of the model
+	 * @param prefix
+	 *            The prefix of the variant
+	 * @param suffix
+	 *            The suffix of the variant
+	 * @param enumClass
+	 *            The enum class containing all of the variants
+	 * @return the array of {@link ResourceLocation}s used by the
+	 *         {@link AutomaticRegistrar}
+	 */
+	public static <E extends Enum<E> & IStringSerializable> ResourceLocation[] generateModelVariants(String modid,
+			String prefix, String suffix, Class<E> enumClass) {
+		List<ResourceLocation> variants = new ArrayList<>();
+		for (IStringSerializable variant : EnumUtils.getEnumValues(enumClass))
+			variants.add(new ResourceLocation(modid, prefix + variant.getName() + suffix));
+		return variants.toArray(new ResourceLocation[0]);
 	}
 
 }
