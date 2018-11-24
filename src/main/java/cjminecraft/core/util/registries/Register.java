@@ -5,8 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.jcraft.jorbis.Block;
-
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -32,7 +32,12 @@ public @interface Register {
 	 * Will register a block with the given registry name. The unlocalized name
 	 * will be set to the {@link #registryName()} by default. This can be
 	 * disabled by setting the {@link #unlocalizedName()}. The unlocalized name
-	 * can optionally not be set by changing {@link #setUnlocalizedName()}
+	 * can optionally not be set by changing {@link #setUnlocalizedName()}. This
+	 * will automatically register an item block, to disable set
+	 * {@link #registerItemBlock()} to <code>false</code>. <br>
+	 * If a custom item block is required, ensure the block has the
+	 * {@link ICustomItemBlock} interface on it so the custom item block is
+	 * registered
 	 * 
 	 * @author CJMinecraft
 	 *
@@ -47,13 +52,15 @@ public @interface Register {
 
 		boolean setUnlocalizedName() default true;
 
+		boolean registerItemBlock() default true;
+
 	}
 
 	/**
 	 * Will register an item with the given registry name. The unlocalized name
 	 * will be set to the {@link #registryName()} by default. This can be
 	 * disabled by setting the {@link #unlocalizedName()}. The unlocalized name
-	 * can optionally not be set by changing {@link #setUnlocalizedName()}
+	 * can optionally not be set by changing {@link #setUnlocalizedName()}.
 	 * 
 	 * @author CJMinecraft
 	 *
@@ -76,8 +83,7 @@ public @interface Register {
 	 * disabled by setting the {@link #unlocalizedName()}. The unlocalized name
 	 * can optionally not be set by changing {@link #setUnlocalizedName()}. <br>
 	 * <br>
-	 * If a custom item block is required, set {@link #customItemBlock()} to
-	 * <code>true</code> (normally <code>false</code>). Ensure the block has the
+	 * If a custom item block is required, ensure the block has the
 	 * {@link ICustomItemBlock} interface on it so the custom item block is
 	 * registered
 	 * 
@@ -92,41 +98,37 @@ public @interface Register {
 
 		String unlocalizedName() default "";
 
-		boolean customItemBlock() default false;
-
 		boolean setUnlocalizedName() default true;
 
 	}
 
 	/**
 	 * Will register a TESR ({@link TileEntitySpecialRenderer}) using the given
-	 * {@link #tileEntityClass()} and {@link #renderClass()}
+	 * {@link #tileEntityClass()} and {@link #renderClass()}. Simply attach to
+	 * the {@link TileEntitySpecialRenderer} class.
 	 * 
 	 * @author CJMinecraft
 	 *
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD })
+	@Target({ ElementType.TYPE })
 	public static @interface RegisterTESR {
 
 		Class tileEntityClass();
-
-		Class renderClass();
 
 	}
 
 	/**
 	 * Will register a {@link TileEntity} using the given
-	 * {@link #tileEntityClass()} and {@link #key()}
+	 * {@link #tileEntityClass()} and {@link #key()}. Simply attach to the
+	 * {@link TileEntity} class
 	 * 
 	 * @author CJMinecraft
 	 *
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD })
+	@Target({ ElementType.TYPE })
 	public static @interface RegisterTileEntity {
-
-		Class tileEntityClass();
 
 		String key();
 
@@ -135,8 +137,8 @@ public @interface Register {
 	/**
 	 * Will register an item or blocks render. <br>
 	 * <br>
-	 * If it has variants, change {@link #hasVariants()} and set the variants
-	 * using {@link #variants()}.
+	 * If it has variants, set the variants using {@link #variants()}. When
+	 * {@link #variants()} is empty (default) no variants will be registered
 	 * 
 	 * @author CJMinecraft
 	 *
@@ -144,10 +146,17 @@ public @interface Register {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.FIELD })
 	public static @interface RegisterRender {
-
-		boolean hasVariants() default false;
-
 		String[] variants() default {};
+		
+		String variantPrefix() default "";
+
+		String variantSuffix() default "";
+
+		/**
+		 * The class must be an instance of {@link IStringSerializable}
+		 * @return the variant which the item uses (for all the different variants, e.g. {@link EnumDyeColor})
+		 */
+		Class variantEnum() default Class.class;
 	}
 
 	/**
@@ -163,8 +172,8 @@ public @interface Register {
 	}
 
 	/**
-	 * States that the given method is where items will be initialised. Will
-	 * get called before the items are registered
+	 * States that the given method is where items will be initialised. Will get
+	 * called before the items are registered
 	 * 
 	 * @author CJMinecraft
 	 *
