@@ -9,19 +9,16 @@ import net.minecraftforge.common.MinecraftForge;
  * @author CJMinecraft
  *
  */
-public class CommonProxy implements IProxy {
+public class CommonProxy {
 
-	@Override
 	public void preInit() {
 		PacketHandler.registerMessages("cjcore");
 		MinecraftForge.EVENT_BUS.register(new CJCoreEvents());
 	}
 
-	@Override
 	public void init() {
 	}
 
-	@Override
 	public void postInit() {
 	}
 
