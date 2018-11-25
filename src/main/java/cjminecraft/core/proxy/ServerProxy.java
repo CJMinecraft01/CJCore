@@ -1,6 +1,5 @@
 package cjminecraft.core.proxy;
 
-
 /**
  * For all things server
  * @author CJMinecraft
