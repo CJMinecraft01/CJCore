@@ -7,18 +7,15 @@ import cjminecraft.core.network.PacketHandler;
  * @author CJMinecraft
  *
  */
-public class CommonProxy implements IProxy {
+public class CommonProxy {
 
-	@Override
 	public void preInit() {
 		PacketHandler.registerMessages("cjcore");
 	}
 
-	@Override
 	public void init() {
 	}
 
-	@Override
 	public void postInit() {
 	}
 
