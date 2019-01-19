@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.lwjgl.util.Color;
-import org.lwjgl.util.ReadableColor;
 
 import cjminecraft.core.CJCore;
 import cjminecraft.core.client.gui.element.ElementEnergyBar;
@@ -24,12 +22,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public enum EnergyUnit implements IStringSerializable {
 
-	REDSTONE_FLUX("redstone_flux", 10.0D, Color.RED), 
-	TESLA("tesla", 10, Color.CYAN), 
-	FORGE_ENERGY("forge_energy", 10, Color.ORANGE), 
-	JOULES("joules", 4, Color.GREEN), 
-	MINECRAFT_JOULES("minecraft_joules", 1, Color.YELLOW), 
-	ENERGY_UNIT("energy_unit", 2.5D, Color.BLUE); // The IC2 Unit
+	REDSTONE_FLUX("redstone_flux", 10), 
+	TESLA("tesla", 10), 
+	FORGE_ENERGY("forge_energy", 10), 
+	JOULES("joules", 4), 
+	MINECRAFT_JOULES("minecraft_joules", 1), 
+	ENERGY_UNIT("energy_unit", 2.5D); // The IC2 Unit
 	
 	public static List<EnergyUnit> VALUES = Arrays.asList(values());
 
@@ -62,59 +60,10 @@ public enum EnergyUnit implements IStringSerializable {
 	 *            The multiplier to convert to the unit from
 	 *            {@link EnergyUnit#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ 4J
 	 *            = 1MJ 6EU = 1MJ
-	 * @param colour
-	 *            The colour of the {@link ElementEnergyBar}
 	 */
-	private EnergyUnit(String unlocalizedName, double multiplier, ReadableColor colour) {
+	private EnergyUnit(String unlocalizedName, double multiplier) {
 		this.unlocalizedName = unlocalizedName;
 		this.multiplier = multiplier;
-		this.colour = new float[] { colour.getRed() / 255.0F, colour.getGreen() / 255.0F,
-				colour.getBlue() / 255.0F };
-	}
-	
-	/**
-	 * Create a energy unit
-	 * 
-	 * @param unlocalizedName
-	 *            The unlocalized name of the energy unit. You will need to add
-	 *            <code>energy.unit.</code><strong>unlocalizedName</strong><code>.name</code>
-	 *            and
-	 *            <code>energy.unit.</code><strong>unlocalizedName</strong><code>.suffix</code>
-	 *            to your language file
-	 * @param multiplier
-	 *            The multiplier to convert to the unit from
-	 *            {@link EnergyUnit#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ 4J
-	 *            = 1MJ 6EU = 1MJ
-	 * @param colour
-	 *            The colour of the {@link ElementEnergyBar}
-	 */
-	private EnergyUnit(String unlocalizedName, double multiplier, int colour) {
-		this.unlocalizedName = unlocalizedName;
-		this.multiplier = multiplier;
-		this.colour = new float[] { (colour >> 15 & 255) / 255.0F, (colour >> 8 & 255) / 255.0F,
-				(colour & 255) / 255.0F };
-	}
-
-	/**
-	 * Create a energy unit
-	 * 
-	 * @param unlocalizedName
-	 *            The unlocalized name of the energy unit. You will need to add
-	 *            <code>energy.unit.</code><strong>unlocalizedName</strong><code>.name</code>
-	 *            and
-	 *            <code>energy.unit.</code><strong>unlocalizedName</strong><code>.suffix</code>
-	 *            to your language file
-	 * @param multiplier
-	 *            The multiplier to convert to the unit from
-	 *            {@link EnergyUnit#MINECRAFT_JOULES} 10RF = 1MJ 10FE = 1MJ 4J
-	 *            = 1MJ 6EU = 1MJ
-	 * @param colour
-	 *            The colour of the {@link ElementEnergyBar}
-	 */
-	private EnergyUnit(String unlocalizedName, double multiplier, float[] colour) {
-		this.unlocalizedName = unlocalizedName;
-		this.multiplier = multiplier;
-		this.colour = colour;
 	}
 
 	public String getUnlocalizedName() {
@@ -147,10 +96,6 @@ public enum EnergyUnit implements IStringSerializable {
 
 	public float[] getColour() {
 		return colour;
-	}
-
-	public void setColour(ReadableColor colour) {
-		setColour(colour.getRed(), colour.getGreen(), colour.getBlue());
 	}
 
 	public void setColour(int r, int g, int b) {
